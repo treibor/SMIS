@@ -20,7 +20,6 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import com.smis.view.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter;
 
-
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends VaadinWebSecurityConfigurerAdapter {
@@ -77,8 +76,10 @@ public class SecurityConfig extends VaadinWebSecurityConfigurerAdapter {
 				.failureUrl(LOGIN_FAILURE_URL)
 
 				// Configure logout
-				.and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
+				.and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+				 ;
 
+				
 	}
   
   

@@ -145,7 +145,8 @@ public class MainLayout extends AppLayout{
 		superMasterView.setRoute(SuperMasterView.class);
 		superMasterView.setVisible(isSuper);
 		//workView.setHighlightCondition(HighlightConditions.sameLocation());
-		addToDrawer(new VerticalLayout(homeView,workView,  printView, workViewmp, printViewmp,masterView, mastermpView,  superMasterView,reportView));
+		//addToDrawer(new VerticalLayout(homeView,workView,  printView, workViewmp, printViewmp,masterView, mastermpView,  superMasterView,reportView));
+		addToDrawer(new VerticalLayout(homeView,workView,  printView,masterView,  superMasterView,reportView));
 	}
 	
 	private void createHeader() {

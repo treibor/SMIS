@@ -179,7 +179,8 @@ public class WorkView extends VerticalLayout {
 		Button testButton = new Button("Generate Test Data");
 
 		testButton.addClickListener(e -> generateTestData());
-		HorizontalLayout toolbar = new HorizontalLayout(filterText, addButton, testButton);
+		//HorizontalLayout toolbar = new HorizontalLayout(filterText, addButton, testButton);
+		HorizontalLayout toolbar = new HorizontalLayout(filterText, addButton);
 		toolbar.setWidthFull();
 		return toolbar;
 	}

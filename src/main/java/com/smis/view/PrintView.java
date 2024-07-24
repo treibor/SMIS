@@ -11,18 +11,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.web.servlet.tags.form.SelectTag;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Block;
@@ -39,22 +34,13 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.provider.DataCommunicator;
-import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.data.provider.Query;
-import com.vaadin.flow.data.selection.MultiSelect;
 import com.vaadin.flow.data.selection.SelectionEvent;
-import com.vaadin.flow.data.selection.SelectionModel;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
@@ -91,6 +77,7 @@ public class PrintView extends VerticalLayout{
 	
 	Notification notify=new Notification();
 	boolean isAdmin;
+	
 	public PrintView(Dbservice service) {
 		//binder.bindInstanceFields(this);
 		this.service=service;
@@ -102,7 +89,34 @@ public class PrintView extends VerticalLayout{
 		add(configureTopLayout(), configueMiddleLayout(),  configureBottomLayout());
 	}
 	
-	
+	public Component configureSideLayout() {
+		FormLayout layout=new FormLayout();
+		layout.setWidth("100%");
+		instNo.setHasControls(true);
+		instNo.setMin(1);
+		instNo.setMax(5);
+		instNo.setValue(1);
+		scheme.addValueChangeListener(e->populateGrid());
+		constituency.addValueChangeListener(e->populateGrid());
+		block.addValueChangeListener(e->populateGrid());
+		year.addValueChangeListener(e->populateGrid());
+		instNo.addValueChangeListener(e->populateGrid());
+		layout.add(instNo, 1);
+		layout.add(scheme, 1);
+		layout.add(year, 1);
+		
+		layout.add(block, 2);
+		layout.add(constituency, 3);
+		//layout.setWidth("30em");
+		layout.setResponsiveSteps(
+		        new ResponsiveStep("100px", 4),
+		        // Use two columns, if layout's width exceeds 500px
+		        new ResponsiveStep("1000px", 9)
+		);
+		HorizontalLayout hl1=new HorizontalLayout(layout);
+		hl1.setWidthFull();
+		return layout;
+	}
 	public Component configureTopLayout() {
 		FormLayout layout=new FormLayout();
 		layout.setWidth("100%");
@@ -132,26 +146,8 @@ public class PrintView extends VerticalLayout{
 		return layout;
 	}
 	public Component configureBottomLayout() {
-		FormLayout blayout=new FormLayout();
-		//populateAllFields();
-		compldate.setHelperText("As Per Scheme Duration");
-		printButton.addClickListener(e->printReport());
-		printButton.setIcon(new Icon(VaadinIcon.PRINT));
-		layout.setWidthFull();
-		blayout.add(instletter, 1);
-		blayout.add(instdate, 1);
-		blayout.add(compldate, 1);
-		blayout.add(installmentcheque, 1);
-		blayout.add(copyTo, 2);
-		blayout.add(note, 2);
-		blayout.add(printButton, 1);
-		//blayout.setWidth("30em");
-		blayout.setResponsiveSteps(
-		        new ResponsiveStep("0", 9),
-		        // Use two columns, if layout's width exceeds 500px
-		        new ResponsiveStep("500px", 9)
-		);
-		return blayout;
+		
+		return null;
 	}
 
 	public Component configueMiddleLayout() {
@@ -338,7 +334,10 @@ public class PrintView extends VerticalLayout{
 			installmentcheque.setValue("");
 		}
 	}
-
+	
+	public void populateEditor(Scheme scheme) {
+		
+	}
 
 	public void populateGrid() {
 		try {
@@ -353,7 +352,7 @@ public class PrintView extends VerticalLayout{
 				configureGrid();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 

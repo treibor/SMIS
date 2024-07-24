@@ -1,53 +1,24 @@
 package com.smis.view;
 
-import java.awt.Window;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.PermitAll;
-import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
-//import javax.xml.transform.stream.StreamSource;
 
-import org.apache.catalina.webresources.FileResource;
-import org.apache.commons.beanutils.locale.converters.DateLocaleConverter;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.ResourceUtils;
-import org.springframework.util.StringUtils;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.dbservice.DbserviceMp;
 import com.smis.entity.Block;
 import com.smis.entity.Constituency;
 import com.smis.entity.Constituencymp;
-import com.smis.entity.District;
 import com.smis.entity.Impldistrict;
 import com.smis.entity.Installment;
 import com.smis.entity.Installmentmp;
@@ -61,27 +32,15 @@ import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.datetimepicker.DateTimePicker;
-import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.server.VaadinResponse;
-import com.vaadin.flow.server.frontend.installer.DefaultFileDownloader;
 
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -89,10 +48,6 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.view.JasperViewer;
 
 @PageTitle("Reports")
 @Route(value = "printing", layout = MainLayout.class)
@@ -118,7 +73,7 @@ public class ReportView extends VerticalLayout {
 	StreamResource resourcerange;
 	PdfViewer pdfViewerrange;
 	String user;
-
+	
 	public ReportView(Dbservice service, DbserviceMp dbservice) {
 		this.dbservice = dbservice;
 		this.service = service;
@@ -127,6 +82,7 @@ public class ReportView extends VerticalLayout {
 		reportTypemla.setItems("General Report", "Detailed Report");
 		reportTypemp.setItems("General Report", "Detailed Report");
 		// candi.addValueChangeListener(e-> removePdfViewer());
+		
 		add(createFinalPanel(), hl4);
 	}
 
@@ -153,7 +109,7 @@ public class ReportView extends VerticalLayout {
 		block.setItemLabelGenerator(Block::getBlockName);
 		scheme.setItemLabelGenerator(Scheme::getSchemeName);
 		year.setItemLabelGenerator(Year::getYearName);
-		consti.setItemLabelGenerator(Constituency::getConstituencyName);
+		consti.setItemLabelGenerator(consti-> consti.getConstituencyName()+" - "+consti.getConstituencyMLA());
 		block.addValueChangeListener(e -> removePdfViewer());
 		scheme.addValueChangeListener(e -> removePdfViewer());
 		year.addValueChangeListener(e -> removePdfViewer());
