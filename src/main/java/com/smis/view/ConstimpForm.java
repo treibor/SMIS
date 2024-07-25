@@ -42,7 +42,7 @@ public class ConstimpForm extends FormLayout{
 	public ConstimpForm(DbserviceMp service) {
 		this.service=service;
 		binder.bindInstanceFields(this);
-		schemeDuration.setHasControls(true);
+		//schemeDuration.setHasControls(true);
 		schemeDuration.setValue(1);
 		constituencyType.setHelperText("Eg: 16th-Lok Sabha");
 		

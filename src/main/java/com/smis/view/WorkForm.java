@@ -3,7 +3,6 @@ package com.smis.view;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Block;
 import com.smis.entity.Constituency;
@@ -21,25 +20,22 @@ import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
-
-import de.codecamp.vaadin.components.messagedialog.MessageDialog;
 
 public class WorkForm extends VerticalLayout{
 	Dbservice service;
@@ -104,7 +100,7 @@ public class WorkForm extends VerticalLayout{
 	}
 	public Component configureForm() {
 		//noOfInstallments.setValue(2);
-		noOfInstallments.setHasControls(true);
+		noOfInstallments.setStepButtonsVisible(true);
 		noOfInstallments.setMin(1);
 		noOfInstallments.setMax(5);
 		//noOfInstallments.setAutocorrect(true);
@@ -134,6 +130,7 @@ public class WorkForm extends VerticalLayout{
 		form1.add(noOfInstallments, 1);
 		form1.add(sanctionNo, 1);
 		form1.add(sanctionDate, 1);
+		//form1.add(createButtonsLayout(), 2);
 		form1.setResponsiveSteps(
 		        new ResponsiveStep("0", 2),
 		        // Use two columns, if layout's width exceeds 500px
@@ -144,9 +141,9 @@ public class WorkForm extends VerticalLayout{
 	
 	private Component createButtonsLayout() {
 		//delete.setEnabled(isAdmin);
-		save.setWidthFull();
-		delete.setWidthFull();
-		close.setWidthFull();
+		//save.setWidthFull();
+		//delete.setWidthFull();
+		//close.setWidthFull();
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		save.addClickShortcut(Key.ENTER);
@@ -163,18 +160,21 @@ public class WorkForm extends VerticalLayout{
 	}
 
 	public void confirmDelete(Work work) {
+		ConfirmDialog dialog=new ConfirmDialog();
 		if (work == null) {
 
 		} else {
-			MessageDialog messageDialog = new MessageDialog().setTitle("Delete Work?", VaadinIcon.FILE_REMOVE.create())
-					.setMessage("All Records of the Work '" + work.getWorkName() + "' will be lost.");
-			// messageDialog.addButton().text("Discard").icon(VaadinIcon.WARNING).error()
-			// .onClick(ev -> Notification.show("Discarded.")).closeOnClick();
-			messageDialog.addButton().text("Delete").primary().onClick(ev -> fireEvent(new DeleteEvent(this, work)))
-					.closeOnClick();
-			messageDialog.addButtonToLeft().text("Cancel").tertiary().onClick(ev -> Notification.show("Cancelled."))
-					.closeOnClick();
-			messageDialog.open();
+			dialog.setHeader("Delete??");
+			dialog.setText("Are You sure you want to delete this item.");
+			dialog.setCancelable(true);
+			dialog.addCancelListener(event -> dialog.close());
+			dialog.setRejectable(true);
+			dialog.setRejectText("Discard");
+			dialog.addRejectListener(event -> dialog.close());
+			dialog.setConfirmText("Delete");
+			dialog.addConfirmListener(event -> fireEvent(new DeleteEvent(this, work)));
+			dialog.open();
+			
 		}
 	}
 	
@@ -192,8 +192,8 @@ public class WorkForm extends VerticalLayout{
 	}
 	private Component createInstallButtons() {
 		installsave.setEnabled(isUser);
-		installsave.setWidthFull();
-		installclose.setWidthFull();
+		//installsave.setWidthFull();
+		//installclose.setWidthFull();
 		installsave.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		installsave.addClickShortcut(Key.ENTER);
 		installclose.addClickShortcut(Key.ESCAPE);
@@ -219,8 +219,8 @@ public class WorkForm extends VerticalLayout{
 	}
 	private Component createUcButtons() {
 		ucsave.setEnabled(isUser);
-		ucsave.setWidthFull();
-		ucclose.setWidthFull();
+		//ucsave.setWidthFull();
+		//ucclose.setWidthFull();
 		ucsave.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		ucsave.addClickShortcut(Key.ENTER);
 		ucclose.addClickShortcut(Key.ESCAPE);

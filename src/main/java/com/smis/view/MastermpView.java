@@ -1,10 +1,6 @@
 package com.smis.view;
 
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.RolesAllowed;
-
 import com.smis.dbservice.DbserviceMp;
-import com.smis.entity.Constituency;
 import com.smis.entity.Constituencymp;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -15,6 +11,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import jakarta.annotation.security.RolesAllowed;
 @PageTitle("MP Master Data")
 @Route(value="mpmaster", layout=MainLayout.class)
 @RolesAllowed({"ADMIN","SUPER"})

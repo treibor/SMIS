@@ -4,20 +4,10 @@ package com.smis.view;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-
-import com.smis.dbservice.Dbservice;
 import com.smis.dbservice.DbserviceMp;
-import com.smis.entity.Block;
-import com.smis.entity.Constituency;
 import com.smis.entity.Constituencymp;
-import com.smis.entity.District;
 import com.smis.entity.Impldistrict;
-import com.smis.entity.Installment;
 import com.smis.entity.Installmentmp;
-import com.smis.entity.Scheme;
-import com.smis.entity.Work;
 import com.smis.entity.Workmp;
 import com.smis.entity.Year;
 import com.vaadin.flow.component.Component;
@@ -33,6 +23,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import jakarta.annotation.security.RolesAllowed;
 @PageTitle("MP Schemes")
 @Route(value="mpschemes", layout=MainLayout.class)
 @RolesAllowed({"USER","SUPER", "ADMIN"})

@@ -109,10 +109,10 @@ public class WorkFormMp extends VerticalLayout{
 	}
 	public Component configureForm() {
 		//noOfInstallments.setValue(2);
-		noOfInstallments.setHasControls(true);
+		//noOfInstallments.setHasControls(true);
 		noOfInstallments.setMin(1);
 		noOfInstallments.setMax(5);
-		priority.setHasControls(true);
+		//priority.setHasControls(true);
 		workName.setMaxHeight("100px");
 		noOfInstallments.setValue(1);
 		noOfInstallments.setEnabled(false);

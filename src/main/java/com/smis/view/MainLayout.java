@@ -1,11 +1,8 @@
 package com.smis.view;
 
-import javax.annotation.security.DenyAll;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.District;
@@ -24,7 +21,6 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -35,12 +31,13 @@ import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.sidenav.SideNav;
+import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.theme.NoTheme;
-import com.vaadin.flow.theme.Theme;
+
+import jakarta.annotation.security.PermitAll;
 
 @PermitAll
 public class MainLayout extends AppLayout{
@@ -75,6 +72,7 @@ public class MainLayout extends AppLayout{
 		isUser=service.isUser();
 		createHeader();
 		createDrawer();
+		//addToDrawer(createHeader(), createDrawer());
 		
 		//setPrimarySection(Section.DRAWER);
 	}
@@ -82,71 +80,15 @@ public class MainLayout extends AppLayout{
 		district.setItems(service.getAllDistricts(state.getValue()));
 	}
 	private void createDrawer() {
-		Icon homeicon=new Icon(VaadinIcon.HOME);
-		homeicon.setSize("5%");
-		Icon workicon = new Icon(VaadinIcon.LOCATION_ARROW_CIRCLE);
-		workicon.setSize("5%");
-		Icon releaseordericon =new Icon(VaadinIcon.PAPERPLANE);
-		releaseordericon.setSize("5%");
-		Icon mastericon =new Icon(VaadinIcon.COG);
-		mastericon.setSize("5%");
-		Icon mpworkicon =new Icon(VaadinIcon.LOCATION_ARROW_CIRCLE_O);
-		mpworkicon.setSize("5%");
-		Icon printmpicon =new Icon(VaadinIcon.PAPERPLANE_O);
-		printmpicon.setSize("5%");
-		Icon mastermpicon =new Icon(VaadinIcon.COG_O);
-		mastermpicon.setSize("5%");
-		Icon reporticon =new Icon(VaadinIcon.TASKS);
-		reporticon.setSize("5%");
-		Icon supericon =new Icon(VaadinIcon.COGS);
-		supericon.setSize("5%");
-		RouterLink workView=new RouterLink();
-		RouterLink printView=new RouterLink();
-		RouterLink masterView=new RouterLink();
-		RouterLink workViewmp=new RouterLink();
-		RouterLink printViewmp=new RouterLink();
-		RouterLink mastermpView=new RouterLink();
-		RouterLink reportView=new RouterLink();
-		RouterLink superMasterView=new RouterLink();
-		RouterLink homeView=new RouterLink();
-		
-		homeView.add(homeicon);
-		homeView.add(" Home");
-		homeView.setRoute(HomeView.class);
-		workView.add(workicon);
-		workView.add(" MLA Schemes");
-		workView.setRoute(WorkView.class);
-		//workView.setVisible(isUser);
-		printView.add(releaseordericon);
-		printView.add(" MLA Release Order");
-		printView.setRoute(PrintView.class);
-		printView.setVisible(isUser);
-		masterView.add(mastericon);
-		masterView.add(" MLA Master Data");
-		masterView.setRoute(MasterView.class);
-		masterView.setVisible(isAdmin);
-		workViewmp.add(mpworkicon);
-		workViewmp.add(" MP Schemes");
-		workViewmp.setRoute(WorkMpView.class);
-		//workViewmp.setVisible(isUser);
-		printViewmp.add(printmpicon);
-		printViewmp.add(" MP Release Order");
-		printViewmp.setRoute(PrintViewMp.class);
-		printViewmp.setVisible(isUser);
-		mastermpView.add(mastermpicon);
-		mastermpView.add(" MP Master Data");
-		mastermpView.setRoute(MastermpView.class);
-		mastermpView.setVisible(isAdmin);
-		reportView.add(reporticon);
-		reportView.add(" Reports");
-		reportView.setRoute(ReportView.class);
-		superMasterView.add(supericon);
-		superMasterView.add(" States || Districts");
-		superMasterView.setRoute(SuperMasterView.class);
-		superMasterView.setVisible(isSuper);
-		//workView.setHighlightCondition(HighlightConditions.sameLocation());
-		//addToDrawer(new VerticalLayout(homeView,workView,  printView, workViewmp, printViewmp,masterView, mastermpView,  superMasterView,reportView));
-		addToDrawer(new VerticalLayout(homeView,workView,  printView,masterView,  superMasterView,reportView));
+		SideNav nav = new SideNav();
+		SideNavItem home = new SideNavItem("Home", HomeView.class, LineAwesomeIcon.HOME_SOLID.create());
+		SideNavItem mla = new SideNavItem("MLA Schemes", WorkView.class, LineAwesomeIcon.PEOPLE_CARRY_SOLID.create());
+		SideNavItem releaseorder = new SideNavItem("Release Order", PrintView.class, LineAwesomeIcon.DONATE_SOLID.create());
+		SideNavItem master = new SideNavItem("Master", MasterView.class, LineAwesomeIcon.MASTODON.create());
+		SideNavItem report = new SideNavItem("Reports", ReportView.class, LineAwesomeIcon.RECEIPT_SOLID.create());
+		nav.addItem(home, mla, releaseorder, master, report);
+		master.setVisible(isAdmin);
+			addToDrawer(new VerticalLayout(nav));
 	}
 	
 	private void createHeader() {

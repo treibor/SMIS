@@ -1,10 +1,5 @@
 package com.smis.view;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-
-import org.springframework.security.access.annotation.Secured;
-
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Block;
 import com.smis.entity.Constituency;
@@ -17,9 +12,10 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Master Data")
 @Route(value="mlamaster", layout=MainLayout.class)

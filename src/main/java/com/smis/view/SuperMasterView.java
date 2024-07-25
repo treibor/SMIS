@@ -1,10 +1,5 @@
 package com.smis.view;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.District;
 import com.smis.entity.Impldistrict;
@@ -19,6 +14,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("States || Districts")
 @Route(value="master", layout=MainLayout.class)

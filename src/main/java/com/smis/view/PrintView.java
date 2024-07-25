@@ -1,19 +1,20 @@
 package com.smis.view;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.annotation.security.RolesAllowed;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
@@ -22,18 +23,18 @@ import org.springframework.core.io.Resource;
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Block;
 import com.smis.entity.Constituency;
+import com.smis.entity.District;
 import com.smis.entity.Installment;
 import com.smis.entity.Scheme;
 import com.smis.entity.Work;
 import com.smis.entity.Year;
-import com.vaadin.componentfactory.pdfviewer.PdfViewer;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -44,7 +45,12 @@ import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
+import com.wontlost.ckeditor.Constants.EditorType;
+import com.wontlost.ckeditor.Constants.ThemeType;
+import com.wontlost.ckeditor.VaadinCKEditor;
+import com.wontlost.ckeditor.VaadinCKEditorBuilder;
 
+import jakarta.annotation.security.RolesAllowed;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -55,7 +61,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @PageTitle("MLA Release Order")
 @Route(value="releaseordermla", layout=MainLayout.class)
 @RolesAllowed({"USER","SUPER"})
-public class PrintView extends VerticalLayout{
+public class PrintView extends HorizontalLayout{
 	//Binder <Work> binder=new BeanValidationBinder<>(Work.class);
 	Dbservice service;
 	Grid<Installment> grid=new Grid<>(Installment.class);
@@ -74,90 +80,94 @@ public class PrintView extends VerticalLayout{
 	TextField note=new TextField("Note:");
 	Button printButton=new Button("Print");
 	HorizontalLayout hl4=new HorizontalLayout();
-	
+	Anchor link = new Anchor();
 	Notification notify=new Notification();
 	boolean isAdmin;
-	
+	 VerticalLayout vlayout = new VerticalLayout();
+	VaadinCKEditor inlineEditor = new VaadinCKEditorBuilder().with(builder -> {
+		builder.editorData = "<p></p>";
+		builder.editorType = EditorType.INLINE;
+	   // builder.theme = ThemeType.DARK;
+	}).createVaadinCKEditor();
 	public PrintView(Dbservice service) {
-		//binder.bindInstanceFields(this);
-		this.service=service;
-		setSizeFull();
-		configureGrid();
-		populateAllFields();
-		printButton.setEnabled(false);
-		isAdmin=service.isAdmin();
-		add(configureTopLayout(), configueMiddleLayout(),  configureBottomLayout());
-	}
-	
-	public Component configureSideLayout() {
-		FormLayout layout=new FormLayout();
-		layout.setWidth("100%");
-		instNo.setHasControls(true);
-		instNo.setMin(1);
-		instNo.setMax(5);
-		instNo.setValue(1);
-		scheme.addValueChangeListener(e->populateGrid());
-		constituency.addValueChangeListener(e->populateGrid());
-		block.addValueChangeListener(e->populateGrid());
-		year.addValueChangeListener(e->populateGrid());
-		instNo.addValueChangeListener(e->populateGrid());
-		layout.add(instNo, 1);
-		layout.add(scheme, 1);
-		layout.add(year, 1);
-		
-		layout.add(block, 2);
-		layout.add(constituency, 3);
-		//layout.setWidth("30em");
-		layout.setResponsiveSteps(
-		        new ResponsiveStep("100px", 4),
-		        // Use two columns, if layout's width exceeds 500px
-		        new ResponsiveStep("1000px", 9)
-		);
-		HorizontalLayout hl1=new HorizontalLayout(layout);
-		hl1.setWidthFull();
-		return layout;
-	}
-	public Component configureTopLayout() {
-		FormLayout layout=new FormLayout();
-		layout.setWidth("100%");
-		instNo.setHasControls(true);
-		instNo.setMin(1);
-		instNo.setMax(5);
-		instNo.setValue(1);
-		scheme.addValueChangeListener(e->populateGrid());
-		constituency.addValueChangeListener(e->populateGrid());
-		block.addValueChangeListener(e->populateGrid());
-		year.addValueChangeListener(e->populateGrid());
-		instNo.addValueChangeListener(e->populateGrid());
-		layout.add(instNo, 1);
-		layout.add(scheme, 1);
-		layout.add(year, 1);
-		
-		layout.add(block, 2);
-		layout.add(constituency, 3);
-		//layout.setWidth("30em");
-		layout.setResponsiveSteps(
-		        new ResponsiveStep("100px", 4),
-		        // Use two columns, if layout's width exceeds 500px
-		        new ResponsiveStep("1000px", 9)
-		);
-		HorizontalLayout hl1=new HorizontalLayout(layout);
-		hl1.setWidthFull();
-		return layout;
-	}
-	public Component configureBottomLayout() {
-		
-		return null;
-	}
+        this.service = service;
+        configureGrid();
+        populateAllFields();
+        printButton.setEnabled(false);
+        isAdmin = service.isAdmin();
+        HorizontalLayout mainLayout = new HorizontalLayout(getLeftLayout(), configureSideLayout());
+        mainLayout.setSizeFull();
+        
+        add(mainLayout);
+        setSizeFull();
+    }
 
-	public Component configueMiddleLayout() {
-		HorizontalLayout middleLayout=new HorizontalLayout(grid, hl4);
-		middleLayout.setFlexGrow(1, grid);
+    public Component getLeftLayout() {
+        VerticalLayout vl = new VerticalLayout();
+        vl.add(configureTopLayout(), configureMiddleLayout(),configureBottomLayout());
+        vl.setSizeFull();
+        return vl;
+    }
+
+    public Component configureTopLayout() {
+        FormLayout layout = new FormLayout();
+        instNo.setStepButtonsVisible(true);
+        instNo.setMin(1);
+        instNo.setMax(5);
+        instNo.setValue(1);
+
+        scheme.addValueChangeListener(e -> populateGrid());
+        constituency.addValueChangeListener(e -> populateGrid());
+        block.addValueChangeListener(e -> populateGrid());
+        year.addValueChangeListener(e -> populateGrid());
+        instNo.addValueChangeListener(e -> populateGrid());
+
+        layout.add(instNo, 1);
+        layout.add(scheme, 1);
+        layout.add(year, 1);
+        layout.add(block, 2);
+        layout.add(constituency, 2);
+
+        layout.setResponsiveSteps(
+            new FormLayout.ResponsiveStep("0", 2), // 1 column by default
+            new FormLayout.ResponsiveStep("500px", 3), // 2 columns for larger screens
+            new FormLayout.ResponsiveStep("800px", 4), // 3 columns for even larger screens
+            new FormLayout.ResponsiveStep("1000px", 7) // 5 columns for very large screens
+        );
+
+        layout.setWidthFull();
+        return layout;
+    }
+
+    public Component configureSideLayout() {
+       
+        vlayout.setWidth("300px"); // Set a fixed width for the side layout
+        compldate.setHelperText("As Per Scheme Duration");
+        printButton.addClickListener(e -> printReport());
+
+        vlayout.add(instletter, instdate, printButton);
+        vlayout.setHeightFull();
+        return vlayout;
+    }
+
+    public Component configureMiddleLayout() {
+        HorizontalLayout middleLayout = new HorizontalLayout(grid);
+        middleLayout.setFlexGrow(1, grid);
 		middleLayout.setFlexGrow(1, hl4);
-		middleLayout.setSizeFull();
-		return middleLayout;
-	}
-	
+		
+        middleLayout.setSizeFull();
+        return middleLayout;
+    }
+
+    public Component configureBottomLayout() {
+    	Button abc=new Button("HTML");
+    	//abc.addClickListener(e->System.out.println(inlineEditor.getValue()));
+        HorizontalLayout bLayout = new HorizontalLayout(inlineEditor);
+        inlineEditor.setSizeFull();
+        bLayout.setWidthFull();
+        bLayout.setHeight("40%");
+        return bLayout;
+    }
 
 	private void printReport() {
 		int installno=instNo.getValue();
@@ -219,17 +229,8 @@ public class PrintView extends VerticalLayout{
 					JasperReport jasperReport = JasperCompileManager.compileReport(employeeReportStream);
 					JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(installments);
 					Map<String, Object> parameters = new HashMap<>();
-					if(copyTo.getValue()=="") {
-						parameters.put("copyTo", "");
-					}else {
-						if (reportType == 2) {
-							parameters.put("copyTo", "6. " + copyTo.getValue());
-						}else if (reportType == 4) {
-							parameters.put("copyTo", "4. " + copyTo.getValue());
-						} else {
-							parameters.put("copyTo", "5. " + copyTo.getValue());
-						}
-					}
+
+					parameters.put("copyTo", inlineEditor.getValue());
 					
 					parameters.put("Note", note.getValue());
 					parameters.put("ComplDate", completion);
@@ -244,14 +245,15 @@ public class PrintView extends VerticalLayout{
 					String username=service.getloggeduser().trim();
 					JasperExportManager.exportReportToPdfFile(jasperPrint, reportPath+"//"+username+"releaseordermla.pdf");
 					File a = new File(reportPath+"//"+username+"releaseordermla.pdf");
-					StreamResource resourcerange = new StreamResource("ReleaseOrder.pdf", () -> createResource(a));
+					/*StreamResource resourcerange = new StreamResource("ReleaseOrder.pdf", () -> createResource(a));
 					PdfViewer pdfViewerrange = new PdfViewer();
 					pdfViewerrange.setSrc(resourcerange);
 					hl4.setVisible(true);
 					//hl4.setMaxWidth("50%");
 					hl4.setSizeFull();
 					hl4.add(pdfViewerrange);
-
+					 	*/
+					addLinkToFile(a);
 				} catch (Exception e) {
 					notify.show("Unable To Generate Report. Error:" + e, 5000, Position.TOP_CENTER);
 					// Position.TOP_CENTER);
@@ -261,6 +263,27 @@ public class PrintView extends VerticalLayout{
 			}
 		}
 	}	
+	private void addLinkToFile(File file) {
+		if (link != null) {
+			vlayout.remove(link);
+		}
+		StreamResource streamResource = new StreamResource(file.getName(), () -> getStream(file));
+		link = new Anchor(streamResource,
+				String.format("%s (%d KB)", file.getName(), (int) file.length() / 1024));
+		link.getElement().setAttribute("download", true);
+		
+		vlayout.add(link);
+	}
+	private InputStream getStream(File file) {
+        FileInputStream stream = null;
+        try {
+            stream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+           
+        }
+
+        return stream;
+    }
 	public String changeAmp(String label) {
 		if(label.contains("&")) {
 			String replacedstring =label.replace("&", "&amp;");
@@ -317,11 +340,12 @@ public class PrintView extends VerticalLayout{
 			complDate = sancDate.plusMonths(schemeduration);
 			compldate.setValue(complDate);
 			instdate.setValue(installsingle.getInstallmentDate());
-			
+			populateEditor(installsingle.getWork());
 			//String letterNo=installsingle.getInstallmentLetter()+"";
 			try {
 				instletter.setValue(installsingle.getInstallmentLetter());
 				installmentcheque.setValue(installsingle.getInstallmentCheque());
+				
 			}catch(NullPointerException npe) {
 				instletter.setValue("");
 				installmentcheque.setValue("");
@@ -332,11 +356,58 @@ public class PrintView extends VerticalLayout{
 			instletter.setValue("");
 			instdate.setValue(null);
 			installmentcheque.setValue("");
+			//inlineEditor.setValue("");
 		}
 	}
 	
-	public void populateEditor(Scheme scheme) {
-		
+	public void populateEditor(Work work) {
+		//System.out.print("HELLO");
+		String mla=work.getConstituency().getConstituencyMLA();
+		String consti=work.getConstituency().getConstituencyName();
+		String dept=work.getScheme().getSchemeDept();
+		String block=work.getBlock().getBlockLabel();
+		District district=work.getDistrict();
+		String districtname=district.getDistrictName();
+		String districthq=district.getDistrictHq();
+		String statehq=district.getState().getStateHq();
+		String state=district.getState().getStateName();
+		int schemeduration = work.getScheme().getSchemeDuration();
+		LocalDate sancDate = work.getSanctionDate();
+		LocalDate complDate = sancDate.plusMonths(schemeduration);
+		String bdo=work.getBlock().getBlockDevelopmentOfficer();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		//compldate.setValue(complDate);
+		if(work.getScheme().getSchemeReport()==1){
+		inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
+				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+mla+", MLA, "+consti+" Constituency for favour of information.&nbsp;&nbsp;</span></li>"
+				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Director, C&RD, "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
+				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, "+dept+", "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
+				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines and to submit Utilisation Certificates, Completion Report on or before "+complDate.format(formatter)+".&nbsp;</span><br>&nbsp;</li>"
+				+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
+		}else if(work.getScheme().getSchemeReport()==2){
+			inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+mla+", MLA, "+consti+" Constituency for favour of information.&nbsp;&nbsp;</span></li>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Under Secretary to the Government of "+state+", "+dept+", "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Director, C&RD, "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, "+dept+", "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines and to submit Utilisation Certificates, Completion Report on or before "+complDate.format(formatter)+". The cheque No. ______ of Rs. ____ is enclosed herewith for implementation of the scheme. He/She will also forward relevant records including APRs and UC to The Deputy Commissioner. He/She would keep custody of all records of the scheme at the District level on completion of the scheme for purpose of future audit under para 3.&nbsp;</span><br>&nbsp;</li>"
+					+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
+			} 
+		else if(work.getScheme().getSchemeReport()==3){
+			inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+mla+", MLA, "+consti+" Constituency for favour of information.&nbsp;&nbsp;</span></li>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Under Secretary to the Government of "+state+", Chief Minister's Secretariat, "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, C&RD, "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines. The "+bdo+" shall release the amount to the beneficiary in one installment for amounts below one Lakh and in two installments for amount above one Lakh and for purchase shall release in one installment only. The "+bdo+" will also forward relevant records, completion report and UC to the Deputy Commissioner accompanied by photographic evidence to enable onward submission to the Chief Minister's Secretariat.&nbsp;</span><br>&nbsp;</li>"
+					+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
+			} else if(work.getScheme().getSchemeReport()==4){
+				inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
+						+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Under Secretary to the Government of "+state+", Chief Minister's Secretariat, "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
+						+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, C&RD, "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
+						+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines. The "+bdo+" shall release the amount to the beneficiary in one installment for amounts below one Lakh and in two installments for amount above one Lakh and for purchase shall release in one installment only. The "+bdo+" will also forward relevant records, completion report and UC to the Deputy Commissioner accompanied by photographic evidence to enable onward submission to the Chief Minister's Secretariat.&nbsp;</span><br>&nbsp;</li>"
+						+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
+				}
+		System.out.println(work.getScheme().getSchemeReport());
 	}
 
 	public void populateGrid() {

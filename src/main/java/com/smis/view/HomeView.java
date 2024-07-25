@@ -1,17 +1,10 @@
 package com.smis.view;
 
-import javax.annotation.security.PermitAll;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-//import org.vaadin.addons.tatu.TabSheet;
-
 import com.smis.dbservice.Dbservice;
 import com.storedobject.chart.BarChart;
 import com.storedobject.chart.CategoryData;
 import com.storedobject.chart.Data;
 import com.storedobject.chart.DataType;
-import com.storedobject.chart.Font.Size;
 import com.storedobject.chart.NightingaleRoseChart;
 import com.storedobject.chart.Position;
 import com.storedobject.chart.RectangularCoordinate;
@@ -21,19 +14,14 @@ import com.storedobject.chart.Toolbox;
 import com.storedobject.chart.XAxis;
 import com.storedobject.chart.YAxis;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
-import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.component.tabs.Tab;
+
+import jakarta.annotation.security.PermitAll;
 @PageTitle("Home")
 @Route(value="", layout=MainLayout.class)
 @PermitAll

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Installment" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a1f690a3-5977-4467-85f8-6b0bcd5b7210">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -411,7 +411,7 @@
 		</band>
 	</detail>
 	<summary>
-		<band height="343" splitType="Stretch">
+		<band height="190" splitType="Stretch">
 			<textField pattern="###0.###;(###0.###-)">
 				<reportElement style="Detail" x="470" y="3" width="83" height="15" uuid="0ecba7ab-fe06-43f9-b8ba-a78bb4e8c2dc">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
@@ -457,80 +457,25 @@
 				</textElement>
 				<textFieldExpression><![CDATA["Dated  "+$F{work.district.districtHq}+", the "+new SimpleDateFormat("dd/MMM/yyyy").format(new java.util.Date())]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement style="Detail" x="2" y="106" width="185" height="15" uuid="5a3d7c4e-42e0-47b5-97b1-2dde2f382da1">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
-				</reportElement>
-				<textElement textAlignment="Left">
-					<font fontName="Times New Roman" size="10" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Copy To:"]]></textFieldExpression>
-			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="Detail" x="5" y="233" width="547" height="40" uuid="b98b1aee-af6f-4746-bb71-49d5a0d09aa7">
+				<reportElement style="Detail" x="0" y="109" width="554" height="40" uuid="b98b1aee-af6f-4746-bb71-49d5a0d09aa7">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{copyTo}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="Detail" x="5" y="273" width="547" height="28" uuid="539ff928-c4e3-4591-8d4f-0fb1bac02153">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
-				</reportElement>
-				<textElement textAlignment="Left">
-					<font fontName="Times New Roman" size="10" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{Note}]]></textFieldExpression>
-			</textField>
 			<textField>
-				<reportElement style="Detail" x="350" y="310" width="204" height="30" uuid="9ad03be0-709c-4fd2-a62e-e96170d03c3f">
+				<reportElement style="Detail" x="350" y="160" width="204" height="30" uuid="9ad03be0-709c-4fd2-a62e-e96170d03c3f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{work.district.deputyCommissioner}+",  \n "+$F{work.district.districtName}+", "+$F{work.district.districtHq}]]></textFieldExpression>
-			</textField>
-			<textField textAdjust="ScaleFont">
-				<reportElement style="Detail" x="5" y="127" width="547" height="15" uuid="a8625b81-80d7-4186-8fa4-d0358d3acb9b">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
-				</reportElement>
-				<textElement textAlignment="Left">
-					<font fontName="Times New Roman" size="10" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA["1. The Under Secretary to the Government of "+$F{work.district.state.stateName}+", Chief Minister's Secretariat, "+$F{work.district.state.stateHq}+", "+$F{work.district.state.stateName} +" for information."]]></textFieldExpression>
-			</textField>
-			<textField textAdjust="ScaleFont">
-				<reportElement style="Detail" x="5" y="142" width="547" height="15" uuid="4148f3bb-f99f-4a7b-8ff5-b344532d3b48">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
-				</reportElement>
-				<textElement textAlignment="Left">
-					<font fontName="Times New Roman" size="10" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA["2. The Project Director, DRDA, "+$F{work.district.districtName}+", "+$F{work.district.districtHq}+" with a request to release the amount accordingly."]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement style="Column header" x="5" y="158" width="12" height="15" forecolor="#120A0A" uuid="f7348300-a081-48e3-861a-b946ab2734fb">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[3. ]]></text>
-			</staticText>
-			<textField textAdjust="ScaleFont">
-				<reportElement style="Detail" x="17" y="158" width="536" height="75" uuid="86925b20-3618-4611-afa9-fb512c1e8058">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Justified">
-					<font fontName="Times New Roman" size="10" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA["The "+$F{work.block.blockDevelopmentOfficer}+", "+$F{work.block.blockLabel}+"  with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines. The "+$F{work.block.blockDevelopmentOfficer}+" shall release the amount to the beneficiary in one installment for amounts below one Lakh and in two installments for amount above one Lakh and for purchase shall release in one installment only. The "+$F{work.block.blockDevelopmentOfficer}+" will also forward relevant records, completion report and UC to the "+$F{work.district.deputyCommissioner}+" accompanied by photographic evidence to enable onward submission to the Chief Minister's Secretariat."]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

@@ -48,7 +48,7 @@ public class SchemeForm extends FormLayout{
 		binder.bindInstanceFields(this);
 		schemeLabel.setHelperText("Eg: SRWP(MLA Scheme) or CMSDF(NGO)");
 		schemeReport.setHelperText("1-For SRWP,CRRP etc 2-For ISYDP,DTFM etc 3-For CMSDF, 4-For CMSDF(Ngo)");
-		schemeReport.setHasControls(true);
+		//schemeReport.setHasControls(true);
 		schemeReport.setMax(4);
 		schemeReport.setMin(1);
 		schemeReport.setValue(1);

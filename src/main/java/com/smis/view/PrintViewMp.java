@@ -11,30 +11,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.web.servlet.tags.form.SelectTag;
 
-import com.smis.dbservice.Dbservice;
 import com.smis.dbservice.DbserviceMp;
-import com.smis.entity.Block;
-import com.smis.entity.Constituency;
 import com.smis.entity.Constituencymp;
-import com.smis.entity.District;
 import com.smis.entity.Impldistrict;
 import com.smis.entity.Installment;
 import com.smis.entity.Installmentmp;
-import com.smis.entity.Scheme;
-import com.smis.entity.Work;
 import com.smis.entity.Workmp;
 import com.smis.entity.Year;
 import com.vaadin.componentfactory.pdfviewer.PdfViewer;
@@ -51,18 +38,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.provider.DataCommunicator;
-import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.data.provider.Query;
-import com.vaadin.flow.data.selection.MultiSelect;
 import com.vaadin.flow.data.selection.SelectionEvent;
-import com.vaadin.flow.data.selection.SelectionModel;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 
+import jakarta.annotation.security.RolesAllowed;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -108,7 +89,7 @@ public class PrintViewMp extends VerticalLayout{
 	public Component configureTopLayout() {
 		FormLayout layout=new FormLayout();
 		layout.setWidth("100%");
-		instNo.setHasControls(true);
+		//instNo.setHasControls(true);
 		instNo.setMin(1);
 		instNo.setMax(5);
 		instNo.setValue(1);
