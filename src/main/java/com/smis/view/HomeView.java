@@ -38,7 +38,7 @@ public class HomeView extends VerticalLayout {
         //add(new H2("Scheme Management & Information System 2.0"));
         //add(new Paragraph("National Informatics Centre, Meghalaya"));
         
-        add(getCharts(), getCharts2(), getCharts());
+        add(getCharts(), getCharts2());
         //add(getTabs());
         setSizeFull();
         //setJustifyContentMode(JustifyContentMode.CENTER);
@@ -67,7 +67,7 @@ public class HomeView extends VerticalLayout {
         //soChart2.setSizeFull();
         int i=service.getAllConstituencies().size();
         for(int index=0; index<i; index++) {
-        	//System.out.println(service.getAllConstituencies().get(index).getConstituencyName());
+        	
         	labels.add(service.getAllConstituencies().get(index).getConstituencyName());
         	//service.getWorkCount(null)
         	data.add(service.getWorkCount(service.getAllConstituencies().get(index)));
@@ -101,7 +101,8 @@ public class HomeView extends VerticalLayout {
         getCharts.addClassName("chartsLayout1");
         getCharts.setWidthFull();
         //getCharts.setHeight("100px");
-        getCharts.add(soChart2, soChart);
+       soChart2.setWidthFull();
+        getCharts.add(soChart2);
         return getCharts;
     }
     
@@ -114,7 +115,7 @@ public class HomeView extends VerticalLayout {
         //soChart2.setSizeFull();
         int i=service.getAllSchemes().size();
         for(int index=0; index<i; index++) {
-        	//System.out.println(service.getAllConstituencies().get(index).getConstituencyName());
+        	
         	labels.add(service.getAllSchemesWIthNotInUse().get(index).getSchemeName());
         	//service.getWorkCount(null)
         	data.add(service.getWorkCount(service.getAllSchemes().get(index)));

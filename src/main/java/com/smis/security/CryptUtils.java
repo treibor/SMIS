@@ -29,7 +29,7 @@ public class CryptUtils {
             // Convert the decrypted bytes to string
             return new String(decryptedBytes, "UTF-8");
         } catch (Exception e) {
-            e.printStackTrace();
+            
             return null;
         }
     }

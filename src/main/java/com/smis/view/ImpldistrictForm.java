@@ -71,9 +71,9 @@ public class ImpldistrictForm extends FormLayout {
 			fireEvent(new SaveEvent(this, district));
 		} catch (ValidationException e) {
 			notify.show("Please Enter All Required Fields", 3000, Position.TOP_CENTER);
-			// e.printStackTrace();
+			
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 
 	}

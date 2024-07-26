@@ -27,6 +27,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -84,9 +85,10 @@ public class MainLayout extends AppLayout{
 		SideNavItem home = new SideNavItem("Home", HomeView.class, LineAwesomeIcon.HOME_SOLID.create());
 		SideNavItem mla = new SideNavItem("MLA Schemes", WorkView.class, LineAwesomeIcon.PEOPLE_CARRY_SOLID.create());
 		SideNavItem releaseorder = new SideNavItem("Release Order", PrintView.class, LineAwesomeIcon.DONATE_SOLID.create());
-		SideNavItem master = new SideNavItem("Master", MasterView.class, LineAwesomeIcon.MASTODON.create());
+		SideNavItem master = new SideNavItem("Master", DistView.class, LineAwesomeIcon.MASTODON.create());
 		SideNavItem report = new SideNavItem("Reports", ReportView.class, LineAwesomeIcon.RECEIPT_SOLID.create());
-		nav.addItem(home, mla, releaseorder, master, report);
+		SideNavItem audit = new SideNavItem("Audit Trail", AuditView.class, LineAwesomeIcon.XBOX.create());
+		nav.addItem(home, mla, releaseorder, master, report, audit);
 		master.setVisible(isAdmin);
 			addToDrawer(new VerticalLayout(nav));
 	}
@@ -212,7 +214,7 @@ public class MainLayout extends AppLayout{
 	
 	private void createUser() {
 		// TODO Auto-generated method stub
-		System.out.println("Executed");
+		
 		if(isAdmin==true || isSuper==true) {
 			userdialog = new Dialog();
 			VerticalLayout dialogLayout1 = createUserDialog(userdialog);
@@ -233,6 +235,7 @@ public class MainLayout extends AppLayout{
 			usertype.setEnabled(true);
 			//state.setEnabled(true);
 		} else if (isAdmin) {
+			
 			state.setValue(service.getLoggedUser().getDistrict().getState());
 			district.setValue(service.getLoggedUser().getDistrict());
 			//state.setValue(null);
@@ -279,7 +282,7 @@ public class MainLayout extends AppLayout{
 				try {
 					if (service.findUser(userName.getValue()) == null) {
 						Users users = new Users();
-						//System.out.println("UserID:" + service.findMaxUserSerial());
+						
 						//users.setUserId(service.findMaxUserSerial() + 1);
 						users.setDistrict(district.getValue());
 						//users.setState(state.getValue());
@@ -296,7 +299,7 @@ public class MainLayout extends AppLayout{
 					}
 					//notify.show("Wat Leh Kamkai. Enter All Values, Please", 3000, Position.TOP_CENTER);
 				} catch (Exception e) {
-					e.printStackTrace();
+					Notification.show("Error Encountered"+e).addThemeVariants(NotificationVariant.LUMO_ERROR);
 				}
 			}
 		}

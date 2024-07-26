@@ -265,6 +265,15 @@
 				</textElement>
 				<textFieldExpression><![CDATA["ORDER"]]></textFieldExpression>
 			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="Detail" x="-1" y="30" width="556" height="15" uuid="f34f7333-bbb9-4732-8d50-9678ae0d6dff">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b36dbddf-2307-4603-9cd9-1184caf289d5"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style isBold=\"true\"  pdfFontName=\"Helvetica-Bold\">"+$F{work.district.districtLabel}.toUpperCase()+"</style>"]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>

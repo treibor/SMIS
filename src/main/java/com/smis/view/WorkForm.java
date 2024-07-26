@@ -27,6 +27,7 @@ import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
@@ -116,7 +117,10 @@ public class WorkForm extends VerticalLayout{
 		year.setItemLabelGenerator(Year:: getYearName);
 		constituency.setItemLabelGenerator(constituency ->constituency.getConstituencyNo()+"-"+constituency.getConstituencyName()+"-"+constituency.getConstituencyMLA());
 		block.setItemLabelGenerator(block->block.getBlockName());
-		
+		workName.setMinLength(5);
+		workName.setMaxLength(999);
+		sanctionNo.setMinLength(2);
+		sanctionNo.setMaxLength(100);
 		//village.setItemLabelGenerator(village->village.getVillageName());
 		FormLayout form1=new FormLayout();
 		form1.setWidth("100%");
@@ -254,10 +258,10 @@ public class WorkForm extends VerticalLayout{
 				work.setDistrict(service.getDistrict());
 				fireEvent(new SaveEvent(this, work));
 				//notify.show("New Work Entered Successfully with Work Code: "+newWorkCode, 5000, Position.TOP_CENTER);
-				//System.out.println("Lah Poi Hangne3");
+				
 			}catch(Exception e) {
-				notify.show("Unable to Save Work. Please Enter All Mandatory Fields", 5000, Position.TOP_CENTER);
-				e.printStackTrace();
+				notify.show("Unable to Save Work. Please Enter All Mandatory Fields"+e, 5000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+				
 			}
 		}
 	}
@@ -269,7 +273,7 @@ public class WorkForm extends VerticalLayout{
 	private void SaveInstallments() {
 		int workinstallments=work.getNoOfInstallments();
 		int tableinstallments=service.getInstallments(work).size();
-		//System.out.println("UC:"+tableinstallments);
+		
 		int toEnterInstallment=tableinstallments+1;
 		if (work == null) {
 			notify.show("Unable To Retrieve Work. Please Select Work From The Table");
@@ -294,7 +298,7 @@ public class WorkForm extends VerticalLayout{
 				//notify.show("Installment No:"+toEnterInstallment+" Entered Sucessfully",5000, Position.TOP_CENTER);
 			}catch(Exception e) {
 				notify.show("Unable to Save Work"+e);
-				e.printStackTrace();
+				
 			}
 		}
 	}
@@ -337,7 +341,7 @@ public class WorkForm extends VerticalLayout{
 				notify.show("UC:" + toEnterInstallment + " Entered Sucessfully", 5000, Position.TOP_CENTER);
 			} catch (Exception e) {
 				notify.show("Unable to Save Work" + e);
-				e.printStackTrace();
+				
 			}
 		}
 	}
@@ -349,7 +353,7 @@ public class WorkForm extends VerticalLayout{
 			fireEvent(new SaveEvent(this, work));
 		} catch (Exception e) {
 			notify.show("Unable to Save Work" + e);
-			e.printStackTrace();
+			
 		}
 
 	}

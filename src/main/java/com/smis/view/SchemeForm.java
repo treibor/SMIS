@@ -75,9 +75,9 @@ public class SchemeForm extends FormLayout{
 			fireEvent(new SaveEvent(this, scheme));
 		} catch (ValidationException e) {
 			//notify.show("Error",3000,Position.TOP_CENTER);
-			e.printStackTrace();
+			
 		}catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 		}
 	}

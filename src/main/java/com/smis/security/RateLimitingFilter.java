@@ -57,7 +57,7 @@ public class RateLimitingFilter implements Filter {
         if (bucket.tryConsume(1)) {
             // Log the request count
             long availableTokens = bucket.getAvailableTokens();
-            //System.out.println("Request count for URL " + normalizedURI + ": " + (getThreshold(normalizedURI) - availableTokens));
+           
             //Notification.show("Too Many Requests. All requests are now Limited",5000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_WARNING);
             chain.doFilter(request, response);
         } else {

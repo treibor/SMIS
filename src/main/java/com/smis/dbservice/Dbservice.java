@@ -92,10 +92,10 @@ public class Dbservice {
 	public boolean isAdmin() {
 		if (getLoggedUser().getRole() == "Admin" || getLoggedUser().getRole().equals("ADMIN")
 				|| getLoggedUser().getRole().equals("SUPER")) {
-			// System.out.println("True:"+getLoggedUser().getRole());
+			
 			return true;
 		} else {
-			// System.out.println("False:"+getLoggedUser().getRole());
+			
 			return false;
 		}
 
@@ -135,11 +135,11 @@ public class Dbservice {
 	public long findMaxUserSerial() {
 
 		try {
-			// System.out.println("Returned:"+urepo.findMaxSerial());
+			
 			return urepo.findMaxSerial();
 
 		} catch (NullPointerException e) {
-			// e.printStackTrace();
+			
 			return (long) 0;
 
 		}
@@ -192,7 +192,7 @@ public class Dbservice {
 	public void saveInstallment(Installment install) {
 		try {
 			if (install == null) {
-				System.err.println("Work Is Null");
+				
 				return;
 			}
 			irepo.save(install);
@@ -222,7 +222,7 @@ public class Dbservice {
 		try {
 			return wrepo.getFilteredWorks(scheme, getDistrict(), year, consti, block);
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 			return Collections.emptyList();
 
 		}
@@ -232,7 +232,7 @@ public class Dbservice {
 		try {
 			return wrepo.getReportWorks(scheme, getDistrict(), year, consti, block);
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 			return Collections.emptyList();
 
 		}
@@ -251,12 +251,12 @@ public class Dbservice {
 	public void saveWork(Work work) {
 		try {
 			if (work == null) {
-				System.err.println("Work Is Null");
+				
 				return;
 			}
 			wrepo.save(work);
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 			notify.show("Unable to Save Work. Error:" + e, 5000, Position.TOP_CENTER);
 		}
 	}
@@ -275,7 +275,7 @@ public class Dbservice {
 	public void saveConstituency(Constituency consti) {
 		try {
 			if (consti == null) {
-				System.err.println("Work Is Null");
+				
 				return;
 			}
 			crepo.save(consti);
@@ -297,7 +297,7 @@ public class Dbservice {
 	// save & Delete Year
 	public void saveYear(Year year) {
 		if (year == null) {
-			System.err.println("Year Is Null");
+			
 			return;
 		}
 		yrepo.save(year);
@@ -315,7 +315,7 @@ public class Dbservice {
 	public void saveScheme(Scheme scheme) {
 		try {
 			if (scheme == null) {
-				System.err.println("Scheme Is Null");
+				
 				return;
 			}
 			srepo.save(scheme);
@@ -338,7 +338,7 @@ public class Dbservice {
 	public void saveBlock(Block block) {
 		try {
 			if (block == null) {
-				System.err.println("Block Is Null");
+				
 				return;
 			}
 			brepo.save(block);
@@ -359,7 +359,7 @@ public class Dbservice {
 	public void saveState(State state) {
 		try {
 			if (state == null) {
-				// System.err.println("Scheme Is Null");
+				
 				return;
 			}
 			strepo.save(state);
@@ -380,7 +380,7 @@ public class Dbservice {
 	// save & Delete district
 	public void saveDistrict(District dist) {
 		if (dist == null) {
-			// System.err.println("Scheme Is Null");
+			
 			return;
 		}
 		drepo.save(dist);
@@ -405,7 +405,7 @@ public class Dbservice {
 	// save & Delete impldistrict
 	public void saveImplDistrict(Impldistrict dist) {
 		if (dist == null) {
-			// System.err.println("Scheme Is Null");
+			
 			return;
 		}
 		idrepo.save(dist);

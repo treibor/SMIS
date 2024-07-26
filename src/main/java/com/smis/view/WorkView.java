@@ -3,6 +3,9 @@ package com.smis.view;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.smis.audit.Audit;
 //import com.identity.views.CheckBox;
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Block;
@@ -44,7 +47,8 @@ public class WorkView extends VerticalLayout {
 	WorkForm workform;
 	boolean isAdmin;
 	boolean isUser;
-
+	@Autowired
+	private Audit audit;
 	public WorkView(Dbservice service) {
 		this.service = service;
 		setSizeFull();
@@ -137,7 +141,7 @@ public class WorkView extends VerticalLayout {
 	}
 
 	public void filterGrid() {
-		// System.out.println("Executed");
+		
 		// selected
 		// filterText.setValue("");
 		grid.setItems(
@@ -156,7 +160,7 @@ public class WorkView extends VerticalLayout {
 	public void updateGrid() {
 
 		grid.setItems(service.getAllWorks());
-		// System.out.println("Works: "+service.getAllWorks());
+		
 	}
 
 	private Component getToolbar() {
@@ -195,7 +199,7 @@ public class WorkView extends VerticalLayout {
 						// for (int c = service.getAllBlocks().size()-1; c <
 						// service.getAllBlocks().size(); c++) {
 						Block block=service.getAllBlocks().get(c);
-						// System.out.println(service.getAllBlocks().get(1));
+						
 						for (int d = 0; d < service.getAllYears().size(); d++) {
 							// service.getAllYears().size(); d++) {
 							Year year=service.getAllYears().get(d); 
@@ -220,10 +224,9 @@ public class WorkView extends VerticalLayout {
 			}
 			updateGrid();
 		} catch (Exception e) {
-			System.err.println("exception");
-			e.printStackTrace(System.err);
-			System.err.flush();
-			// e.printStackTrace();
+			
+			
+
 		}
 	}
 
@@ -239,10 +242,11 @@ public class WorkView extends VerticalLayout {
 		long a = event.getWork().getWorkCode();
 
 		service.saveWork(event.getWork());
+		audit.saveAudit(event.getWork(), "Save/Update");
+		
 		updateList();
 		long b = service.getWorkCode();
-		// System.out.println("Work Code:"+a);
-		// System.out.println("Max Work Code:"+b);
+		
 
 		// closeEditor();
 		if (a == b) {
@@ -257,7 +261,7 @@ public class WorkView extends VerticalLayout {
 		grid.asSingleSelect().clear();
 		workform.installaccordion.setEnabled(false);
 		workform.ucaccordion.setEnabled(false);
-		// System.out.println("Lah Poi Hangne mE");
+		
 		Work newWork = new Work();
 		newWork.setBlock(work.getBlock());
 		newWork.setConstituency(work.getConstituency());
@@ -272,6 +276,7 @@ public class WorkView extends VerticalLayout {
 
 	public void deleteWork(WorkForm.DeleteEvent event) {
 		// service.deleteInstallments(event.getWork());
+		audit.saveAudit(event.getWork(), "Delete");
 		service.deleteWork(event.getWork());
 		updateList();
 		closeEditor();
@@ -298,7 +303,7 @@ public class WorkView extends VerticalLayout {
 		grid.asSingleSelect().clear();
 		workform.installaccordion.setEnabled(false);
 		workform.ucaccordion.setEnabled(false);
-		// System.out.println("Lah Poi Hangne mE");
+		
 		editWork(new Work());
 
 	}
@@ -314,14 +319,14 @@ public class WorkView extends VerticalLayout {
 				workform.save.setEnabled(isUser);
 				enableFields();
 				workinstallment = work.getNoOfInstallments();
-				// System.out.println("No of Inst:"+workinstallment);
+				
 				if (work.getWorkAmount() != null) {
 					// check if work is entered or not by checking if installment is greater than 0
 					int tablecount = service.getInstallmentCount(work);
 					int toEnter = tablecount + 1;
-					// System.out.println("A");
+					
 					if (tablecount > 0) {
-						// System.out.println("B");
+						
 						// check if any installment is entered
 						List<Installment> installments = service.getInstallments(work);
 						workform.delete.setEnabled(isAdmin);
@@ -330,10 +335,10 @@ public class WorkView extends VerticalLayout {
 						int tablecountindex = tablecount - 1;
 						if (workinstallment == tablecount) {
 							// check if all installments are entered, (if yes check if uc is enetered
-							// System.out.println("C");
+							
 							if (installments.get(tablecountindex).getInstallmentLetter() == null) {
 								closeAllAccordion();
-								// System.out.println("D");
+								
 								// workform.ucmaster.setText("UC: " + tablecount);
 							} else if (installments.get(tablecountindex).getUcLetter() == null) {
 								openUcAccordion();
@@ -345,12 +350,12 @@ public class WorkView extends VerticalLayout {
 							}
 						} else {
 							// Not All Installments are entered
-							// System.out.println("E");
+							
 							if (installments.get(tablecountindex).getInstallmentLetter() == null) {
 								// check if release order is not printed
 								closeAllAccordion();
 							} else if (installments.get(tablecountindex).getUcLetter() == null) {
-								// System.out.println("F");
+								
 								openUcAccordion();
 								workform.ucmaster.setText("UC: " + tablecount);
 
@@ -371,16 +376,16 @@ public class WorkView extends VerticalLayout {
 					}
 
 				} else {
-					// System.out.println("Work is Null, Entering new Work");
+					
 					closeAllAccordion();
 					// workform.delete.setEnabled(isA);
 					enableFields();
 				}
 			}
 		} catch (ArithmeticException aE) {
-			aE.printStackTrace();
+			
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 	}
 

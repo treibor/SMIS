@@ -189,8 +189,7 @@ public class WorkFormMp extends VerticalLayout{
 		if (implDistrict.getValue() != null) {
 			noOfInstallments.setValue(1);
 			priority.setValue(1);
-			//System.out.println("Impl"+implDistrict.getValue().getDistrictId());
-			//System.out.println("logged"+service.getDistrict().getDistrictId());
+			
 			if (implDistrict.getValue().getDistrictCode() == service.getDistrict().getDistrictCode()) {
 				implAgency.setValue("");
 				implHead.setValue("");
@@ -297,10 +296,10 @@ public class WorkFormMp extends VerticalLayout{
 				}*/
 				work.setDistrict(service.getDistrict());
 				fireEvent(new SaveEvent(this, work));
-				//System.out.println("Lah Poi Hangne3");
+				
 			}catch(Exception e) {
-				notify.show("Unable to Save Work. Please Enter All Mandatory Fields", 5000, Position.TOP_CENTER);
-				//e.printStackTrace();
+				notify.show("Unable to Save Work. Please Enter All Mandatory Fields"+e, 5000, Position.TOP_CENTER);
+				
 			}
 		}
 	}
@@ -312,7 +311,7 @@ public class WorkFormMp extends VerticalLayout{
 	private void SaveInstallments() {
 		int workinstallments=work.getNoOfInstallments();
 		int tableinstallments=service.getInstallmentMps(work).size();
-		//System.out.println("UC:"+tableinstallments);
+		
 		int toEnterInstallment=tableinstallments+1;
 		if (work == null) {
 			notify.show("Unable To Retrieve Work. Please Select Work From The Table");
@@ -337,7 +336,7 @@ public class WorkFormMp extends VerticalLayout{
 				//notify.show("Installment No:"+toEnterInstallment+" Entered Sucessfully",5000, Position.TOP_CENTER);
 			}catch(Exception e) {
 				notify.show("Unable to Save Work"+e);
-				e.printStackTrace();
+				
 			}
 		}
 	}
@@ -380,7 +379,7 @@ public class WorkFormMp extends VerticalLayout{
 				notify.show("UC:" + toEnterInstallment + " Entered Sucessfully", 5000, Position.TOP_CENTER);
 			} catch (Exception e) {
 				notify.show("Unable to Save Work" + e);
-				e.printStackTrace();
+				
 			}
 		}
 	}
@@ -392,7 +391,7 @@ public class WorkFormMp extends VerticalLayout{
 			fireEvent(new SaveEvent(this, work));
 		} catch (Exception e) {
 			notify.show("Unable to Save Work" + e);
-			e.printStackTrace();
+			
 		}
 
 	}

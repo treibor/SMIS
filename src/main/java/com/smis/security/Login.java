@@ -26,6 +26,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H5;
@@ -52,7 +53,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import elemental.json.JsonObject;
 
-@Route("logins")
+@Route("login")
 @AnonymousAllowed
 public class Login extends VerticalLayout implements BeforeEnterObserver {
 
@@ -72,8 +73,9 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 	TextField usernameField = new TextField("User Name");
 	PasswordField passwordField = new PasswordField("Password");
 	Button button = new Button("Login");
-	H2 title = new H2("Meghalaya Biodiversity Board");
-	H3 description = new H3("People's Biodiversity Register");
+	H3 maintitle = new H3("Government of Meghalaya");
+	H2 title = new H2("Scheme MIS 2.0 ");
+	H3 description = new H3("Version 2.0");
 	Anchor anchor = new Anchor();
 	private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
 			.getContextHolderStrategy();
@@ -138,16 +140,16 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 		button.setAutofocus(true);
 		anchor.setText("Forgot Password?");
 		anchor.getElement().addEventListener("click",e-> ForgotPassword());
-		anchor.getStyle().set("color", "hsla(119, 93%, 29%, 0.90)").set("padding-bottom", "20px");
+		anchor.getStyle().set("color", "hsla(211, 100%, 50%, 0.90)").set("padding-bottom", "20px");
 		var form = new FormLayout();
 		// form.add(title, 1);
 		// form.add(description, 1);
 		form.add(usernameField, 1);
 		form.add(passwordField, 1);
 
-		form.add(getCaptcha(), 1);
+		//form.add(getCaptcha(), 1);
 		form.add(new Span(), 1);
-		form.add(captchatext, 1);
+		//form.add(captchatext, 1);
 		// form.add(, 1);
 		form.add(button, 1);
 		// form.add(anchor, 1);
@@ -156,10 +158,11 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 		form.getStyle().set("padding", "20px");
 
 		var header = new VerticalLayout();
+		maintitle.getStyle().set("color", "white");
 		title.getStyle().set("color", "white");
 		description.getStyle().set("color", "white");
-		header.add(title, description);
-		header.getStyle().set("background-color", "hsla(119, 93%, 29%, 0.90)");
+		header.add(maintitle,title);
+		header.getStyle().set("background-color", "hsla(211, 100%, 50%, 0.90)");
 		header.setAlignItems(Alignment.START);
 		header.setJustifyContentMode(JustifyContentMode.END);
 		header.setHeight("150px");
@@ -182,11 +185,51 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 		return container;
 	}
 
+	/*Captcha
+	 * private void doLogin(String encryptedUsername, String encryptedPassword) {
+	 * button.setEnabled(false); String username=""; String password=""; if
+	 * (captcha.checkUserAnswer(captchatext.getValue())) { try { username =
+	 * CryptUtils.decryptUsername(encryptedUsername, dynamicKey); password =
+	 * CryptUtils.decryptPassword(encryptedPassword, dynamicKey); int
+	 * activeSessionCount = getActiveSessionCountForUser(username); if
+	 * (activeSessionCount == 0) { // invalidatePreviousSessionsForUser(username);
+	 * UsernamePasswordAuthenticationToken token = new
+	 * UsernamePasswordAuthenticationToken(username, password); Authentication
+	 * authentication = this.authenticationManager.authenticate(token);
+	 * 
+	 * SecurityContext context =
+	 * this.securityContextHolderStrategy.createEmptyContext();
+	 * context.setAuthentication(authentication);
+	 * this.securityContextHolderStrategy.setContext(context);
+	 * securityRepo.saveContext(context, VaadinServletRequest.getCurrent(),
+	 * VaadinServletResponse.getCurrent()); // registerSession(ServletContext,
+	 * (UserDetails) authentication.getPrincipal());
+	 * registerSession(VaadinService.getCurrentRequest().getWrappedSession(),
+	 * (UserDetails) authentication.getPrincipal());
+	 * //audit.saveLoginAudit("Login Successfully", username);
+	 * UI.getCurrent().navigate(HomeView.class); }else { Notification.
+	 * show("User Is Already Logged In. Please login with a different User").
+	 * addThemeVariants(NotificationVariant.LUMO_ERROR); } } catch (Exception e) {
+	 * 
+	 *  //Notification.show("Authentication failed: " +
+	 * e.getMessage()) // .addThemeVariants(NotificationVariant.LUMO_ERROR);
+	 * Notification.show("Authentication failed: Wrong User Name and Password" )
+	 * .addThemeVariants(NotificationVariant.LUMO_ERROR);
+	 * 
+	 * clearFields();
+	 * 
+	 * //audit.saveLoginAudit("Login Failure- Authentication", username); } } else {
+	 * Notification.show("Invalid captcha").addThemeVariants(NotificationVariant.
+	 * LUMO_ERROR); clearFields(); //audit.saveLoginAudit("Login Failure- Captcha",
+	 * username);
+	 * 
+	 * } }
+	 */
 	private void doLogin(String encryptedUsername, String encryptedPassword) {
 		button.setEnabled(false);
 		String username="";
 		String password="";
-		if (captcha.checkUserAnswer(captchatext.getValue())) {
+		
 			try {
 				username = CryptUtils.decryptUsername(encryptedUsername, dynamicKey);
 				password = CryptUtils.decryptPassword(encryptedPassword, dynamicKey);
@@ -212,7 +255,7 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 				}
 			} catch (Exception e) {
 
-				// e.printStackTrace();
+				
 				//Notification.show("Authentication failed: " + e.getMessage())
 					//	.addThemeVariants(NotificationVariant.LUMO_ERROR);
 				Notification.show("Authentication failed: Wrong User Name and Password" )
@@ -222,14 +265,8 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 
 				//audit.saveLoginAudit("Login Failure- Authentication", username);
 			}
-		} else {
-			Notification.show("Invalid captcha").addThemeVariants(NotificationVariant.LUMO_ERROR);
-			clearFields();
-			//audit.saveLoginAudit("Login Failure- Captcha", username);
-
-		}
+		
 	}
-
 	private void registerSession(WrappedSession session, UserDetails userDetails) {
 		sr.registerNewSession(session.getId(), userDetails);
 	}

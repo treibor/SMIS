@@ -109,7 +109,7 @@ public class WorkMpView extends VerticalLayout{
 	}
 	public void updateGrid() {
 		grid.setItems(service.getAllWorks());
-		//System.out.println("Works: "+service.getAllWorks());
+		
 	}
 	private Component getToolbar() {
 		filterText.setPlaceholder("Filter By Work Name or Sanction Number");
@@ -149,10 +149,10 @@ public class WorkMpView extends VerticalLayout{
 		grid.asSingleSelect().clear();
 		workform.installaccordion.setEnabled(false);
 		workform.ucaccordion.setEnabled(false);
-		//System.out.println("Lah Poi Hangne mE");
+		
 		Workmp newWork=new Workmp();
 		//newWork.setImplDistrict(work.getImplDistrict());
-		//System.out.println("Lah Poi Hangne mE");
+		
 		newWork.setConstituencymp(work.getConstituencymp());
 		newWork.setSanctionDate(work.getSanctionDate());
 		newWork.setPriority(work.getPriority());
@@ -162,9 +162,9 @@ public class WorkMpView extends VerticalLayout{
 		newWork.setNoOfInstallments(work.getNoOfInstallments());
 		newWork.setImplDistrict(work.getImplDistrict());
 		//workform.implDistrict.setValue(work.getImplDistrict());
-		//System.out.println("Lah Poi Hangne mE1");
+		
 		editWork(newWork);
-		//System.out.println("Lah Poi Hangne mE2");
+		
 	}
 	
 	public void deleteWork(WorkFormMp.DeleteEvent event) {
@@ -200,7 +200,7 @@ public class WorkMpView extends VerticalLayout{
 		grid.asSingleSelect().clear();
 		workform.installaccordion.setEnabled(false);
 		workform.ucaccordion.setEnabled(false);
-		//System.out.println("Lah Poi Hangne mE");
+		
 		editWork(new Workmp());
 		
 	}
@@ -216,15 +216,15 @@ public class WorkMpView extends VerticalLayout{
 			workform.save.setEnabled(isUser);
 			enableFields();
 			workinstallment = work.getNoOfInstallments();
-			//System.out.println("No of Inst:A");
+			
 			if (work.getWorkAmount()!=null) {
-				//System.out.println("No of Inst:B");
+				
 				//check if work is entered or not by checking if installment is greater than 0
 					int tablecount = service.getInstallmentMpCount(work);
 					int toEnter = tablecount + 1;
-					//System.out.println("To Enter"+ toEnter);
+					
 					if (tablecount > 0) {
-						//System.out.println("Tablecount greater than sero");
+						
 						// check if any installment is entered
 						List<Installmentmp> installments = service.getInstallmentMps(work);
 						workform.delete.setEnabled(isAdmin);
@@ -268,7 +268,7 @@ public class WorkMpView extends VerticalLayout{
 					}
 				
 			}else {
-				//System.out.println("Work is Null, Entering new Work");
+				
 				closeAllAccordion();
 				//workform.delete.setEnabled(isA);
 				enableFields();

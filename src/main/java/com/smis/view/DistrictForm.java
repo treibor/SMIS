@@ -73,13 +73,13 @@ public class DistrictForm extends FormLayout {
 		try {
 			long dist_code=service.getMaxDistrictCode(state.getValue())+1;
 			binder.writeBean(district);
-			//System.out.println("A");
+			
 			//check if new entry
 			if (district.getDistrictCode() < 1) {
-				//System.out.println("B");
+				
 				district.setDistrictCode(dist_code);
 				if (service.getImpldistrict(dist_code-1) == null) {
-					//System.out.println("C");
+					
 					impldist = new Impldistrict();
 					impldist.setDistrictCode(dist_code);
 					//impldist.setDistrictId(service.getMaxDistrictCode());
@@ -91,7 +91,7 @@ public class DistrictForm extends FormLayout {
 				}
 			}else {
 				if (service.getImpldistrict(dist_code-1) == null) {
-					//System.out.println("C");
+					
 					impldist = new Impldistrict();
 					impldist.setDistrictCode(district.getDistrictCode());
 					//impldist.setDistrictId(service.getMaxDistrictCode());
@@ -105,9 +105,9 @@ public class DistrictForm extends FormLayout {
 			fireEvent(new SaveEvent(this, district));
 		} catch (ValidationException e) {
 			notify.show("Please Enter All Required Fields", 3000, Position.TOP_CENTER);
-			// e.printStackTrace();
+			
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 
 	}

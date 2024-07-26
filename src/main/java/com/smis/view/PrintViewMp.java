@@ -146,7 +146,7 @@ public class PrintViewMp extends VerticalLayout{
 	
 
 	private void printReport() {
-		//System.out.println("ComplDate:"+compldate.getValue());
+		
 		int installno=instNo.getValue();
 		//int index=installno-1;
 		if (instletter.getValue() == "" || instdate.getValue() == null || compldate.getValue()==null){
@@ -190,7 +190,7 @@ public class PrintViewMp extends VerticalLayout{
 					String totalAmountwords=convertToIndianCurrency(totalamount+"");
 					String totalAmountnumbers = totalamount.stripTrailingZeros().toPlainString();
 					populateGrid();
-					//System.out.println("In Words:"+convertToIndianCurrency(totalamount+""));
+					
 					Resource resource=null;
 					//URL res =null;
 					Map<String, Object> parameters = new HashMap<>();
@@ -226,7 +226,7 @@ public class PrintViewMp extends VerticalLayout{
 					parameters.put("year", yearlabel);
 					parameters.put("sanctionNo", sanctionNo);
 					parameters.put("amount",  "(Rupees "+totalAmountwords+" only.)");
-										//System.out.println("ComplDate:"+compldate.getValue());
+										
 					JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,
 							jrBeanCollectionDataSource);
 					JasperExportManager.exportReportToPdfFile(jasperPrint, reportPath+"//releaseordermp.pdf");
@@ -241,7 +241,7 @@ public class PrintViewMp extends VerticalLayout{
 				} catch (Exception e) {
 					notify.show("Unable TO Generate Report. Error:" + e, 5000, Position.TOP_CENTER);
 					// Position.TOP_CENTER);
-					e.printStackTrace();
+					
 
 				}
 			}
@@ -343,7 +343,7 @@ public class PrintViewMp extends VerticalLayout{
 				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 	}
 

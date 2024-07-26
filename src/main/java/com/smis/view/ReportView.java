@@ -130,7 +130,7 @@ public class ReportView extends VerticalLayout {
 	public Component createFinalPanel() {
 		Accordion accordion = new Accordion();
 		accordion.add("MLA Schemes", createMlaPanel());
-		accordion.add("MP Schemes", createMpPanel());
+		//accordion.add("MP Schemes", createMpPanel());
 		// accordion.set
 		accordion.setWidthFull();
 		return accordion;
@@ -225,7 +225,7 @@ public class ReportView extends VerticalLayout {
 					hl4.setSizeFull();
 					hl4.add(pdfViewerrange);
 				} else {
-					System.out.println(reportTypemp.getValue());
+					
 					notify.show("Fatal Error: Contact Programmer ");
 				}
 
@@ -233,7 +233,7 @@ public class ReportView extends VerticalLayout {
 
 			} catch (Exception e) {
 				notify.show("Error:" + e, 5000, Position.TOP_CENTER);
-				e.printStackTrace();
+				
 			}
 		}
 	}
@@ -293,7 +293,7 @@ public class ReportView extends VerticalLayout {
 
 			} catch (Exception e) {
 				notify.show("Error:" + e, 5000, Position.TOP_CENTER);
-				e.printStackTrace();
+				
 			}
 		}
 	}

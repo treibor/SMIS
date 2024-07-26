@@ -84,6 +84,7 @@ public class PrintView extends HorizontalLayout{
 	Notification notify=new Notification();
 	boolean isAdmin;
 	 VerticalLayout vlayout = new VerticalLayout();
+	 
 	VaadinCKEditor inlineEditor = new VaadinCKEditorBuilder().with(builder -> {
 		builder.editorData = "<p></p>";
 		builder.editorType = EditorType.INLINE;
@@ -161,7 +162,7 @@ public class PrintView extends HorizontalLayout{
 
     public Component configureBottomLayout() {
     	Button abc=new Button("HTML");
-    	//abc.addClickListener(e->System.out.println(inlineEditor.getValue()));
+    	
         HorizontalLayout bLayout = new HorizontalLayout(inlineEditor);
         inlineEditor.setSizeFull();
         bLayout.setWidthFull();
@@ -171,7 +172,7 @@ public class PrintView extends HorizontalLayout{
 
 	private void printReport() {
 		int installno=instNo.getValue();
-		//System.out.println("ComplDate:"+compldate.getValue());
+		
 		if (instletter.getValue() == "" || instdate.getValue() == null || compldate.getValue()==null){
 			notify.show( "Release Letter, Release Date  and Completion  Date Cannot Be Empty", 5000, Position.TOP_CENTER);
 		} else {
@@ -185,7 +186,7 @@ public class PrintView extends HorizontalLayout{
 				notify.show("Invalid Release  Date. Release Date Has to Be After the UC date of Previous Installment", 5000, Position.TOP_CENTER);
 			} else {
 				try {
-					//System.out.println("Report To be Printed:Release : A");
+					
 					int selecteditems = installments.size();
 					String schemelabel=changeAmp(installments.get(0).getWork().getScheme().getSchemeLabel());
 					String blocklabel=changeAmp(installments.get(0).getWork().getBlock().getBlockLabel());
@@ -194,7 +195,7 @@ public class PrintView extends HorizontalLayout{
 					LocalDate completion=compldate.getValue();
 					int reportType=installments.get(0).getWork().getScheme().getSchemeReport();
 					int installNo;
-					//System.out.println("Report To be Printed:Release : B");
+					
 					if(instNo.getValue()<3) {
 						installNo=instNo.getValue();
 					}else {
@@ -225,7 +226,7 @@ public class PrintView extends HorizontalLayout{
 					String reportPath=absolutePath.substring(0, absolutePath.length()-15);
 					//String reportPath="D:"; // before production
 					InputStream employeeReportStream = resource.getInputStream();
-					//System.out.println("Report To be Printed:Release"+reportType+""+installNo+".jrxml");
+					
 					JasperReport jasperReport = JasperCompileManager.compileReport(employeeReportStream);
 					JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(installments);
 					Map<String, Object> parameters = new HashMap<>();
@@ -239,12 +240,13 @@ public class PrintView extends HorizontalLayout{
 					parameters.put("year", yearlabel);
 					parameters.put("sanctionNo", sanctionNo);
 					parameters.put("amount", totalAmountnumbers+" ("+totalAmountwords+")");
-					//System.out.println("ComplDate:"+compldate.getValue());
+					
 					JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,
 							jrBeanCollectionDataSource);
-					String username=service.getloggeduser().trim();
-					JasperExportManager.exportReportToPdfFile(jasperPrint, reportPath+"//"+username+"releaseordermla.pdf");
-					File a = new File(reportPath+"//"+username+"releaseordermla.pdf");
+					//String username=service.getloggeduser().trim();
+					long userid=service.getLoggedUser().getUserId();
+					JasperExportManager.exportReportToPdfFile(jasperPrint, reportPath+"//"+userid+"releaseorder.pdf");
+					File a = new File(reportPath+"//"+userid+"releaseorder.pdf");
 					/*StreamResource resourcerange = new StreamResource("ReleaseOrder.pdf", () -> createResource(a));
 					PdfViewer pdfViewerrange = new PdfViewer();
 					pdfViewerrange.setSrc(resourcerange);
@@ -257,7 +259,7 @@ public class PrintView extends HorizontalLayout{
 				} catch (Exception e) {
 					notify.show("Unable To Generate Report. Error:" + e, 5000, Position.TOP_CENTER);
 					// Position.TOP_CENTER);
-					e.printStackTrace();
+					
 
 				}
 			}
@@ -361,7 +363,7 @@ public class PrintView extends HorizontalLayout{
 	}
 	
 	public void populateEditor(Work work) {
-		//System.out.print("HELLO");
+		
 		String mla=work.getConstituency().getConstituencyMLA();
 		String consti=work.getConstituency().getConstituencyName();
 		String dept=work.getScheme().getSchemeDept();
@@ -407,7 +409,7 @@ public class PrintView extends HorizontalLayout{
 						+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines. The "+bdo+" shall release the amount to the beneficiary in one installment for amounts below one Lakh and in two installments for amount above one Lakh and for purchase shall release in one installment only. The "+bdo+" will also forward relevant records, completion report and UC to the Deputy Commissioner accompanied by photographic evidence to enable onward submission to the Chief Minister's Secretariat.&nbsp;</span><br>&nbsp;</li>"
 						+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
 				}
-		System.out.println(work.getScheme().getSchemeReport());
+		
 	}
 
 	public void populateGrid() {
@@ -423,7 +425,7 @@ public class PrintView extends HorizontalLayout{
 				configureGrid();
 			}
 		} catch (Exception e) {
-			//e.printStackTrace();
+			
 		}
 	}
 

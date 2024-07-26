@@ -130,7 +130,7 @@ public class DbserviceMp {
 	}
 	public void saveInstallmentMp(Installmentmp install) {
 		if(install==null) {
-			System.err.println("Work Is Null");
+			
 			return;
 		}
 		try {
@@ -177,7 +177,7 @@ public class DbserviceMp {
 	
 	public void saveWork(Workmp work) {
 		if(work==null) {
-			System.err.println("Work Is Null");
+			
 			return;
 		}
 		try {
@@ -199,7 +199,7 @@ public class DbserviceMp {
 	//save & Delete Constituency
 	public void saveConstituencymp(Constituencymp consti) {
 		if(consti==null) {
-			System.err.println("Work Is Null");
+			
 			return;
 		}
 		crepo.save(consti);
@@ -215,7 +215,7 @@ public class DbserviceMp {
 	// save & Delete Year
 	public void saveYear(Year year) {
 		if (year == null) {
-			System.err.println("Year Is Null");
+			
 			return;
 		}
 		yrepo.save(year);
@@ -233,7 +233,7 @@ public class DbserviceMp {
 	// save & Delete blocks
 	public void saveBlock(Block block) {
 		if (block == null) {
-			System.err.println("Block Is Null");
+			
 			return;
 		}
 		brepo.save(block);
