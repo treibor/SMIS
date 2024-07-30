@@ -24,6 +24,7 @@ import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
@@ -73,8 +74,10 @@ public class WorkForm extends VerticalLayout{
 	AccordionPanel workaccordion=new AccordionPanel();
 	AccordionPanel installaccordion=new AccordionPanel();
 	AccordionPanel ucaccordion=new AccordionPanel();
-	Label installmentmaster=new Label("");
-	Label ucmaster=new Label("");
+	//Label installmentmaster=new Label("");
+	H3 installmentmaster=new H3("");
+	H3 ucmaster=new H3("");
+	//Label ucmaster=new Label("");
 	boolean isAdmin;
 	boolean isUser;
 	public WorkForm(Dbservice service) {

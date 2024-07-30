@@ -13,17 +13,24 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
 
-@SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
+@SpringBootApplication()
 //@Theme (variant= Lumo.LIGHT)
 //@JsModule("@vaadin/vaadin-lumo-styles/presets/compact.js")
 @Theme(value = "my-theme")
 public class SmisJuneApplication extends SpringBootServletInitializer implements AppShellConfigurator{
 	
-	@Override
-	protected SpringApplicationBuilder configure (SpringApplicationBuilder builder) {
-		return builder.sources(SmisJuneApplication.class);
-		
-	}
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/*
+	 * @Override protected SpringApplicationBuilder configure
+	 * (SpringApplicationBuilder builder) { return
+	 * builder.sources(SmisJuneApplication.class);
+	 * 
+	 * }
+	 */
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SmisJuneApplication.class, args);

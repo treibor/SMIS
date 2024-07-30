@@ -30,6 +30,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.details.DetailsVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
@@ -83,8 +84,8 @@ public class WorkFormMp extends VerticalLayout{
 	AccordionPanel implaccordion=new AccordionPanel();
 	AccordionPanel installaccordion=new AccordionPanel();
 	AccordionPanel ucaccordion=new AccordionPanel();
-	Label installmentmaster=new Label("");
-	Label ucmaster=new Label("");
+	H3 installmentmaster=new H3("");
+	H3 ucmaster=new H3("");
 	boolean isAdmin;
 	boolean isUser;
 	public WorkFormMp(DbserviceMp service) {

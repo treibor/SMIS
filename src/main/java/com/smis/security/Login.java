@@ -15,6 +15,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.context.SecurityContextRepository;
 
+import com.smis.audit.Audit;
 import com.smis.security.captcha.Captcha;
 import com.smis.security.captcha.CapthaImpl;
 import com.smis.view.HomeView;
@@ -57,7 +58,8 @@ import elemental.json.JsonObject;
 @AnonymousAllowed
 public class Login extends VerticalLayout implements BeforeEnterObserver {
 
-	
+	@Autowired
+	private Audit audit;
 	@Autowired
 	SessionRegistry sr;
 	@Autowired
@@ -79,31 +81,27 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 	Anchor anchor = new Anchor();
 	private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
 			.getContextHolderStrategy();
-	String dynamicKey="";
+	String dynamicKey = "";
+
 	public Login(AuthenticatedUser authenticatedUser) {
 		this.authenticatedUser = authenticatedUser;
 		dynamicKey = generateDynamicKey();
 		button.addClickListener(e -> {
-		    String username = usernameField.getValue();
-		    String password = passwordField.getValue();
-		    UI.getCurrent().getPage().executeJs(
-		        "var key = $2;" + // Use $2 to represent the dynamic key
-		        "var encryptedUsername = '';" +
-		        "for (var i = 0; i < $0.length; i++) {" +
-		        "    encryptedUsername += String.fromCharCode($0.charCodeAt(i) ^ key.charCodeAt(i % key.length));" +
-		        "}" +
-		        "var encryptedPassword = '';" +
-		        "for (var j = 0; j < $1.length; j++) {" +
-		        "    encryptedPassword += String.fromCharCode($1.charCodeAt(j) ^ key.charCodeAt(j % key.length));" +
-		        "}" +
-		        "return { username: btoa(encryptedUsername), password: btoa(encryptedPassword) };",
-		        username, password, dynamicKey // Pass dynamicKey as the third argument
-		    ).then(response -> {
-		        JsonObject data = (JsonObject) response;
-		        String encryptedUsername = data.getString("username");
-		        String encryptedPassword = data.getString("password");
-		        doLogin(encryptedUsername, encryptedPassword);
-		    });
+			String username = usernameField.getValue();
+			String password = passwordField.getValue();
+			UI.getCurrent().getPage().executeJs("var key = $2;" + // Use $2 to represent the dynamic key
+					"var encryptedUsername = '';" + "for (var i = 0; i < $0.length; i++) {"
+					+ "    encryptedUsername += String.fromCharCode($0.charCodeAt(i) ^ key.charCodeAt(i % key.length));"
+					+ "}" + "var encryptedPassword = '';" + "for (var j = 0; j < $1.length; j++) {"
+					+ "    encryptedPassword += String.fromCharCode($1.charCodeAt(j) ^ key.charCodeAt(j % key.length));"
+					+ "}" + "return { username: btoa(encryptedUsername), password: btoa(encryptedPassword) };",
+					username, password, dynamicKey // Pass dynamicKey as the third argument
+			).then(response -> {
+				JsonObject data = (JsonObject) response;
+				String encryptedUsername = data.getString("username");
+				String encryptedPassword = data.getString("password");
+				doLogin(encryptedUsername, encryptedPassword);
+			});
 		});
 		// setAlignItems(FlexComponent.Alignment.STRETCH);
 		setAlignItems(Alignment.CENTER);
@@ -113,16 +111,18 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 		getStyle().set("background-color", "hsla(0, 0%, 95%, 0.69)");
 		// add(createLoginForm());
 	}
+
 	private String generateDynamicKey() {
-	    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	    StringBuilder key = new StringBuilder();
-	    Random rnd = new Random();
-	    while (key.length() < 5) { // length of the key
-	        int index = (int) (rnd.nextFloat() * characters.length());
-	        key.append(characters.charAt(index));
-	    }
-	    return key.toString();
+		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		StringBuilder key = new StringBuilder();
+		Random rnd = new Random();
+		while (key.length() < 5) { // length of the key
+			int index = (int) (rnd.nextFloat() * characters.length());
+			key.append(characters.charAt(index));
+		}
+		return key.toString();
 	}
+
 	private Component createPasswordForm() {
 
 		// captchacontainer.add(getCaptcha(), refreshButton);
@@ -139,7 +139,7 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 		button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		button.setAutofocus(true);
 		anchor.setText("Forgot Password?");
-		anchor.getElement().addEventListener("click",e-> ForgotPassword());
+		anchor.getElement().addEventListener("click", e -> ForgotPassword());
 		anchor.getStyle().set("color", "hsla(211, 100%, 50%, 0.90)").set("padding-bottom", "20px");
 		var form = new FormLayout();
 		// form.add(title, 1);
@@ -147,9 +147,9 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 		form.add(usernameField, 1);
 		form.add(passwordField, 1);
 
-		//form.add(getCaptcha(), 1);
+		// form.add(getCaptcha(), 1);
 		form.add(new Span(), 1);
-		//form.add(captchatext, 1);
+		// form.add(captchatext, 1);
 		// form.add(, 1);
 		form.add(button, 1);
 		// form.add(anchor, 1);
@@ -161,7 +161,7 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 		maintitle.getStyle().set("color", "white");
 		title.getStyle().set("color", "white");
 		description.getStyle().set("color", "white");
-		header.add(maintitle,title);
+		header.add(maintitle, title);
 		header.getStyle().set("background-color", "hsla(211, 100%, 50%, 0.90)");
 		header.setAlignItems(Alignment.START);
 		header.setJustifyContentMode(JustifyContentMode.END);
@@ -185,12 +185,12 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 		return container;
 	}
 
-	/*Captcha
-	 * private void doLogin(String encryptedUsername, String encryptedPassword) {
-	 * button.setEnabled(false); String username=""; String password=""; if
-	 * (captcha.checkUserAnswer(captchatext.getValue())) { try { username =
-	 * CryptUtils.decryptUsername(encryptedUsername, dynamicKey); password =
-	 * CryptUtils.decryptPassword(encryptedPassword, dynamicKey); int
+	/*
+	 * Captcha private void doLogin(String encryptedUsername, String
+	 * encryptedPassword) { button.setEnabled(false); String username=""; String
+	 * password=""; if (captcha.checkUserAnswer(captchatext.getValue())) { try {
+	 * username = CryptUtils.decryptUsername(encryptedUsername, dynamicKey);
+	 * password = CryptUtils.decryptPassword(encryptedPassword, dynamicKey); int
 	 * activeSessionCount = getActiveSessionCountForUser(username); if
 	 * (activeSessionCount == 0) { // invalidatePreviousSessionsForUser(username);
 	 * UsernamePasswordAuthenticationToken token = new
@@ -211,8 +211,8 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 	 * show("User Is Already Logged In. Please login with a different User").
 	 * addThemeVariants(NotificationVariant.LUMO_ERROR); } } catch (Exception e) {
 	 * 
-	 *  //Notification.show("Authentication failed: " +
-	 * e.getMessage()) // .addThemeVariants(NotificationVariant.LUMO_ERROR);
+	 * //Notification.show("Authentication failed: " + e.getMessage()) //
+	 * .addThemeVariants(NotificationVariant.LUMO_ERROR);
 	 * Notification.show("Authentication failed: Wrong User Name and Password" )
 	 * .addThemeVariants(NotificationVariant.LUMO_ERROR);
 	 * 
@@ -227,46 +227,43 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 	 */
 	private void doLogin(String encryptedUsername, String encryptedPassword) {
 		button.setEnabled(false);
-		String username="";
-		String password="";
-		
-			try {
-				username = CryptUtils.decryptUsername(encryptedUsername, dynamicKey);
-				password = CryptUtils.decryptPassword(encryptedPassword, dynamicKey);
-				int activeSessionCount = getActiveSessionCountForUser(username);
-				if (activeSessionCount == 0) {
-					// invalidatePreviousSessionsForUser(username);
-					UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username,
-							password);
-					Authentication authentication = this.authenticationManager.authenticate(token);
+		String username = "";
+		String password = "";
 
-					SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
-					context.setAuthentication(authentication);
-					this.securityContextHolderStrategy.setContext(context);
-					securityRepo.saveContext(context, VaadinServletRequest.getCurrent(),
-							VaadinServletResponse.getCurrent());
-					// registerSession(ServletContext, (UserDetails) authentication.getPrincipal());
-					registerSession(VaadinService.getCurrentRequest().getWrappedSession(),
-							(UserDetails) authentication.getPrincipal());
-					//audit.saveLoginAudit("Login Successfully", username);
-					UI.getCurrent().navigate(HomeView.class);
-				}else {
-					Notification.show("User Is Already Logged In. Please login with a different User").addThemeVariants(NotificationVariant.LUMO_ERROR);
-				}
-			} catch (Exception e) {
+		try {
+			username = CryptUtils.decryptUsername(encryptedUsername, dynamicKey);
+			password = CryptUtils.decryptPassword(encryptedPassword, dynamicKey);
+			int activeSessionCount = getActiveSessionCountForUser(username);
+			//System.out.println(activeSessionCount);
 
-				
-				//Notification.show("Authentication failed: " + e.getMessage())
-					//	.addThemeVariants(NotificationVariant.LUMO_ERROR);
-				Notification.show("Authentication failed: Wrong User Name and Password" )
-				.addThemeVariants(NotificationVariant.LUMO_ERROR);
-		
-				clearFields();
+			invalidatePreviousSessionsForUser(username);
+			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+			Authentication authentication = this.authenticationManager.authenticate(token);
 
-				//audit.saveLoginAudit("Login Failure- Authentication", username);
-			}
-		
+			SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
+			context.setAuthentication(authentication);
+			this.securityContextHolderStrategy.setContext(context);
+			securityRepo.saveContext(context, VaadinServletRequest.getCurrent(), VaadinServletResponse.getCurrent());
+			// registerSession(ServletContext, (UserDetails) authentication.getPrincipal());
+			registerSession(VaadinService.getCurrentRequest().getWrappedSession(),
+					(UserDetails) authentication.getPrincipal());
+			audit.saveLoginAudit("Login Successfully", username);
+			UI.getCurrent().navigate(HomeView.class);
+
+		} catch (Exception e) {
+
+			// Notification.show("Authentication failed: " + e.getMessage())
+			// .addThemeVariants(NotificationVariant.LUMO_ERROR);
+			Notification.show("Authentication failed: Wrong User Name and Password")
+					.addThemeVariants(NotificationVariant.LUMO_ERROR);
+
+			clearFields();
+
+			audit.saveLoginAudit("Login Failure- Authentication", username);
+		}
+
 	}
+
 	private void registerSession(WrappedSession session, UserDetails userDetails) {
 		sr.registerNewSession(session.getId(), userDetails);
 	}
@@ -278,38 +275,40 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 			if (principal instanceof UserDetails) {
 				UserDetails userDetails = (UserDetails) principal;
 				if (userDetails.getUsername().equals(username)) {
-					List<SessionInformation> sessionInfoList = sr.getAllSessions(userDetails, true); 
+					List<SessionInformation> sessionInfoList = sr.getAllSessions(userDetails, true);
 					count += sessionInfoList.size();
 				}
 			}
 		}
 		return count;
 	}
+
 	public void ForgotPassword() {
-		Dialog aboutdialog=new Dialog();
-		Button cancelButton=new Button("Cancel");
+		Dialog aboutdialog = new Dialog();
+		Button cancelButton = new Button("Cancel");
 		H2 headline = new H2("Forgot Password?");
-		//H3 header=new H3("Meghalaya Biodiversity Board");
-		//H3 header2=new H3("People's Biodiversity Register (PBR): Version 2.0");
-		H5 body=new H5("Please Enter Your Email Id");
-		EmailField email=new EmailField();
+		// H3 header=new H3("Meghalaya Biodiversity Board");
+		// H3 header2=new H3("People's Biodiversity Register (PBR): Version 2.0");
+		H5 body = new H5("Please Enter Your Email Id");
+		EmailField email = new EmailField();
 		email.setPlaceholder("Email");
 		email.setMaxLength(20);
 		email.setMinLength(5);
-		Button submitbutton=new Button("Submit");
-		submitbutton.addClickListener(e-> Notification.show("To Be Implemented Using Email API. Public IP Required"));
-		headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0").set("font-size", "1.5em").set("font-weight",
-				"bold").set("text-decoration", "underline");
+		Button submitbutton = new Button("Submit");
+		submitbutton.addClickListener(e -> Notification.show("To Be Implemented Using Email API. Public IP Required"));
+		headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0").set("font-size", "1.5em")
+				.set("font-weight", "bold").set("text-decoration", "underline");
 		cancelButton.addClickListener(e -> aboutdialog.close());
-		HorizontalLayout buttonLayout1 = new HorizontalLayout(submitbutton,cancelButton);
+		HorizontalLayout buttonLayout1 = new HorizontalLayout(submitbutton, cancelButton);
 		buttonLayout1.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-		VerticalLayout dialogLayout1 = new VerticalLayout(headline, body, email,   buttonLayout1);
+		VerticalLayout dialogLayout1 = new VerticalLayout(headline, body, email, buttonLayout1);
 		dialogLayout1.setPadding(false);
 		dialogLayout1.setAlignItems(FlexComponent.Alignment.STRETCH);
 		dialogLayout1.getStyle().set("width", "300px").set("max-width", "100%");
 		aboutdialog.add(dialogLayout1);
 		aboutdialog.open();
 	}
+
 	public void invalidatePreviousSessionsForUser(String username) {
 		// Get active session count for the user
 		int activeSessionCount = getActiveSessionCountForUser(username);

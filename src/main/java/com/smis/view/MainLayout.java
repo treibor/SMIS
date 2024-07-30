@@ -85,11 +85,15 @@ public class MainLayout extends AppLayout{
 		SideNavItem home = new SideNavItem("Home", HomeView.class, LineAwesomeIcon.HOME_SOLID.create());
 		SideNavItem mla = new SideNavItem("MLA Schemes", WorkView.class, LineAwesomeIcon.PEOPLE_CARRY_SOLID.create());
 		SideNavItem releaseorder = new SideNavItem("Release Order", PrintView.class, LineAwesomeIcon.DONATE_SOLID.create());
-		SideNavItem master = new SideNavItem("Master", DistView.class, LineAwesomeIcon.MASTODON.create());
+		SideNavItem master = new SideNavItem("Master", MasterView.class, LineAwesomeIcon.MASTODON.create());
+		SideNavItem distmaster = new SideNavItem("District Master", DistView.class, LineAwesomeIcon.MASTODON.create());
 		SideNavItem report = new SideNavItem("Reports", ReportView.class, LineAwesomeIcon.RECEIPT_SOLID.create());
 		SideNavItem audit = new SideNavItem("Audit Trail", AuditView.class, LineAwesomeIcon.XBOX.create());
-		nav.addItem(home, mla, releaseorder, master, report, audit);
+		nav.addItem(home, mla, releaseorder, master,distmaster, report, audit);
 		master.setVisible(isAdmin);
+		distmaster.setVisible(isSuper);
+		releaseorder.setVisible(isUser);
+		audit.setVisible(isAdmin);
 			addToDrawer(new VerticalLayout(nav));
 	}
 	
@@ -130,8 +134,10 @@ public class MainLayout extends AppLayout{
 	private VerticalLayout createAboutDialog(Dialog dialog2) {
 		H2 headline = new H2("About");
         headline.getStyle().set("margin", "var(--lumo-space-m) 0 0 0").set("font-size", "1.5em").set("font-weight", "bold");
-        Label text1=new Label("Designed and Developed By NIC, Meghalaya");
-        Label text2=new Label("Contact: aiban.m@nic.in");
+        //Label text1=new Label("Designed and Developed By NIC, Meghalaya");
+        //Label text2=new Label("Contact: aiban.m@nic.in");
+        H3 text1=new H3("Designed and Developed By NIC, Meghalaya");
+    	H3 text2=new H3("Contact: aiban.m@nic.in");
         Button close=new Button("Close");
         close.addClickListener(e->dialog2.close());
         VerticalLayout dialogLayout1 = new VerticalLayout(headline, text1, text2, close);

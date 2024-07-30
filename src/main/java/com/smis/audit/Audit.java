@@ -43,4 +43,12 @@ public class Audit {
 		audit.setDetails(work.getWorkCode()+"- Sanction No:" +work.getSanctionNo() +", Sanction Date-"+work.getSanctionDate()+",Name-"+ work.getWorkName()+", Previous User-"+work.getEnteredBy()+", Previous Entry Date-"+work.getEnteredOn());
 		auditservice.updateAudit(audit);
 	}
+	public void saveLoginAudit(String action, String details) {
+		audit=new AuditTrail();
+		audit.setAction(action);
+		audit.setActionOn(LocalDateTime.now());
+		audit.setDetails(details);
+		audit.setIpAddress(getRealClientIp());
+		auditservice.updateAudit(audit);
+	}
 }

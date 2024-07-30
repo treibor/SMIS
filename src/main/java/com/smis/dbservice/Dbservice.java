@@ -14,15 +14,12 @@ import com.smis.entity.Constituency;
 import com.smis.entity.District;
 import com.smis.entity.Impldistrict;
 import com.smis.entity.Installment;
-import com.smis.entity.Installmentmp;
 import com.smis.entity.Scheme;
 import com.smis.entity.State;
 import com.smis.entity.Users;
 import com.smis.entity.Village;
 import com.smis.entity.Work;
-import com.smis.entity.Workmp;
 import com.smis.entity.Year;
-import com.smis.entity.Block;
 import com.smis.repository.BlockRepository;
 import com.smis.repository.ConstituencyRepository;
 import com.smis.repository.DistrictRepository;
@@ -82,7 +79,8 @@ public class Dbservice {
 	}
 
 	public boolean isUser() {
-		if (getLoggedUser().getRole().equals("USER") || getLoggedUser().getRole().equals("SUPER")) {
+		if (getLoggedUser().getRole().equals("USER") || getLoggedUser().getRole().equals("ADMIN")
+				|| getLoggedUser().getRole().equals("SUPER")) {
 			return true;
 		} else {
 			return false;
@@ -92,10 +90,10 @@ public class Dbservice {
 	public boolean isAdmin() {
 		if (getLoggedUser().getRole() == "Admin" || getLoggedUser().getRole().equals("ADMIN")
 				|| getLoggedUser().getRole().equals("SUPER")) {
-			
+
 			return true;
 		} else {
-			
+
 			return false;
 		}
 
@@ -135,11 +133,11 @@ public class Dbservice {
 	public long findMaxUserSerial() {
 
 		try {
-			
+
 			return urepo.findMaxSerial();
 
 		} catch (NullPointerException e) {
-			
+
 			return (long) 0;
 
 		}
@@ -192,7 +190,7 @@ public class Dbservice {
 	public void saveInstallment(Installment install) {
 		try {
 			if (install == null) {
-				
+
 				return;
 			}
 			irepo.save(install);
@@ -222,7 +220,7 @@ public class Dbservice {
 		try {
 			return wrepo.getFilteredWorks(scheme, getDistrict(), year, consti, block);
 		} catch (Exception e) {
-			
+
 			return Collections.emptyList();
 
 		}
@@ -232,7 +230,7 @@ public class Dbservice {
 		try {
 			return wrepo.getReportWorks(scheme, getDistrict(), year, consti, block);
 		} catch (Exception e) {
-			
+
 			return Collections.emptyList();
 
 		}
@@ -241,9 +239,11 @@ public class Dbservice {
 	public long getWorkCode() {
 		return wrepo.findMaxWorkCode(getDistrict());
 	}
+
 	public long getWorkCount(Constituency consti) {
 		return wrepo.findByConstituency(consti).size();
 	}
+
 	public long getWorkCount(Scheme scheme) {
 		return wrepo.findByScheme(scheme).size();
 	}
@@ -251,12 +251,12 @@ public class Dbservice {
 	public void saveWork(Work work) {
 		try {
 			if (work == null) {
-				
+
 				return;
 			}
 			wrepo.save(work);
 		} catch (Exception e) {
-			
+
 			notify.show("Unable to Save Work. Error:" + e, 5000, Position.TOP_CENTER);
 		}
 	}
@@ -275,7 +275,7 @@ public class Dbservice {
 	public void saveConstituency(Constituency consti) {
 		try {
 			if (consti == null) {
-				
+
 				return;
 			}
 			crepo.save(consti);
@@ -284,7 +284,7 @@ public class Dbservice {
 		}
 
 	}
-	
+
 	public void deleteConstituency(Constituency consti) {
 		try {
 			crepo.delete(consti);
@@ -292,12 +292,11 @@ public class Dbservice {
 			notify.show("Unable to Delete Constituency " + e, 5000, Position.TOP_CENTER);
 		}
 	}
-	
 
 	// save & Delete Year
 	public void saveYear(Year year) {
 		if (year == null) {
-			
+
 			return;
 		}
 		yrepo.save(year);
@@ -315,7 +314,7 @@ public class Dbservice {
 	public void saveScheme(Scheme scheme) {
 		try {
 			if (scheme == null) {
-				
+
 				return;
 			}
 			srepo.save(scheme);
@@ -338,7 +337,7 @@ public class Dbservice {
 	public void saveBlock(Block block) {
 		try {
 			if (block == null) {
-				
+
 				return;
 			}
 			brepo.save(block);
@@ -359,7 +358,7 @@ public class Dbservice {
 	public void saveState(State state) {
 		try {
 			if (state == null) {
-				
+
 				return;
 			}
 			strepo.save(state);
@@ -380,7 +379,7 @@ public class Dbservice {
 	// save & Delete district
 	public void saveDistrict(District dist) {
 		if (dist == null) {
-			
+
 			return;
 		}
 		drepo.save(dist);
@@ -405,7 +404,7 @@ public class Dbservice {
 	// save & Delete impldistrict
 	public void saveImplDistrict(Impldistrict dist) {
 		if (dist == null) {
-			
+
 			return;
 		}
 		idrepo.save(dist);
@@ -420,7 +419,7 @@ public class Dbservice {
 		if (isSuperAdmin()) {
 			return wrepo.findAll();
 		} else {
-			//return wrepo.findByDistrict(getDistrict());
+			// return wrepo.findByDistrict(getDistrict());
 			return wrepo.findByDistrictOrderByWorkCodeDesc(getDistrict());
 		}
 	}

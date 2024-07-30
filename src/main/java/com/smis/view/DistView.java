@@ -49,10 +49,11 @@ public class DistView extends VerticalLayout{
 	}
 	private void configureGrids() {
 		distgrid.setSizeFull();
-		distgrid.setColumns("deputyCommissioner", "districtCode");
+		distgrid.setColumns( "state","districtCode", "districtName", "districtAddress", "districtHq","districtLabel","deputyCommissioner");
 		//distgrid.addColumn(constituency->constituency.getDistrict().getDistrictName()).setSortable(true).setVisible(isSuperAdmin);
 		//distgrid.addColumn(constituency->constituency.getDistrict().getState().getStateName()).setSortable(true).setVisible(isSuperAdmin);
-		
+		//constigrid.asSingleSelect().addValueChangeListener(e-> editConsti(e.getValue()));
+		distgrid.asSingleSelect().addValueChangeListener(e->editDistrict(e.getValue()));
 	}
 	
 	private Component getContent() {
@@ -67,14 +68,10 @@ public class DistView extends VerticalLayout{
 		return content;
 	}
 	private Component getToolbar() {
-		Button addButton=new  Button("Constituency");
-		Button addYear=new  Button("Financial Year");
-		Button addScheme=new  Button("Scheme");
-		Button addBlock=new  Button("Block");
+		Button addButton=new  Button("New District");
 		addButton.setIcon(new Icon(VaadinIcon.PLUS_CIRCLE));
-		addButton.addClickListener(e-> addDistrict());
-		addBlock.setIcon(new Icon(VaadinIcon.PLUS_CIRCLE));
-		HorizontalLayout toolbar=new HorizontalLayout(addButton,addScheme, addBlock, addYear);
+		addButton.addClickListener(e->addDistrict());
+		HorizontalLayout toolbar=new HorizontalLayout(addButton);
 		toolbar.setWidthFull();
 		return toolbar;
 	}
