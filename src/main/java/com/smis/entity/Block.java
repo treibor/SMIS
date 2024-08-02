@@ -1,5 +1,7 @@
 package com.smis.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +13,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Block {
+public class Block implements Serializable{
+	 private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "block_generator")
 	@SequenceGenerator(name="block_generator", sequenceName = "block_seq", allocationSize=1)

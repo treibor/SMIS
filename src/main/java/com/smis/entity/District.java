@@ -1,5 +1,7 @@
 package com.smis.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +14,8 @@ import jakarta.validation.constraints.NotNull;
 
 
 @Entity
-public class District {
+public class District implements Serializable{
+	 private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "district_generator")
 	@SequenceGenerator(name="district_generator", sequenceName = "district_seq", allocationSize=1)

@@ -1,5 +1,7 @@
 package com.smis.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,7 +12,8 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
-public class Village {
+public class Village implements Serializable{
+	 private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "village_generator")
 	@SequenceGenerator(name="village_generator", sequenceName = "village_seq", allocationSize=1)

@@ -1,5 +1,6 @@
 package com.smis.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +22,8 @@ import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name="AuditTrail")
-public class AuditTrail {
+public class AuditTrail implements Serializable {
+	 private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "audit_generator")
 	@SequenceGenerator(name="audit_generator", sequenceName = "audit_seq", allocationSize=1)

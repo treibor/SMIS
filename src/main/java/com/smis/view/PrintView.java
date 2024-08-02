@@ -342,7 +342,7 @@ public class PrintView extends HorizontalLayout{
 			complDate = sancDate.plusMonths(schemeduration);
 			compldate.setValue(complDate);
 			instdate.setValue(installsingle.getInstallmentDate());
-			populateEditor(installsingle.getWork());
+			populateEditor(installs);
 			//String letterNo=installsingle.getInstallmentLetter()+"";
 			try {
 				instletter.setValue(installsingle.getInstallmentLetter());
@@ -362,8 +362,12 @@ public class PrintView extends HorizontalLayout{
 		}
 	}
 	
-	public void populateEditor(Work work) {
-		
+	public void populateEditor(List<Installment> installs) {
+		Work work=installs.get(0).getWork();
+		BigDecimal total = BigDecimal.ZERO;
+        for (Installment installment : installs) {
+            total = total.add(installment.getInstallmentAmount());
+        }
 		String mla=work.getConstituency().getConstituencyMLA();
 		String consti=work.getConstituency().getConstituencyName();
 		String dept=work.getScheme().getSchemeDept();
@@ -382,19 +386,19 @@ public class PrintView extends HorizontalLayout{
 		if(work.getScheme().getSchemeReport()==1){
 		inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
 				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+mla+", MLA, "+consti+" Constituency for favour of information.&nbsp;&nbsp;</span></li>"
-				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Director, C&RD, "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
-				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, "+dept+", "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
+				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Director, "+dept+", "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
+				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, C&RD, "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
 				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines and to submit Utilisation Certificates, Completion Report on or before "+complDate.format(formatter)+".&nbsp;</span><br>&nbsp;</li>"
 				+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
 		}else if(work.getScheme().getSchemeReport()==2){
 			inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+mla+", MLA, "+consti+" Constituency for favour of information.&nbsp;&nbsp;</span></li>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Under Secretary to the Government of "+state+", "+dept+", "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
-					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Director, C&RD, "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
-					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, "+dept+", "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
-					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines and to submit Utilisation Certificates, Completion Report on or before "+complDate.format(formatter)+". The cheque No. ______ of Rs. ____ is enclosed herewith for implementation of the scheme. He/She will also forward relevant records including APRs and UC to The Deputy Commissioner. He/She would keep custody of all records of the scheme at the District level on completion of the scheme for purpose of future audit under para 3.&nbsp;</span><br>&nbsp;</li>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Director, "+dept+", "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, C&RD, "+districtname+", "+districthq+" for information.&nbsp;&nbsp;</span></li>"
+					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines and to submit Utilisation Certificates, Completion Report on or before "+complDate.format(formatter)+". The cheque No. ______ of Rs."+total+" is enclosed herewith for implementation of the scheme. He/She will also forward relevant records including APRs and UC to The Deputy Commissioner. He/She would keep custody of all records of the scheme at the District level on completion of the scheme for purpose of future audit under para 3.&nbsp;</span><br>&nbsp;</li>"
 					+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
-			} 
+		} 
 		else if(work.getScheme().getSchemeReport()==3){
 			inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+mla+", MLA, "+consti+" Constituency for favour of information.&nbsp;&nbsp;</span></li>"
@@ -402,13 +406,13 @@ public class PrintView extends HorizontalLayout{
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, C&RD, "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines. The "+bdo+" shall release the amount to the beneficiary in one installment for amounts below one Lakh and in two installments for amount above one Lakh and for purchase shall release in one installment only. The "+bdo+" will also forward relevant records, completion report and UC to the Deputy Commissioner accompanied by photographic evidence to enable onward submission to the Chief Minister's Secretariat.&nbsp;</span><br>&nbsp;</li>"
 					+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
-			} else if(work.getScheme().getSchemeReport()==4){
+		} else if(work.getScheme().getSchemeReport()==4){
 				inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
 						+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Under Secretary to the Government of "+state+", Chief Minister's Secretariat, "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
 						+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, C&RD, "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
 						+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines. The "+bdo+" shall release the amount to the beneficiary in one installment for amounts below one Lakh and in two installments for amount above one Lakh and for purchase shall release in one installment only. The "+bdo+" will also forward relevant records, completion report and UC to the Deputy Commissioner accompanied by photographic evidence to enable onward submission to the Chief Minister's Secretariat.&nbsp;</span><br>&nbsp;</li>"
 						+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
-				}
+		}
 		
 	}
 

@@ -1,5 +1,6 @@
 package com.smis.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Entity;
@@ -14,7 +15,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Scheme {
+public class Scheme implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "scheme_generator")
 	@SequenceGenerator(name="scheme_generator", initialValue = 1, sequenceName = "scheme_sequence", allocationSize = 1)

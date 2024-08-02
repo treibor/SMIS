@@ -272,6 +272,7 @@ public class ReportView extends VerticalLayout {
 				} else if (reportTypemla.getValue() == "General Report") {
 					List<Work> works = service.getReportWorks(scheme.getValue(), consti.getValue(), block.getValue(),
 							year.getValue());
+					System.out.println("Works Total:"+works.size());
 					Resource resource = new ClassPathResource("report/Generalmla.jrxml");
 					InputStream employeeReportStream = resource.getInputStream();
 					JasperReport jasperReport = JasperCompileManager.compileReport(employeeReportStream);

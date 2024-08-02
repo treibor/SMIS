@@ -1,5 +1,7 @@
 package com.smis.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 
 @Entity
-public class State {
+public class State implements Serializable{
+	 private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "state_generator")
 	@SequenceGenerator(name="state_generator", sequenceName = "state_seq", allocationSize=1)

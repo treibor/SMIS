@@ -431,7 +431,7 @@
 				<textFieldExpression><![CDATA["Total Amount Released:   Rs."]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Detail" x="350" y="44" width="204" height="30" uuid="28da787f-889f-4647-b384-0efb06034d39">
+				<reportElement style="Detail" x="350" y="63" width="204" height="30" uuid="28da787f-889f-4647-b384-0efb06034d39">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -440,7 +440,7 @@
 				<textFieldExpression><![CDATA[$F{work.district.deputyCommissioner}+",  \n "+$F{work.district.districtName}+", "+$F{work.district.districtHq}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Detail" x="0" y="86" width="270" height="15" uuid="1cd40172-5a2b-49e8-a605-cdc47a38ad09">
+				<reportElement style="Detail" x="0" y="102" width="270" height="15" uuid="1cd40172-5a2b-49e8-a605-cdc47a38ad09">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -449,23 +449,23 @@
 				<textFieldExpression><![CDATA["Memo No. "+$F{installmentLetter}+"-A"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Detail" x="350" y="86" width="204" height="15" uuid="bf523d20-a1e5-4f37-bf9f-0f1595aebbee">
+				<reportElement style="Detail" x="350" y="102" width="204" height="15" uuid="bf523d20-a1e5-4f37-bf9f-0f1595aebbee">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Dated  "+$F{work.district.districtHq}+", the "+new SimpleDateFormat("dd/MMM/yyyy").format(new java.util.Date())]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight">
-				<reportElement x="0" y="105" width="554" height="30" uuid="db36b2ef-15c1-4945-8fac-99b1547b5f7a">
+				<reportElement x="0" y="121" width="554" height="30" uuid="db36b2ef-15c1-4945-8fac-99b1547b5f7a">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[$P{copyTo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Detail" positionType="Float" x="350" y="156" width="204" height="30" uuid="ede806e2-c6ee-443e-8fdc-a4f75b2e7466">
+				<reportElement style="Detail" positionType="Float" x="350" y="172" width="204" height="30" uuid="ede806e2-c6ee-443e-8fdc-a4f75b2e7466">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
 				</reportElement>
 				<textElement textAlignment="Center">
