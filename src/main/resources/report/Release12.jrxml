@@ -201,7 +201,7 @@
 		<property name="com.jaspersoft.studio.field.label" value="year_label"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="year"/>
 	</field>
-	<variable name="Sum_Installments" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+	<variable name="Sum_Installments" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{installmentAmount}]]></variableExpression>
 	</variable>
 	<background>
@@ -412,7 +412,7 @@
 	</detail>
 	<summary>
 		<band height="207" splitType="Stretch">
-			<textField pattern="###0.###;(###0.###-)">
+			<textField evaluationTime="Report" pattern="###0.###;(###0.###-)">
 				<reportElement style="Detail" x="470" y="3" width="83" height="15" uuid="0ecba7ab-fe06-43f9-b8ba-a78bb4e8c2dc">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="394d3c07-5f3d-45a0-878f-33e5fd03a8fe"/>
 				</reportElement>

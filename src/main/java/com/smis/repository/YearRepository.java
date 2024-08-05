@@ -11,5 +11,7 @@ public interface YearRepository extends JpaRepository<Year, Long>{
 
 	
 	List<Year> findByDistrictAndInUseOrderByYearNameAsc(District district, boolean inUse);
+	List<Year> findByDistrictAndInUseOrderByYearNameDesc(District district, boolean inUse);
 	List<Year> findByDistrict(District district);
+	List<Year> findByDistrictOrderByYearNameDesc(District district);
 }

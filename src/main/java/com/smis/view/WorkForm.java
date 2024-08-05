@@ -24,8 +24,8 @@ import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -33,99 +33,125 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.shared.Registration;
 
-public class WorkForm extends VerticalLayout{
+public class WorkForm extends VerticalLayout {
 	Dbservice service;
 	private Work work;
 	private Installment installment;
-	Binder <Work> binder=new BeanValidationBinder<>(Work.class);
+	Binder<Work> binder = new BeanValidationBinder<>(Work.class);
 	ComboBox<Scheme> scheme = new ComboBox("Schemes");
-	ComboBox<Year> year=new ComboBox("Financial Year");
-	ComboBox<Constituency> constituency=new ComboBox("Assembly Constituency");
-	ComboBox<Block> block=new ComboBox("Block/MB");
-	ComboBox<Village> village=new ComboBox("Village");
-	//TextField workName=new TextField("Work Name");
-	TextArea workName=new TextArea("Work Name");
-	IntegerField noOfInstallments=new IntegerField("No Of Installments");
-	//NumberField noOfInstallments=new NumberField("No Of Installments");
-	//NumberField workAmount=new NumberField("Sanctioned Amount");
-	BigDecimalField workAmount= new BigDecimalField("Sanctioned Amount");
-	TextField sanctionNo=new TextField("Sanction Number");
-	DatePicker sanctionDate=new DatePicker("Sanction Date");
-	Button save=new Button("Save");
-	Button delete=new Button("Delete");
-	Button close=new Button("Close");
-	Button installsave=new Button("Save");
-	Button installclose=new Button("Close");
-	Button ucsave=new Button("Save");
-	Button ucclose=new Button("Close");
-	//ConfirmDialog cdialog;
-	BigDecimalField installmentAmount=new BigDecimalField("Amount");
-	//TextField installmentCheque =new TextField("Cheque Number");
-	TextField ucletter=new TextField("UC Number");
-	DatePicker ucDate=new DatePicker("UC Date");
-	Notification notify=new Notification();
-	Accordion accordion=new Accordion();
-	AccordionPanel workaccordion=new AccordionPanel();
-	AccordionPanel installaccordion=new AccordionPanel();
-	AccordionPanel ucaccordion=new AccordionPanel();
-	//Label installmentmaster=new Label("");
-	H3 installmentmaster=new H3("");
-	H3 ucmaster=new H3("");
-	//Label ucmaster=new Label("");
+	ComboBox<Year> year = new ComboBox("Financial Year");
+	ComboBox<Constituency> constituency = new ComboBox("Assembly Constituency");
+	ComboBox<Block> block = new ComboBox("Block/MB");
+	ComboBox<Village> village = new ComboBox("Village");
+	// TextField workName=new TextField("Work Name");
+	// TextArea workName=new TextArea("Work Name");
+	ComboBox<String> workName = new ComboBox("Work Name");
+	IntegerField noOfInstallments = new IntegerField("No Of Installments");
+	// NumberField noOfInstallments=new NumberField("No Of Installments");
+	// NumberField workAmount=new NumberField("Sanctioned Amount");
+	BigDecimalField workAmount = new BigDecimalField("Sanctioned Amount");
+	TextField sanctionNo = new TextField("Sanction Number");
+	DatePicker sanctionDate = new DatePicker("Sanction Date");
+	Button save = new Button("Save");
+	Button delete = new Button("Delete");
+	Button close = new Button("Close");
+	Button installsave = new Button("Save");
+	Button installclose = new Button("Close");
+	Button ucsave = new Button("Save");
+	Button ucclose = new Button("Close");
+	// ConfirmDialog cdialog;
+	BigDecimalField installmentAmount = new BigDecimalField("Amount");
+	// TextField installmentCheque =new TextField("Cheque Number");
+	TextField ucletter = new TextField("UC Number");
+	DatePicker ucDate = new DatePicker("UC Date");
+	Notification notify = new Notification();
+	Accordion accordion = new Accordion();
+	AccordionPanel workaccordion = new AccordionPanel();
+	AccordionPanel installaccordion = new AccordionPanel();
+	AccordionPanel ucaccordion = new AccordionPanel();
+	// Label installmentmaster=new Label("");
+	H3 installmentmaster = new H3("");
+	H3 ucmaster = new H3("");
+	// Label ucmaster=new Label("");
 	boolean isAdmin;
 	boolean isUser;
+
 	public WorkForm(Dbservice service) {
-		block.addValueChangeListener(e->getVillages(e.getValue()));
-		this.service=service;
+		block.addValueChangeListener(e -> getVillages(e.getValue()));
+		this.service = service;
 		binder.bindInstanceFields(this);
-		isAdmin=service.isAdmin();
-		isUser=service.isUser();
+		isAdmin = service.isAdmin();
+		isUser = service.isUser();
 		add(createFinalPanel());
-		
+
 	}
-	
+
 	public void getVillages(Block block) {
 		village.setItems(service.getVillage(block));
-		village.setItemLabelGenerator(village->village.getVillageName());
+		village.setItemLabelGenerator(village -> village.getVillageName());
 	}
+
 	public Component createFinalPanel() {
-		
-		//accordion.add("Work", new VerticalLayout(configureForm(), createButtonsLayout()));
-		workaccordion=accordion.add("Work", new VerticalLayout(configureForm(), createButtonsLayout()));
-		installaccordion=accordion.add("Installments", new VerticalLayout(configureInstallmentForm(), createInstallButtons()));
-		ucaccordion=accordion.add("Utilisation Certificate", new VerticalLayout(configureUcForm(), createUcButtons()));
+
+		// accordion.add("Work", new VerticalLayout(configureForm(),
+		// createButtonsLayout()));
+		workaccordion = accordion.add("Work", new VerticalLayout(configureForm(), createButtonsLayout()));
+		installaccordion = accordion.add("Installments",
+				new VerticalLayout(configureInstallmentForm(), createInstallButtons()));
+		ucaccordion = accordion.add("Utilisation Certificate",
+				new VerticalLayout(configureUcForm(), createUcButtons()));
 		return accordion;
 	}
+
 	public Component configureForm() {
-		//noOfInstallments.setValue(2);
+		// noOfInstallments.setValue(2);
 		noOfInstallments.setStepButtonsVisible(true);
 		noOfInstallments.setMin(1);
 		noOfInstallments.setMax(5);
-		//noOfInstallments.setAutocorrect(true);
-		workName.setMaxHeight("100px");
-		workName.setErrorMessage("Hello");
-		//workName.val
+		// noOfInstallments.setAutocorrect(true);
+		// workName.setHeight("200px");
+		// workName.setErrorMessage("Hello");
+		// workName.val
 		noOfInstallments.setValue(1);
 		scheme.setItems(service.getAllSchemes());
 		year.setItems(service.getAllYears());
 		constituency.setItems(service.getAllConstituencies());
 		block.setItems(service.getAllBlocks());
-		scheme.setItemLabelGenerator(Scheme:: getSchemeName);
-		year.setItemLabelGenerator(Year:: getYearName);
-		constituency.setItemLabelGenerator(constituency ->constituency.getConstituencyNo()+"-"+constituency.getConstituencyName()+"-"+constituency.getConstituencyMLA());
-		block.setItemLabelGenerator(block->block.getBlockName());
-		workName.setMinLength(5);
-		workName.setMaxLength(999);
+		scheme.setItemLabelGenerator(Scheme::getSchemeName);
+		year.setItemLabelGenerator(Year::getYearName);
+		constituency.setItemLabelGenerator(constituency -> constituency.getConstituencyNo() + "-"
+				+ constituency.getConstituencyName() + "-" + constituency.getConstituencyMLA());
+		block.setItemLabelGenerator(block -> block.getBlockName());
+		// workName.setMinLength(5);
+		// workName.setMaxLength(999);
+		// Work work=new Work();
+		workName.setItems(service.getWorkNames());
+		workName.setAllowCustomValue(true);
+		workName.setRenderer(new ComponentRenderer<>(item -> {
+		    Div div = new Div();
+		    div.setText(item);
+		    div.getStyle().set("white-space", "pre-wrap");
+		    div.getStyle().set("word-wrap", "break-word");
+		    div.setWidth("300px"); // Adjust width as needed
+		    //div.addClassName("custom-combobox-item"); // Apply the custom class
+		    return div;
+		}));		
+		workName.addCustomValueSetListener(e -> {
+			String workname = e.getDetail();
+			workName.setItems(workname);
+			workName.setValue(workname);
+		});
 		sanctionNo.setMinLength(2);
-		sanctionNo.setMaxLength(100);
-		//village.setItemLabelGenerator(village->village.getVillageName());
-		FormLayout form1=new FormLayout();
+		sanctionNo.setMaxLength(50);
+		workName.addClassName("custom-combobox");
+		// village.setItemLabelGenerator(village->village.getVillageName());
+		FormLayout form1 = new FormLayout();
 		form1.setWidth("100%");
 		form1.add(scheme, 1);
 		form1.add(year, 1);
@@ -137,37 +163,35 @@ public class WorkForm extends VerticalLayout{
 		form1.add(noOfInstallments, 1);
 		form1.add(sanctionNo, 1);
 		form1.add(sanctionDate, 1);
-		//form1.add(createButtonsLayout(), 2);
-		form1.setResponsiveSteps(
-		        new ResponsiveStep("0", 2),
-		        // Use two columns, if layout's width exceeds 500px
-		        new ResponsiveStep("500px", 2)
-		);
+		// form1.add(createButtonsLayout(), 2);
+		form1.setResponsiveSteps(new ResponsiveStep("0", 2),
+				// Use two columns, if layout's width exceeds 500px
+				new ResponsiveStep("500px", 2));
 		return form1;
 	}
-	
+
 	private Component createButtonsLayout() {
-		//delete.setEnabled(isAdmin);
-		//save.setWidthFull();
-		//delete.setWidthFull();
-		//close.setWidthFull();
+		// delete.setEnabled(isAdmin);
+		// save.setWidthFull();
+		// delete.setWidthFull();
+		// close.setWidthFull();
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		save.addClickShortcut(Key.ENTER);
 		close.addClickShortcut(Key.ESCAPE);
 		save.addClickListener(event -> validatandSave());
-		//delete.addClickListener(event -> fireEvent(new DeleteEvent(this, work)));
+		// delete.addClickListener(event -> fireEvent(new DeleteEvent(this, work)));
 		delete.addClickListener(event -> confirmDelete(work));
 		close.addClickListener(event -> fireEvent(new CloseEvent(this)));
-		HorizontalLayout hl1=new HorizontalLayout(save, delete, close);
-		//return new HorizontalLayout(save, delete, close);
+		HorizontalLayout hl1 = new HorizontalLayout(save, delete, close);
+		// return new HorizontalLayout(save, delete, close);
 		hl1.setWidthFull();
 		return hl1;
-		
+
 	}
 
 	public void confirmDelete(Work work) {
-		ConfirmDialog dialog=new ConfirmDialog();
+		ConfirmDialog dialog = new ConfirmDialog();
 		if (work == null) {
 
 		} else {
@@ -181,37 +205,38 @@ public class WorkForm extends VerticalLayout{
 			dialog.setConfirmText("Delete");
 			dialog.addConfirmListener(event -> fireEvent(new DeleteEvent(this, work)));
 			dialog.open();
-			
+
 		}
 	}
-	
+
 	public Component configureInstallmentForm() {
 		FormLayout form2 = new FormLayout();
 		form2.setWidth("100%");
 		form2.add(installmentmaster, 2);
 		form2.add(installmentAmount, 2);
-		//form2.add(installmentCheque, 2);
+		// form2.add(installmentCheque, 2);
 		form2.setResponsiveSteps(new ResponsiveStep("0", 2),
 				// Use two columns, if layout's width exceeds 500px
 				new ResponsiveStep("500px", 2));
 
 		return form2;
 	}
+
 	private Component createInstallButtons() {
 		installsave.setEnabled(isUser);
-		//installsave.setWidthFull();
-		//installclose.setWidthFull();
+		// installsave.setWidthFull();
+		// installclose.setWidthFull();
 		installsave.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		installsave.addClickShortcut(Key.ENTER);
 		installclose.addClickShortcut(Key.ESCAPE);
 		installsave.addClickListener(event -> SaveInstallments());
 		installclose.addClickListener(event -> fireEvent(new CloseEvent(this)));
-		HorizontalLayout hl1=new HorizontalLayout(installsave, installclose);
-		//return new HorizontalLayout(save, delete, close);
+		HorizontalLayout hl1 = new HorizontalLayout(installsave, installclose);
+		// return new HorizontalLayout(save, delete, close);
 		hl1.setWidthFull();
 		return hl1;
 	}
-	
+
 	public Component configureUcForm() {
 		FormLayout form2 = new FormLayout();
 		form2.setWidth("100%");
@@ -224,34 +249,37 @@ public class WorkForm extends VerticalLayout{
 
 		return form2;
 	}
+
 	private Component createUcButtons() {
 		ucsave.setEnabled(isUser);
-		//ucsave.setWidthFull();
-		//ucclose.setWidthFull();
+		// ucsave.setWidthFull();
+		// ucclose.setWidthFull();
 		ucsave.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		ucsave.addClickShortcut(Key.ENTER);
 		ucclose.addClickShortcut(Key.ESCAPE);
 		ucsave.addClickListener(event -> saveUc());
 		ucclose.addClickListener(event -> fireEvent(new CloseEvent(this)));
-		HorizontalLayout hl1=new HorizontalLayout(ucsave, ucclose);
-		//return new HorizontalLayout(save, delete, close);
+		HorizontalLayout hl1 = new HorizontalLayout(ucsave, ucclose);
+		// return new HorizontalLayout(save, delete, close);
 		hl1.setWidthFull();
 		return hl1;
 	}
+
 	private void validatandSave() {
 		if (work == null) {
 			notify.show("Unable To Identify The Work", 5000, Position.TOP_CENTER);
-		} else if(noOfInstallments.getValue()<1 || noOfInstallments.getValue()>5){
-			notify.show("Failure: Number of Installments Should Be Between 1 and 5",5000, Position.TOP_CENTER);
-		}else if(workAmount.getValue()==null||workAmount.getValue().compareTo(BigDecimal.ZERO)==-1 ||workAmount.getValue().compareTo(BigDecimal.ZERO)==0){
-			notify.show("Failure: Amount  Must Be Entered .",5000, Position.TOP_CENTER);
-		}else if(sanctionDate.getValue()==null){
-			notify.show("Failure: Sanction Date Must Be Entered .",5000, Position.TOP_CENTER);
-		}else {
+		} else if (noOfInstallments.getValue() < 1 || noOfInstallments.getValue() > 5) {
+			notify.show("Failure: Number of Installments Should Be Between 1 and 5", 5000, Position.TOP_CENTER);
+		} else if (workAmount.getValue() == null || workAmount.getValue().compareTo(BigDecimal.ZERO) == -1
+				|| workAmount.getValue().compareTo(BigDecimal.ZERO) == 0) {
+			notify.show("Failure: Amount  Must Be Entered .", 5000, Position.TOP_CENTER);
+		} else if (sanctionDate.getValue() == null) {
+			notify.show("Failure: Sanction Date Must Be Entered .", 5000, Position.TOP_CENTER);
+		} else {
 			try {
-				long singlework=work.getWorkCode();
+				long singlework = work.getWorkCode();
 				binder.writeBean(work);
-				long newWorkCode=service.getWorkCode() + 1;
+				long newWorkCode = service.getWorkCode() + 1;
 				if (singlework == 0) {
 					work.setWorkCode(newWorkCode);
 					work.setWorkStatus("Entered");
@@ -260,79 +288,90 @@ public class WorkForm extends VerticalLayout{
 				}
 				work.setDistrict(service.getDistrict());
 				fireEvent(new SaveEvent(this, work));
-				//notify.show("New Work Entered Successfully with Work Code: "+newWorkCode, 5000, Position.TOP_CENTER);
-				
-			}catch(Exception e) {
-				notify.show("Unable to Save Work. Please Enter All Mandatory Fields"+e, 5000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
-				
+				// notify.show("New Work Entered Successfully with Work Code: "+newWorkCode,
+				// 5000, Position.TOP_CENTER);
+
+			} catch (Exception e) {
+				notify.show("Unable to Save Work. Please Enter All Mandatory Fields" + e, 5000, Position.TOP_CENTER)
+						.addThemeVariants(NotificationVariant.LUMO_ERROR);
+
 			}
 		}
 	}
+
 	public void setWork(Work work) {
-        this.work = work; 
-        binder.readBean(work); 
-    }
-	
+		this.work = work;
+		binder.readBean(work);
+	}
+
 	private void SaveInstallments() {
-		int workinstallments=work.getNoOfInstallments();
-		int tableinstallments=service.getInstallments(work).size();
-		
-		int toEnterInstallment=tableinstallments+1;
+		int workinstallments = work.getNoOfInstallments();
+		int tableinstallments = service.getInstallments(work).size();
+
+		int toEnterInstallment = tableinstallments + 1;
 		if (work == null) {
 			notify.show("Unable To Retrieve Work. Please Select Work From The Table");
-		} else if(workinstallments==tableinstallments){
-			notify.show("Failure: All Installments Have Been Entered For The Selected Work.",5000, Position.TOP_CENTER);
-		}else if(installmentAmount.getValue()==null ||installmentAmount.getValue().compareTo(BigDecimal.ZERO)==0||installmentAmount.getValue().compareTo(BigDecimal.ZERO)==-1){
-			notify.show("Failure:Please Enter A Valid Amount .",5000, Position.TOP_CENTER);
-		}else if(work.getWorkAmount().compareTo(installmentAmount.getValue())==-1){
-			notify.show("Failure: Please Check Released Amount. It Should Be less Or Equal To The Sanctioned Amount",5000, Position.TOP_CENTER);
-		}else if((calculateReleasedInstAmount(work).add(installmentAmount.getValue())).compareTo(work.getWorkAmount())==1 ){
-			notify.show("Failure: Released Amount:"+calculateReleasedInstAmount(work)+" & Amount To Be Released has Exceeded The Sanctioned Amount:"+work.getWorkAmount()+"",5000, Position.TOP_CENTER);
-		}else{
+		} else if (workinstallments == tableinstallments) {
+			notify.show("Failure: All Installments Have Been Entered For The Selected Work.", 5000,
+					Position.TOP_CENTER);
+		} else if (installmentAmount.getValue() == null || installmentAmount.getValue().compareTo(BigDecimal.ZERO) == 0
+				|| installmentAmount.getValue().compareTo(BigDecimal.ZERO) == -1) {
+			notify.show("Failure:Please Enter A Valid Amount .", 5000, Position.TOP_CENTER);
+		} else if (work.getWorkAmount().compareTo(installmentAmount.getValue()) == -1) {
+			notify.show("Failure: Please Check Released Amount. It Should Be less Or Equal To The Sanctioned Amount",
+					5000, Position.TOP_CENTER);
+		} else if ((calculateReleasedInstAmount(work).add(installmentAmount.getValue()))
+				.compareTo(work.getWorkAmount()) == 1) {
+			notify.show("Failure: Released Amount:" + calculateReleasedInstAmount(work)
+					+ " & Amount To Be Released has Exceeded The Sanctioned Amount:" + work.getWorkAmount() + "", 5000,
+					Position.TOP_CENTER);
+		} else {
 			try {
-				Installment installment=new Installment();
+				Installment installment = new Installment();
 				installment.setInstallmentAmount(installmentAmount.getValue());
-				installment.setInstallmentNo(service.getInstallments(work).size()+1);
+				installment.setInstallmentNo(service.getInstallments(work).size() + 1);
 				installment.setInstallmentAmountPrev(calculateReleasedInstAmount(work));
 				installment.setWork(work);
 				service.saveInstallment(installment);
-				updateWork("Installment "+toEnterInstallment+"");
-				notify.show("Installment No:"+toEnterInstallment+" Entered Sucessfully",5000, Position.TOP_CENTER);
-				//notify.show("Installment No:"+toEnterInstallment+" Entered Sucessfully",5000, Position.TOP_CENTER);
-			}catch(Exception e) {
-				notify.show("Unable to Save Work"+e);
-				
+				updateWork("Installment " + toEnterInstallment + "");
+				notify.show("Installment No:" + toEnterInstallment + " Entered Sucessfully", 5000, Position.TOP_CENTER);
+				// notify.show("Installment No:"+toEnterInstallment+" Entered Sucessfully",5000,
+				// Position.TOP_CENTER);
+			} catch (Exception e) {
+				notify.show("Unable to Save Work" + e);
+
 			}
 		}
 	}
+
 	public BigDecimal calculateReleasedInstAmount(Work work) {
 		int tablecount = service.getInstallments(work).size();
-	
+
 		if (tablecount == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			BigDecimal totalamount=BigDecimal.ZERO;
+			BigDecimal totalamount = BigDecimal.ZERO;
 			for (int i = 0; i < tablecount; i++) {
 				BigDecimal amount = service.getInstallments(work).get(i).getInstallmentAmount();
 				totalamount = totalamount.add(amount);
 			}
 			return totalamount;
 		}
-		
+
 	}
-	
+
 	public void saveUc() {
-		int tableinstallments=service.getInstallments(work).size();
-		int toEnterInstallment=tableinstallments;
-		int index=tableinstallments-1;
+		int tableinstallments = service.getInstallments(work).size();
+		int toEnterInstallment = tableinstallments;
+		int index = tableinstallments - 1;
 		if (ucletter.getValue() == null || ucletter.equals("") || ucDate.getValue() == null
 				|| ucDate.getValue().equals(null)) {
 			notify.show("Please Enter All Values", 5000, Position.TOP_CENTER);
-		} else if(ucDate.getValue().isBefore(service.getInstallments(work).get(index).getInstallmentDate())){
+		} else if (ucDate.getValue().isBefore(service.getInstallments(work).get(index).getInstallmentDate())) {
 			notify.show("UC Date Cannot Be Before Installment Release Date", 5000, Position.TOP_CENTER);
-		}else {
+		} else {
 			try {
-				this.installment=service.getInstallments(work).get(index);
+				this.installment = service.getInstallments(work).get(index);
 				installment.setUcDate(ucDate.getValue());
 				installment.setUcLetter(ucletter.getValue());
 				service.saveInstallment(installment);
@@ -344,7 +383,7 @@ public class WorkForm extends VerticalLayout{
 				notify.show("UC:" + toEnterInstallment + " Entered Sucessfully", 5000, Position.TOP_CENTER);
 			} catch (Exception e) {
 				notify.show("Unable to Save Work" + e);
-				
+
 			}
 		}
 	}
@@ -356,19 +395,20 @@ public class WorkForm extends VerticalLayout{
 			fireEvent(new SaveEvent(this, work));
 		} catch (Exception e) {
 			notify.show("Unable to Save Work" + e);
-			
+
 		}
 
 	}
-	//Form Events for Save Delete
-	
-	public static abstract class WorkFormEvent extends ComponentEvent<WorkForm>{
+	// Form Events for Save Delete
+
+	public static abstract class WorkFormEvent extends ComponentEvent<WorkForm> {
 		private Work work;
-		
+
 		protected WorkFormEvent(WorkForm source, Work work) {
 			super(source, false);
-			this.work=work;
+			this.work = work;
 		}
+
 		public Work getWork() {
 			return work;
 		}
@@ -393,14 +433,8 @@ public class WorkForm extends VerticalLayout{
 		}
 	}
 
-	public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,ComponentEventListener<T> listener) {
+	public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
+			ComponentEventListener<T> listener) {
 		return getEventBus().addListener(eventType, listener);
 	}
 }
-	
-	
-	
-	
-	
-	
-

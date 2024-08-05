@@ -1,5 +1,6 @@
 package com.smis.dbservice;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +36,11 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 
 @Service
-public class Dbservice {
+public class Dbservice implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final WorkRepository wrepo;
 	private final YearRepository yrepo;
 	private final SchemeRepository srepo;
@@ -428,7 +433,7 @@ public class Dbservice {
 		if (isSuperAdmin()) {
 			return yrepo.findAll();
 		} else {
-			return yrepo.findByDistrictAndInUseOrderByYearNameAsc(getDistrict(), true);
+			return yrepo.findByDistrictAndInUseOrderByYearNameDesc(getDistrict(), true);
 		}
 
 	}
@@ -437,7 +442,8 @@ public class Dbservice {
 		if (isSuperAdmin()) {
 			return yrepo.findAll();
 		} else {
-			return yrepo.findByDistrict(getDistrict());
+			//return yrepo.findByDistrict(getDistrict());
+			return yrepo.findByDistrictOrderByYearNameDesc(getDistrict());
 		}
 
 	}
@@ -469,7 +475,9 @@ public class Dbservice {
 		}
 		// return crepo.findAll();
 	}
-
+	public List<String> getWorkNames(){
+		return wrepo.findWorkNames();
+	}
 	public List<Constituency> getAllConstituenciesWIthNotInUse() {
 		if (isSuperAdmin()) {
 			return crepo.findAll();

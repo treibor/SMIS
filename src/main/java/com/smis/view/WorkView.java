@@ -17,9 +17,9 @@ import com.smis.entity.Year;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -30,12 +30,17 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import jakarta.annotation.security.RolesAllowed;
+import software.xdev.vaadin.grid_exporter.GridExporter;
 
 @PageTitle("MLA Schemes")
 @Route(value = "mlaschemes", layout = MainLayout.class)
 @RolesAllowed({ "USER", "SUPER", "ADMIN" })
 //@CssImport(value = "../components/vaadin-grid.css", themeFor = "vaadin-grid")
 public class WorkView extends VerticalLayout {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Dbservice service;
 	Grid<Work> grid = new Grid<>(Work.class);
 	TextField filterText = new TextField();
@@ -43,6 +48,7 @@ public class WorkView extends VerticalLayout {
 	ComboBox<Constituency> consti = new ComboBox();
 	ComboBox<Year> year = new ComboBox();
 	ComboBox<Scheme> scheme = new ComboBox();
+	Button expButton = new Button("Export");
 	// Checkbox displayFilter= new Checkbox("Show More Filters");
 	WorkForm workform;
 	boolean isAdmin;
@@ -62,8 +68,7 @@ public class WorkView extends VerticalLayout {
 		closeEditor();
 
 	}
-
-	private void configureGrid() {
+	private void configureCombos() {
 		block.setItems(service.getAllBlocks());
 		// block.setClearButtonVisible(true);
 		consti.setItems(service.getAllConstituencies());
@@ -86,6 +91,10 @@ public class WorkView extends VerticalLayout {
 		consti.addValueChangeListener(e -> filterGrid());
 		year.addValueChangeListener(e -> filterGrid());
 		scheme.addValueChangeListener(e -> filterGrid());
+	}
+
+	private void configureGrid() {
+		
 		grid.setSizeFull();
 		// grid.setClassNameGenerator(work -> work.getWorkAmount().intValue() > 500 ?
 		// "warn" : null);
@@ -96,17 +105,15 @@ public class WorkView extends VerticalLayout {
 				.setSortable(true);
 		grid.addColumn(work -> work.getWorkAmount()).setHeader("Sanc. Amount").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
-		Grid.Column<Work> yearColumn = grid.addColumn(work -> work.getYear().getYearName()).setAutoWidth(true)
-				.setHeader("Year").setSortable(true).setResizable(true);
-		Grid.Column<Work> blockColumn = grid.addColumn(work -> work.getBlock().getBlockName()).setAutoWidth(true)
-				.setHeader("Block/MB").setSortable(true).setResizable(true);
-		Grid.Column<Work> schemeColumn = grid.addColumn(work -> work.getScheme().getSchemeName()).setAutoWidth(true)
-				.setHeader("Scheme").setSortable(true).setResizable(true);
-		Grid.Column<Work> constiColumn = grid
-				.addColumn(work -> work.getConstituency().getConstituencyNo() + "-"
-						+ work.getConstituency().getConstituencyName() + "-"
-						+ work.getConstituency().getConstituencyMLA())
-				.setWidth("20%").setHeader("Constituency").setSortable(true).setResizable(true);
+		//Grid.Column<Work> yearColumn = grid.addColumn(work -> work.getYear().getYearName()).setAutoWidth(true).setHeader("Year").setSortable(true).setResizable(true);
+		//Grid.Column<Work> blockColumn = grid.addColumn(work -> work.getBlock().getBlockName()).setAutoWidth(true).setHeader("Block/MB").setSortable(true).setResizable(true);
+		//Grid.Column<Work> schemeColumn = grid.addColumn(work -> work.getScheme().getSchemeName()).setAutoWidth(true).setHeader("Scheme").setSortable(true).setResizable(true);
+		//Grid.Column<Work> constiColumn = grid.addColumn(work -> work.getConstituency().getConstituencyNo() + "-"+ work.getConstituency().getConstituencyName() + "-"+ work.getConstituency().getConstituencyMLA()).setWidth("20%").setHeader("Constituency").setSortable(true).setResizable(true);
+		//Grid.Column<Work> yearColumn = grid.addColumn(work -> work.getYear().getYearName()).setAutoWidth(true).setHeader("Year").setSortable(true).setResizable(true);
+		grid.addColumn(work -> work.getBlock().getBlockName()).setAutoWidth(true).setHeader("Block/MB").setSortable(true).setResizable(true);
+		grid.addColumn(work -> work.getScheme().getSchemeName()).setAutoWidth(true).setHeader("Scheme").setSortable(true).setResizable(true);
+		grid.addColumn(work -> work.getConstituency().getConstituencyNo() + "-"+ work.getConstituency().getConstituencyName() + "-"+ work.getConstituency().getConstituencyMLA()).setWidth("20%").setHeader("Constituency").setSortable(true).setResizable(true);
+		grid.addColumn(work -> work.getYear().getYearName()).setAutoWidth(true).setHeader("Year").setSortable(true).setResizable(true);
 		grid.addColumn(work -> work.getSanctionNo()).setHeader("Sanc. No").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
 		grid.addColumn(work -> work.getSanctionDate()).setHeader("Sanc. Date").setResizable(true).setSortable(true)
@@ -124,11 +131,11 @@ public class WorkView extends VerticalLayout {
 				.setAutoWidth(true);
 		grid.asSingleSelect().addValueChangeListener(e -> editWork(e.getValue()));
 		grid.getHeaderRows().clear();
-		HeaderRow headerRow = grid.appendHeaderRow();
-		headerRow.getCell(blockColumn).setComponent(block);
-		headerRow.getCell(constiColumn).setComponent(consti);
-		headerRow.getCell(schemeColumn).setComponent(scheme);
-		headerRow.getCell(yearColumn).setComponent(year);
+//		HeaderRow headerRow = grid.appendHeaderRow();
+//		headerRow.getCell(blockColumn).setComponent(block);
+//		headerRow.getCell(constiColumn).setComponent(consti);
+//		headerRow.getCell(schemeColumn).setComponent(scheme);
+//		headerRow.getCell(yearColumn).setComponent(year);
 		grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
 		grid.setClassNameGenerator(work -> {
 			if (work.getWorkStatus().equals("Completed"))
@@ -168,17 +175,32 @@ public class WorkView extends VerticalLayout {
 		filterText.setClearButtonVisible(true);
 		filterText.setValueChangeMode(ValueChangeMode.LAZY);
 		filterText.addValueChangeListener(e -> updateList());
-		filterText.setWidth("30%");
-
+		filterText.setWidth("10%");
+		expButton.addClickListener(e -> GridExporter.newWithDefaults(grid).open());
+		expButton.setIcon(new Icon(VaadinIcon.EXTERNAL_LINK));
 		Button addButton = new Button("New Work");
-		addButton.setIcon(new Icon(VaadinIcon.PLUS_CIRCLE));
+		addButton.setIcon(new Icon(VaadinIcon.PLUS_CIRCLE_O));
 		addButton.addClickListener(e -> addWork());
 		// for testing purpose: generate dummy data
 		Button testButton = new Button("Generate Test Data");
 
 		testButton.addClickListener(e -> generateTestData());
+		configureCombos();
 		//HorizontalLayout toolbar = new HorizontalLayout(filterText, addButton, testButton);
-		HorizontalLayout toolbar = new HorizontalLayout(filterText, addButton);
+		//HorizontalLayout toolbar = new HorizontalLayout(filterText,consti, block, scheme, year, addButton, expButton);
+		FormLayout toolbar = new FormLayout();
+		toolbar.add(filterText, 2);
+		toolbar.add(consti, 2);
+		toolbar.add(block, 2);
+		toolbar.add(scheme,1);
+		toolbar.add(year, 1);
+		toolbar.add(addButton, 1);
+		toolbar.add(expButton,1);
+		toolbar.setResponsiveSteps(
+		    new FormLayout.ResponsiveStep("0", 2),   // 1 column by default
+		    new FormLayout.ResponsiveStep("600px", 4), // 2 columns for screens wider than 600px
+		    new FormLayout.ResponsiveStep("800px", 10)  // 3 columns for screens wider than 800px
+		);
 		toolbar.setWidthFull();
 		return toolbar;
 	}

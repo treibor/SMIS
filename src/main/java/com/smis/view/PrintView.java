@@ -75,7 +75,7 @@ public class PrintView extends HorizontalLayout{
 	TextField instletter=new TextField("Release Letter No.");
 	TextField installmentcheque=new TextField("Cheque No.");
 	DatePicker instdate=new DatePicker("Release Date");
-	DatePicker compldate=new DatePicker("Completion Date");
+	//DatePicker compldate=new DatePicker("Completion Date");
 	TextField copyTo=new TextField("Copy To:");
 	TextField note=new TextField("Note:");
 	Button printButton=new Button("Print");
@@ -143,10 +143,10 @@ public class PrintView extends HorizontalLayout{
     public Component configureSideLayout() {
        
         vlayout.setWidth("300px"); // Set a fixed width for the side layout
-        compldate.setHelperText("As Per Scheme Duration");
+        //compldate.setHelperText("As Per Scheme Duration");
         printButton.addClickListener(e -> printReport());
 
-        vlayout.add(instletter, instdate, printButton);
+        vlayout.add(instletter, instdate,printButton);
         vlayout.setHeightFull();
         return vlayout;
     }
@@ -173,15 +173,20 @@ public class PrintView extends HorizontalLayout{
 	private void printReport() {
 		int installno=instNo.getValue();
 		
-		if (instletter.getValue() == "" || instdate.getValue() == null || compldate.getValue()==null){
-			notify.show( "Release Letter, Release Date  and Completion  Date Cannot Be Empty", 5000, Position.TOP_CENTER);
+		if (instletter.getValue() == "" || instdate.getValue() == null ){
+			notify.show( "Release Letter, Release Date Cannot Be Empty", 5000, Position.TOP_CENTER);
 		} else {
 			Set<Installment> installmentset = grid.getSelectedItems();
 			List<Installment> installments=new ArrayList<>(installmentset);
 			if (installments.get(0).getWork().getSanctionDate().isAfter(instdate.getValue())) {
 				notify.show("Release Date  Cannot be before the sanction Date", 5000, Position.TOP_CENTER);
-			}else if (installments.get(0).getWork().getSanctionDate().isAfter(compldate.getValue())||instdate.getValue().isAfter(compldate.getValue() )) {
-				notify.show("Invalid Completion Date. Please don not Modify Completion date unless its is Really Necessary", 5000, Position.TOP_CENTER);
+				/*
+				 * }else if
+				 * (installments.get(0).getWork().getSanctionDate().isAfter(compldate.getValue()
+				 * )||instdate.getValue().isAfter(compldate.getValue() )) { notify.
+				 * show("Invalid Completion Date. Please don not Modify Completion date unless its is Really Necessary"
+				 * , 5000, Position.TOP_CENTER);
+				 */
 			}else if (installno >1 && service.getInstallmentByWorkAndNo(installments.get(0).getInstallmentNo()-1, installments.get(0).getWork()).getUcDate().isAfter(instdate.getValue())) {
 				notify.show("Invalid Release  Date. Release Date Has to Be After the UC date of Previous Installment", 5000, Position.TOP_CENTER);
 			} else {
@@ -192,7 +197,7 @@ public class PrintView extends HorizontalLayout{
 					String blocklabel=changeAmp(installments.get(0).getWork().getBlock().getBlockLabel());
 					String yearlabel=changeAmp(installments.get(0).getWork().getYear().getYearLabel());
 					String sanctionNo=changeAmp(installments.get(0).getWork().getSanctionNo());
-					LocalDate completion=compldate.getValue();
+					//LocalDate completion=compldate.getValue();
 					int reportType=installments.get(0).getWork().getScheme().getSchemeReport();
 					int installNo;
 					
@@ -207,7 +212,8 @@ public class PrintView extends HorizontalLayout{
 						Installment singleinstallment = installments.get(i);
 						singleinstallment.setInstallmentDate(instdate.getValue());
 						singleinstallment.setInstallmentLetter(instletter.getValue());
-						singleinstallment.setInstallmentCheque(installmentcheque.getValue());
+						//singleinstallment.setInstallmentCheque(installmentcheque.getValue());
+						singleinstallment.setCopyTo(inlineEditor.getValue());
 						service.saveInstallment(singleinstallment);
 						Work singlework = singleinstallment.getWork();
 						if (singleinstallment.getUcLetter() == null) {
@@ -234,7 +240,7 @@ public class PrintView extends HorizontalLayout{
 					parameters.put("copyTo", inlineEditor.getValue());
 					
 					parameters.put("Note", note.getValue());
-					parameters.put("ComplDate", completion);
+					parameters.put("ComplDate", "");
 					parameters.put("scheme", schemelabel);
 					parameters.put("block", blocklabel);
 					parameters.put("year", yearlabel);
@@ -259,7 +265,7 @@ public class PrintView extends HorizontalLayout{
 				} catch (Exception e) {
 					notify.show("Unable To Generate Report. Error:" + e, 5000, Position.TOP_CENTER);
 					// Position.TOP_CENTER);
-					
+					e.printStackTrace();
 
 				}
 			}
@@ -310,7 +316,8 @@ public class PrintView extends HorizontalLayout{
 		block.setItems(service.getAllBlocks());
 		block.setItemLabelGenerator(block-> block.getBlockName());
 		constituency.setItems(service.getAllConstituencies());
-		constituency.setItemLabelGenerator(constituency->constituency.getConstituencyNo()+" - "+constituency.getConstituencyName()+" - "+constituency.getConstituencyMLA());
+		//constituency.setItemLabelGenerator(constituency->constituency.getConstituencyNo()+" - "+constituency.getConstituencyName()+" - "+constituency.getConstituencyMLA());
+		constituency.setItemLabelGenerator(constituency->constituency.getConstituencyName()+" - "+constituency.getConstituencyMLA());
 	}
 	
 	public void configureGrid() {
@@ -323,7 +330,7 @@ public class PrintView extends HorizontalLayout{
 		grid.addColumn(installment-> installment.getWork().getNoOfInstallments()).setHeader("No of Inst").setAutoWidth(true);
 		grid.addColumn(installment-> installment.getInstallmentLetter()).setHeader("Release No").setAutoWidth(true);
 		grid.addColumn(installment-> installment.getInstallmentDate()).setHeader("Release Date").setAutoWidth(true);
-		grid.addColumn(installment-> installment.getInstallmentCheque()).setHeader("Cheque No.").setAutoWidth(true);
+		//grid.addColumn(installment-> installment.getInstallmentCheque()).setHeader("Cheque No.").setAutoWidth(true);
 		grid.addColumn(installment-> installment.getWork().getWorkStatus()).setHeader("Status").setAutoWidth(true);
 		//grid.getColumns().forEach(col-> col.setAutoWidth(true));
 		grid.addSelectionListener(event ->doSomething(event));
@@ -340,24 +347,25 @@ public class PrintView extends HorizontalLayout{
 			int schemeduration = installsingle.getWork().getScheme().getSchemeDuration();
 			LocalDate sancDate = installsingle.getWork().getSanctionDate();
 			complDate = sancDate.plusMonths(schemeduration);
-			compldate.setValue(complDate);
+			//compldate.setValue(complDate);
 			instdate.setValue(installsingle.getInstallmentDate());
 			populateEditor(installs);
 			//String letterNo=installsingle.getInstallmentLetter()+"";
 			try {
 				instletter.setValue(installsingle.getInstallmentLetter());
-				installmentcheque.setValue(installsingle.getInstallmentCheque());
+				//installmentcheque.setValue(installsingle.getInstallmentCheque());
 				
 			}catch(NullPointerException npe) {
+				npe.printStackTrace();
 				instletter.setValue("");
-				installmentcheque.setValue("");
+				//installmentcheque.setValue("");
 			}
 		} else {
 			printButton.setEnabled(false);
-			compldate.setValue(null);
+			//compldate.setValue(null);
 			instletter.setValue("");
 			instdate.setValue(null);
-			installmentcheque.setValue("");
+			//installmentcheque.setValue("");
 			//inlineEditor.setValue("");
 		}
 	}
@@ -383,37 +391,40 @@ public class PrintView extends HorizontalLayout{
 		String bdo=work.getBlock().getBlockDevelopmentOfficer();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		//compldate.setValue(complDate);
-		if(work.getScheme().getSchemeReport()==1){
-		inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
+		if(installs.get(0).getCopyTo()!=null) {
+			inlineEditor.setValue(installs.get(0).getCopyTo());
+		}else {
+			if(work.getScheme().getSchemeReport()==1){
+			inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
 				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+mla+", MLA, "+consti+" Constituency for favour of information.&nbsp;&nbsp;</span></li>"
 				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Director, "+dept+", "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
 				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, C&RD, "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
 				+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines and to submit Utilisation Certificates, Completion Report on or before "+complDate.format(formatter)+".&nbsp;</span><br>&nbsp;</li>"
 				+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
-		}else if(work.getScheme().getSchemeReport()==2){
-			inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
+			}else if(work.getScheme().getSchemeReport()==2){
+				inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+mla+", MLA, "+consti+" Constituency for favour of information.&nbsp;&nbsp;</span></li>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Under Secretary to the Government of "+state+", "+dept+", "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Director, "+dept+", "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, C&RD, "+districtname+", "+districthq+" for information.&nbsp;&nbsp;</span></li>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines and to submit Utilisation Certificates, Completion Report on or before "+complDate.format(formatter)+". The cheque No. ______ of Rs."+total+" is enclosed herewith for implementation of the scheme. He/She will also forward relevant records including APRs and UC to The Deputy Commissioner. He/She would keep custody of all records of the scheme at the District level on completion of the scheme for purpose of future audit under para 3.&nbsp;</span><br>&nbsp;</li>"
 					+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
-		} 
-		else if(work.getScheme().getSchemeReport()==3){
-			inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
+			}	 
+			else if(work.getScheme().getSchemeReport()==3){
+				inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+mla+", MLA, "+consti+" Constituency for favour of information.&nbsp;&nbsp;</span></li>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Under Secretary to the Government of "+state+", Chief Minister's Secretariat, "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, C&RD, "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
 					+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines. The "+bdo+" shall release the amount to the beneficiary in one installment for amounts below one Lakh and in two installments for amount above one Lakh and for purchase shall release in one installment only. The "+bdo+" will also forward relevant records, completion report and UC to the Deputy Commissioner accompanied by photographic evidence to enable onward submission to the Chief Minister's Secretariat.&nbsp;</span><br>&nbsp;</li>"
 					+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
-		} else if(work.getScheme().getSchemeReport()==4){
+			} else if(work.getScheme().getSchemeReport()==4){
 				inlineEditor.setValue("<p><span style=\"font-family:'Times New Roman', Times, serif;\">Copy To:&nbsp;</span></p><ol>"
-						+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Under Secretary to the Government of "+state+", Chief Minister's Secretariat, "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
+						+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Deputy Secretary to the Government of "+state+", Chief Minister's Secretariat, "+statehq+", "+state+" for information.&nbsp;&nbsp;</span></li>"
 						+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">The Project Director, C&RD, "+districtname+", "+districthq+" with a request to release the amount accordingly.&nbsp;&nbsp;</span></li>"
 						+ "<li><span style=\"font-family:'Times New Roman', Times, serif;\">"+bdo+", "+block+" with a direction to ensure that implementation of the scheme is strictly adhered to the relevant guidelines. The "+bdo+" shall release the amount to the beneficiary in one installment for amounts below one Lakh and in two installments for amount above one Lakh and for purchase shall release in one installment only. The "+bdo+" will also forward relevant records, completion report and UC to the Deputy Commissioner accompanied by photographic evidence to enable onward submission to the Chief Minister's Secretariat.&nbsp;</span><br>&nbsp;</li>"
 						+ "</ol><p>&nbsp;</p><p>&nbsp;</p>");
+			}
 		}
-		
 	}
 
 	public void populateGrid() {

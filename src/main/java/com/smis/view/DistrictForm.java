@@ -32,6 +32,10 @@ import com.vaadin.flow.shared.Registration;
 
 
 public class DistrictForm extends FormLayout {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Dbservice service;
 	Binder<District> binder=new BeanValidationBinder<>(District.class);
 	ComboBox<State> state=new ComboBox();
@@ -55,9 +59,15 @@ public class DistrictForm extends FormLayout {
 		state.setItems(service.getAllStates());
 		state.setItemLabelGenerator(state-> state.getStateName());
 		binder.bindInstanceFields(this);
-		
-		add(state,districtName, deputyCommissioner,districtHq,deputyCommissionerName,districtAddress,districtPin, districtEmail,districtPhone,districtFax, createButtonsLayout());
+		configureFields();
+		add(state,districtName, deputyCommissioner,districtHq,deputyCommissionerName,districtLabel,districtAddress,districtPin, districtEmail,districtPhone,districtFax, createButtonsLayout());
 	
+	}
+
+	private void configureFields() {
+		districtName.setMinLength(2);
+		districtName.setMaxLength(30);
+		
 	}
 
 	private Component createButtonsLayout() {

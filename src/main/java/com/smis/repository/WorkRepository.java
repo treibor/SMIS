@@ -24,6 +24,8 @@ public interface WorkRepository extends JpaRepository<Work, Long> {
 	@Query("select coalesce (Max(c.workCode),0) from Work c where c.district= :district")
 	Long findMaxWorkCode(@Param ("district") District district);
 	
+	@Query("SELECT w.workName FROM Work w")
+    List<String> findWorkNames();
 	/*
 	@Query("select  c, d, e,f,g, h, i  from Work c join c.installment d join c.year e  join c.scheme f join c.constituency g join c.district h join c.block i where c.block=:block and c.district=:district and c.scheme=:scheme  and c.constituency=:consti and c.scheme=:scheme and c.year=:year and d.installmentNo=:installment order by c.workCode ASC")
 	List<Work> getFilteredWorks(@Param("scheme") Scheme scheme, @Param("consti") Constituency consti,  @Param ("block") Block block ,  @Param ("district") District district, @Param ("year") Year year, @Param ("installment") int installment);
@@ -32,8 +34,20 @@ public interface WorkRepository extends JpaRepository<Work, Long> {
 	List<Work> getWorksForCalculation(@Param("scheme") Scheme scheme, @Param("district") District district, @Param("year") Year year);
 	
 	@Query("select  c from Work c where  c.district=:district and (c.scheme=:scheme or :scheme is null or :scheme=0) and (c.year=:year or :year is null or :year=0) and (c.block=:block or :block is null or :block=0) and (c.constituency=:consti or :consti is null or :consti=0)  order by c.workCode Desc")
-	List<Work> getFilteredWorks(@Param("scheme") Scheme scheme, @Param("district") District district, @Param("year") Year year,@Param("consti") Constituency consti, @Param("block") Block block);
+	List<Work> getFilteredWorkss(@Param("scheme") Scheme scheme, @Param("district") District district, @Param("year") Year year,@Param("consti") Constituency consti, @Param("block") Block block);
 	
+	
+	@Query("SELECT c FROM Work c WHERE c.district = :district " +
+		       "AND (:scheme IS NULL OR c.scheme = :scheme) " +
+		       "AND (:year IS NULL OR c.year = :year) " +
+		       "AND (:block IS NULL OR c.block = :block) " +
+		       "AND (:consti IS NULL OR c.constituency = :consti) " +
+		       "ORDER BY c.workCode DESC")
+		List<Work> getFilteredWorks(@Param("scheme") Scheme scheme, 
+		                            @Param("district") District district, 
+		                            @Param("year") Year year,
+		                            @Param("consti") Constituency consti, 
+		                            @Param("block") Block block);
 	
 	@Query("select  c, d, e, f, g, h from Work c join c.constituency d join c.block e join c.scheme f join c.year g join c.district h where  c.district=:district and (c.scheme=:scheme or :scheme is null or :scheme=0) and (c.year=:year or :year is null or :year=0) and (c.block=:block or :block is null or :block=0) and (c.constituency=:consti or :consti is null or :consti=0) order by d.constituencyName, e.blockName, f.schemeName, g.yearName, c.workCode Desc")
 	List<Work> getReportWorks(@Param("scheme") Scheme scheme, @Param("district") District district, @Param("year") Year year,@Param("consti") Constituency consti, @Param("block") Block block);

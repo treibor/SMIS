@@ -1,11 +1,13 @@
 package com.smis.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +19,8 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 
 @Entity 
-public class Installment {
+public class Installment implements Serializable {
+	 private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO,  generator= "inst_generator")
 	@SequenceGenerator(name="inst_generator", allocationSize = 1, sequenceName = "inst_seq", initialValue = 1)
@@ -33,6 +36,16 @@ public class Installment {
 	private String installmentLabel;
 	private String ucLetter;
 	private LocalDate ucDate;
+	@Column(length=2000)
+	private String copyTo;
+	public String getCopyTo() {
+		return copyTo;
+	}
+	public void setCopyTo(String copyTo) {
+		this.copyTo = copyTo;
+	}
+
+
 	@ManyToOne 
 	@JoinColumn(name="workId", referencedColumnName = "workId")
 	@OnDelete(action = OnDeleteAction.CASCADE)

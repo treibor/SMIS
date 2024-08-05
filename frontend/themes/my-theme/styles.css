@@ -20,13 +20,23 @@ html {
 
     }
     
-
-
-.chartsLayout1 {
- border: 2px solid DodgerBlue;
-  border-radius: 5px;
-  padding: 25px 50px 20px 20px;
+    
+.custom-combobox::part(input-field) {
+    height: 40px; /* Adjust the input field height */
+    white-space: pre-wrap; /* Allows text to wrap */
+    word-wrap: break-word; /* Break long words */
 }
+
+.custom-combobox::part(overlay) {
+    width: 300px; /* Adjust the overlay width */
+}
+
+.custom-combobox-item {
+    white-space: pre-wrap; /* Allows text to wrap into multiple lines */
+    padding: 5px; /* Optional: Add some padding for better readability */
+}
+
+
 
 .homeLayout{
 	padding: 10px 10px 20px 10px;

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import org.hibernate.validator.constraints.Length;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +20,10 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Work implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO,  generator= "work_generator")
 	@SequenceGenerator(name="work_generator", allocationSize = 1, sequenceName = "work_seq", initialValue = 1)
@@ -26,6 +32,7 @@ public class Work implements Serializable{
 	private long workCode;
 	@NotEmpty(message = "Work name cannot be blank")
 	@Column(length=1000)
+	@Length(max = 1000, message="Work Name Has Exceeded the Limit")
 	private String workName;
 	@Digits(integer=10, fraction=2)
 	private BigDecimal workAmount;
