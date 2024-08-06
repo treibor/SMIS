@@ -100,6 +100,7 @@ public class WorkFormMp extends VerticalLayout{
 		
 		//accordion.add("Work", new VerticalLayout(configureForm(), createButtonsLayout()));
 		workaccordion=accordion.add("Work", new VerticalLayout(configureForm(), createButtonsLayout()));
+		
 		workaccordion.addThemeVariants(DetailsVariant.SMALL);
 		//implaccordion=accordion.add("Implementing District", new VerticalLayout(configureImplForm(),  createButtonsLayout()));
 		installaccordion=accordion.add("Installments", new VerticalLayout(configureInstallmentForm(), createInstallButtons()));

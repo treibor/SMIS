@@ -89,6 +89,8 @@ public class RateLimitingFilter implements Filter {
                 return 50; // Max 5 requests per minute for /login
             case "/dashboard":
                 return 10; // Max 10 requests per minute for /home
+            case "/mlaschemes":
+                return 200; // Max 10 requests per minute for /home
             case "/":
                 return 100; // Max 10 requests per minute for /home
             default:

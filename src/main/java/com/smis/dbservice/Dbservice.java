@@ -116,7 +116,9 @@ public class Dbservice implements Serializable{
 	public Users findUser(String username) {
 		return urepo.findByUserName(username);
 	}
-
+	public List<Users> findUsersByDistrict(District district) {
+		return urepo.findByDistrict(district);
+	}
 	public Users getLoggedUser() {
 		return urepo.findByUserName(getloggeduser());
 	}
@@ -216,6 +218,13 @@ public class Dbservice implements Serializable{
 	public List<Work> getFilteredWorks(String searchTerm) {
 		try {
 			return wrepo.search(searchTerm, getDistrict());
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
+	public List<Work> getFilteredWorkss(String searchTerm) {
+		try {
+			return wrepo.searchAll(searchTerm, getDistrict());
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
@@ -477,6 +486,9 @@ public class Dbservice implements Serializable{
 	}
 	public List<String> getWorkNames(){
 		return wrepo.findWorkNames();
+	}
+	public List<String> getSanctionNos(){
+		return wrepo.findSanctionNos();
 	}
 	public List<Constituency> getAllConstituenciesWIthNotInUse() {
 		if (isSuperAdmin()) {

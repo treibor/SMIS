@@ -39,6 +39,7 @@ public class Work implements Serializable{
 	@NotNull
 	private int noOfInstallments=2;
 	@NotEmpty (message = "Please Enter the Sanction No")
+	@Length(max = 100, message="Sanction Number Has exceeded the Limit")
 	private String sanctionNo;
 	private LocalDate sanctionDate;
 	//private long workCode;

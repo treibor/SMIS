@@ -26,6 +26,9 @@ public interface WorkRepository extends JpaRepository<Work, Long> {
 	
 	@Query("SELECT w.workName FROM Work w")
     List<String> findWorkNames();
+	
+	@Query("SELECT Distinct(w.sanctionNo) FROM Work w")
+    List<String> findSanctionNos();
 	/*
 	@Query("select  c, d, e,f,g, h, i  from Work c join c.installment d join c.year e  join c.scheme f join c.constituency g join c.district h join c.block i where c.block=:block and c.district=:district and c.scheme=:scheme  and c.constituency=:consti and c.scheme=:scheme and c.year=:year and d.installmentNo=:installment order by c.workCode ASC")
 	List<Work> getFilteredWorks(@Param("scheme") Scheme scheme, @Param("consti") Constituency consti,  @Param ("block") Block block ,  @Param ("district") District district, @Param ("year") Year year, @Param ("installment") int installment);
@@ -58,4 +61,9 @@ public interface WorkRepository extends JpaRepository<Work, Long> {
 	//@Query(a1+a2+a3)
 	@Query("select c from Work c where c.district= :district and(lower(c.workName) like lower(concat('%', :searchTerm, '%'))or lower(c.sanctionNo) like lower(concat('%', :searchTerm, '%'))) order by c.workCode Desc")
 	List<Work> search(@Param("searchTerm") String searchTerm, @Param("district") District district);
+	
+	@Query("select c from Work c where c.district= :district and(str(c.workCode)=:searchTerm or lower(c.workName) like lower(concat('%', :searchTerm, '%'))or lower(c.sanctionNo) like lower(concat('%', :searchTerm, '%'))) order by c.workCode Desc")
+	List<Work> searchAll(@Param("searchTerm") String searchTerm, @Param("district") District district);
+	
+	
 }

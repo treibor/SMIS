@@ -1,29 +1,21 @@
 package com.smis.view;
 
 import com.smis.dbservice.Dbservice;
-import com.smis.dbservice.DbserviceMp;
 import com.smis.entity.District;
 import com.smis.entity.Impldistrict;
-import com.smis.entity.District;
 import com.smis.entity.State;
-import com.smis.view.DistrictForm.ConstiFormEvent;
-import com.smis.view.DistrictForm.DeleteEvent;
-import com.smis.view.DistrictForm.SaveEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
@@ -127,10 +119,10 @@ public class DistrictForm extends FormLayout {
 		binder.readBean(district);
 	}
 	
-	public static abstract class ConstiFormEvent extends ComponentEvent<DistrictForm> {
+	public static abstract class DistrictFormEvent extends ComponentEvent<DistrictForm> {
 		private District district;
 
-		protected ConstiFormEvent(DistrictForm source, District district) {
+		protected DistrictFormEvent(DistrictForm source, District district) {
 			super(source, false);
 			this.district = district;
 		}
@@ -140,20 +132,20 @@ public class DistrictForm extends FormLayout {
 		}
 	}
 
-	public static class SaveEvent extends ConstiFormEvent {
+	public static class SaveEvent extends DistrictFormEvent {
 		SaveEvent(DistrictForm source, District district) {
 			super(source, district);
 		}
 	}
 
-	public static class DeleteEvent extends ConstiFormEvent {
+	public static class DeleteEvent extends DistrictFormEvent {
 		DeleteEvent(DistrictForm source, District district) {
 			super(source, district);
 		}
 
 	}
 
-	public static class CloseEvent extends ConstiFormEvent {
+	public static class CloseEvent extends DistrictFormEvent {
 		CloseEvent(DistrictForm source) {
 			super(source, null);
 		}

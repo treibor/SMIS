@@ -9,6 +9,7 @@ import com.smis.entity.District;
 import com.smis.entity.State;
 import com.smis.entity.Users;
 import com.smis.security.SecurityService;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -21,14 +22,12 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.notification.Notification.Position;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -36,7 +35,6 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.RouterLink;
 
 import jakarta.annotation.security.PermitAll;
 
@@ -82,21 +80,54 @@ public class MainLayout extends AppLayout{
 	}
 	private void createDrawer() {
 		SideNav nav = new SideNav();
-		SideNavItem home = new SideNavItem("Home", HomeView.class, LineAwesomeIcon.HOME_SOLID.create());
-		SideNavItem mla = new SideNavItem("MLA Schemes", WorkView.class, LineAwesomeIcon.PEOPLE_CARRY_SOLID.create());
-		SideNavItem releaseorder = new SideNavItem("Release Order", PrintView.class, LineAwesomeIcon.DONATE_SOLID.create());
-		SideNavItem master = new SideNavItem("Master", MasterView.class, LineAwesomeIcon.MASTODON.create());
-		SideNavItem distmaster = new SideNavItem("District Master", DistView.class, LineAwesomeIcon.MASTODON.create());
-		SideNavItem report = new SideNavItem("Reports", ReportView.class, LineAwesomeIcon.RECEIPT_SOLID.create());
-		SideNavItem audit = new SideNavItem("Audit Trail", AuditView.class, LineAwesomeIcon.XBOX.create());
-		nav.addItem(home, mla, releaseorder, master,distmaster, report, audit);
+//		SideNavItem home = new SideNavItem("Home", HomeView.class, LineAwesomeIcon.HOME_SOLID.create());
+//		SideNavItem mla = new SideNavItem("MLA Schemes", WorkView.class, LineAwesomeIcon.PEOPLE_CARRY_SOLID.create());
+//		SideNavItem releaseorder = new SideNavItem("Release Order", PrintView.class, LineAwesomeIcon.DONATE_SOLID.create());
+//		SideNavItem master = new SideNavItem("Master", MasterView.class, LineAwesomeIcon.MASTODON.create());
+//		SideNavItem distmaster = new SideNavItem("District Master", DistView.class, LineAwesomeIcon.MASTODON.create());
+//		SideNavItem report = new SideNavItem("Reports", ReportView.class, LineAwesomeIcon.RECEIPT_SOLID.create());
+//		SideNavItem audit = new SideNavItem("Audit Trail", AuditView.class, LineAwesomeIcon.XBOX.create());
+		VerticalLayout drawerContent = new VerticalLayout();
+
+	    // Add navigation items with helper text
+		SideNavItemWithHelperText home = new SideNavItemWithHelperText("", "Home", HomeView.class, LineAwesomeIcon.HOME_SOLID.create());
+        SideNavItemWithHelperText mla = new SideNavItemWithHelperText("", "Works", WorkView.class, LineAwesomeIcon.PEOPLE_CARRY_SOLID.create());
+        SideNavItemWithHelperText releaseorder = new SideNavItemWithHelperText("", "Release Order", PrintView.class, LineAwesomeIcon.DONATE_SOLID.create());
+        SideNavItemWithHelperText master = new SideNavItemWithHelperText("", "Master", MasterView.class, LineAwesomeIcon.BALANCE_SCALE_LEFT_SOLID.create());
+        SideNavItemWithHelperText distmaster = new SideNavItemWithHelperText("", "District Master", DistView.class, LineAwesomeIcon.BALANCE_SCALE_RIGHT_SOLID.create());
+        SideNavItemWithHelperText report = new SideNavItemWithHelperText("", "Reports", ReportView.class, LineAwesomeIcon.CALCULATOR_SOLID.create());
+        SideNavItemWithHelperText audit = new SideNavItemWithHelperText("", "Audit Trail", AuditView.class, LineAwesomeIcon.CALENDAR.create());
+        SideNavItemWithHelperText users = new SideNavItemWithHelperText("", "Users", UsersView.class, LineAwesomeIcon.USER.create());
+		/*
+		 * SideNavItem home = new SideNavItem("", HomeView.class,
+		 * LineAwesomeIcon.HOME_SOLID.create()); home.getElement().setAttribute("title",
+		 * "Home"); SideNavItem mla = new SideNavItem("", WorkView.class,
+		 * LineAwesomeIcon.PEOPLE_CARRY_SOLID.create());
+		 * mla.getElement().setAttribute("title", "MLA Schemes"); SideNavItem
+		 * releaseorder = new SideNavItem("", PrintView.class,
+		 * LineAwesomeIcon.DONATE_SOLID.create());
+		 * releaseorder.getElement().setAttribute("title", "Release Order"); SideNavItem
+		 * master = new SideNavItem("", MasterView.class,
+		 * LineAwesomeIcon.MASTODON.create()); SideNavItem distmaster = new
+		 * SideNavItem("", DistView.class, LineAwesomeIcon.MASTODON.create());
+		 * SideNavItem report = new SideNavItem("", ReportView.class,
+		 * LineAwesomeIcon.RECEIPT_SOLID.create()); SideNavItem audit = new
+		 * SideNavItem("", AuditView.class, LineAwesomeIcon.XBOX.create());
+		 */
+		//nav.addItem(home, mla, releaseorder, master,distmaster, report, audit);
 		master.setVisible(isAdmin);
 		distmaster.setVisible(isSuper);
 		releaseorder.setVisible(isUser);
 		audit.setVisible(isAdmin);
-			addToDrawer(new VerticalLayout(nav));
+		users.setVisible(isAdmin);
+		//nav.setWidth("5%");
+		 //getElement().getStyle().set("--_vaadin-app-layout-drawer-width", "2px");
+		//addToDrawer(new VerticalLayout(nav));
+		//addToDrawer(nav);
+		drawerContent.add(home, mla, releaseorder, master,distmaster, report, audit, users);
+		addToDrawer(drawerContent);
 	}
-	
+
 	private void createHeader() {
 	
 		Avatar avatarImage = new Avatar(service.getloggeduser());
@@ -121,7 +152,20 @@ public class MainLayout extends AppLayout{
 		header.addClassNames("py-0","px-m");
 		addToNavbar(header);
 	}
-	
+	private VerticalLayout createNavItemWithHelper(String label, String helperText, Class<? extends Component> navigationTarget, Component icon) {
+        SideNavItem mainItem = new SideNavItem(label, navigationTarget, icon);
+
+        Span helperTextSpan = new Span(helperText);
+        helperTextSpan.getStyle().set("font-size", "var(--lumo-font-size-xs)"); // Smaller font size
+        helperTextSpan.getStyle().set("color", "var(--lumo-secondary-text-color)"); // Secondary text color
+
+        VerticalLayout layout = new VerticalLayout(mainItem, helperTextSpan);
+        layout.setSpacing(false);
+        layout.setPadding(false);
+        layout.setMargin(false);
+
+        return layout;
+    }
 	private void openAboutDialog() {
 		if (aboutdialog != null) {
 			aboutdialog = null;

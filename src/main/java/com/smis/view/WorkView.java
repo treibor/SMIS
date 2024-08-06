@@ -254,7 +254,7 @@ public class WorkView extends VerticalLayout {
 
 	public void configureForm() {
 		workform = new WorkForm(service);
-		workform.setWidth("35%");
+		workform.setWidth("40%");
 		workform.addListener(WorkForm.SaveEvent.class, this::saveWork);
 		workform.addListener(WorkForm.DeleteEvent.class, this::deleteWork);
 		workform.addListener(WorkForm.CloseEvent.class, e -> closeEditor());
@@ -310,7 +310,8 @@ public class WorkView extends VerticalLayout {
 		scheme.clear();
 		consti.clear();
 		year.clear();
-		grid.setItems(service.getFilteredWorks(filterText.getValue()));
+		///grid.setItems(service.getFilteredWorks(filterText.getValue()));
+		grid.setItems(service.getFilteredWorkss(filterText.getValue()));
 		// configureGrid();
 	}
 
@@ -325,7 +326,7 @@ public class WorkView extends VerticalLayout {
 		grid.asSingleSelect().clear();
 		workform.installaccordion.setEnabled(false);
 		workform.ucaccordion.setEnabled(false);
-		
+		workform.workSelect.setValue("");
 		editWork(new Work());
 
 	}
@@ -444,6 +445,7 @@ public class WorkView extends VerticalLayout {
 		workform.year.setEnabled(true);
 		workform.workAmount.setEnabled(true);
 		workform.noOfInstallments.setEnabled(true);
+		workform.workSelect.setEnabled(true);
 	}
 
 	public void disableFields() {
@@ -453,5 +455,6 @@ public class WorkView extends VerticalLayout {
 		workform.year.setEnabled(false);
 		workform.workAmount.setEnabled(false);
 		workform.noOfInstallments.setEnabled(false);
+		workform.workSelect.setEnabled(false);
 	}
 }

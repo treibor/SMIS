@@ -42,5 +42,7 @@ html {
 	padding: 10px 10px 20px 10px;
 }
 
-
+vaadin-app-layout::part(drawer) {
+  width: 100px;
+}
 

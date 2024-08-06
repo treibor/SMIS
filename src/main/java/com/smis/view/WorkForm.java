@@ -33,6 +33,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
@@ -50,13 +51,14 @@ public class WorkForm extends VerticalLayout {
 	ComboBox<Block> block = new ComboBox("Block/MB");
 	ComboBox<Village> village = new ComboBox("Village");
 	// TextField workName=new TextField("Work Name");
-	// TextArea workName=new TextArea("Work Name");
-	ComboBox<String> workName = new ComboBox("Work Name");
+	TextArea workName=new TextArea("Work Name");
+	ComboBox<String> workSelect = new ComboBox("Select From Previous Works");
 	IntegerField noOfInstallments = new IntegerField("No Of Installments");
 	// NumberField noOfInstallments=new NumberField("No Of Installments");
 	// NumberField workAmount=new NumberField("Sanctioned Amount");
 	BigDecimalField workAmount = new BigDecimalField("Sanctioned Amount");
-	TextField sanctionNo = new TextField("Sanction Number");
+	//TextField sanctionNo = new TextField("Sanction Number");
+	ComboBox<String> sanctionNo = new ComboBox("Sanction No");
 	DatePicker sanctionDate = new DatePicker("Sanction Date");
 	Button save = new Button("Save");
 	Button delete = new Button("Delete");
@@ -69,6 +71,7 @@ public class WorkForm extends VerticalLayout {
 	BigDecimalField installmentAmount = new BigDecimalField("Amount");
 	// TextField installmentCheque =new TextField("Cheque Number");
 	TextField ucletter = new TextField("UC Number");
+	
 	DatePicker ucDate = new DatePicker("UC Date");
 	Notification notify = new Notification();
 	Accordion accordion = new Accordion();
@@ -113,9 +116,9 @@ public class WorkForm extends VerticalLayout {
 		// noOfInstallments.setValue(2);
 		noOfInstallments.setStepButtonsVisible(true);
 		noOfInstallments.setMin(1);
-		noOfInstallments.setMax(5);
+		noOfInstallments.setMax(3);
 		// noOfInstallments.setAutocorrect(true);
-		// workName.setHeight("200px");
+		workName.setHeight("100px");
 		// workName.setErrorMessage("Hello");
 		// workName.val
 		noOfInstallments.setValue(1);
@@ -128,27 +131,26 @@ public class WorkForm extends VerticalLayout {
 		constituency.setItemLabelGenerator(constituency -> constituency.getConstituencyNo() + "-"
 				+ constituency.getConstituencyName() + "-" + constituency.getConstituencyMLA());
 		block.setItemLabelGenerator(block -> block.getBlockName());
-		// workName.setMinLength(5);
-		// workName.setMaxLength(999);
+		workName.setMinLength(5);
+		workName.setMaxLength(999);
 		// Work work=new Work();
-		workName.setItems(service.getWorkNames());
-		workName.setAllowCustomValue(true);
-		workName.setRenderer(new ComponentRenderer<>(item -> {
-		    Div div = new Div();
-		    div.setText(item);
-		    div.getStyle().set("white-space", "pre-wrap");
-		    div.getStyle().set("word-wrap", "break-word");
-		    div.setWidth("300px"); // Adjust width as needed
-		    //div.addClassName("custom-combobox-item"); // Apply the custom class
-		    return div;
-		}));		
-		workName.addCustomValueSetListener(e -> {
+		workSelect.setItems(service.getWorkNames());
+		workSelect.setAllowCustomValue(true);
+		workSelect.addCustomValueSetListener(e -> {
 			String workname = e.getDetail();
-			workName.setItems(workname);
-			workName.setValue(workname);
+			workSelect.setItems(workname);
+			workSelect.setValue(workname);
 		});
-		sanctionNo.setMinLength(2);
-		sanctionNo.setMaxLength(50);
+		workSelect.addValueChangeListener(e->workName.setValue(workSelect.getValue()));
+		//sanctionNo.setMinLength(2);
+		//sanctionNo.setMaxLength(50);
+		sanctionNo.setItems(service.getSanctionNos());
+		sanctionNo.setAllowCustomValue(true);
+		sanctionNo.addCustomValueSetListener(e->{
+			String sancno=e.getDetail();
+			sanctionNo.setItems(sancno);
+			sanctionNo.setValue(sancno);
+		});
 		workName.addClassName("custom-combobox");
 		// village.setItemLabelGenerator(village->village.getVillageName());
 		FormLayout form1 = new FormLayout();
@@ -158,6 +160,7 @@ public class WorkForm extends VerticalLayout {
 		form1.add(constituency, 2);
 		form1.add(block, 1);
 		form1.add(village, 1);
+		form1.add(workSelect, 2);
 		form1.add(workName, 2);
 		form1.add(workAmount, 1);
 		form1.add(noOfInstallments, 1);
@@ -172,9 +175,9 @@ public class WorkForm extends VerticalLayout {
 
 	private Component createButtonsLayout() {
 		// delete.setEnabled(isAdmin);
-		// save.setWidthFull();
-		// delete.setWidthFull();
-		// close.setWidthFull();
+		//save.setWidthFull();
+		//delete.setWidthFull();
+		//close.setWidthFull();
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		save.addClickShortcut(Key.ENTER);
@@ -185,6 +188,9 @@ public class WorkForm extends VerticalLayout {
 		close.addClickListener(event -> fireEvent(new CloseEvent(this)));
 		HorizontalLayout hl1 = new HorizontalLayout(save, delete, close);
 		// return new HorizontalLayout(save, delete, close);
+		hl1.setFlexGrow(1, save);
+		hl1.setFlexGrow(1, delete);
+		hl1.setFlexGrow(1, close);
 		hl1.setWidthFull();
 		return hl1;
 

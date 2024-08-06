@@ -1,5 +1,7 @@
 package com.smis.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,9 +28,28 @@ public class Users {
 	@JoinColumn(name="districtId")
 	@NotNull
 	private District district;
+	private boolean enabled;
+	private String enteredBy;
+	private LocalDate enteredOn;
 	
-	
-	
+	public String getEnteredBy() {
+		return enteredBy;
+	}
+	public void setEnteredBy(String enteredBy) {
+		this.enteredBy = enteredBy;
+	}
+	public LocalDate getEnteredOn() {
+		return enteredOn;
+	}
+	public void setEnteredOn(LocalDate enteredOn) {
+		this.enteredOn = enteredOn;
+	}
+	public boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 	public Users() {
 		//super();
 		// TODO Auto-generated constructor stub
