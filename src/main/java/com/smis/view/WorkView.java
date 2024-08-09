@@ -171,7 +171,7 @@ public class WorkView extends VerticalLayout {
 	}
 
 	private Component getToolbar() {
-		filterText.setPlaceholder("Filter By Work Name or Sanction Number");
+		filterText.setPlaceholder("Filter By Work Code, Name or Sanction Number");
 		filterText.setClearButtonVisible(true);
 		filterText.setValueChangeMode(ValueChangeMode.LAZY);
 		filterText.addValueChangeListener(e -> updateList());
