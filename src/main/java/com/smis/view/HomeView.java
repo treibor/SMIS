@@ -26,6 +26,10 @@ import jakarta.annotation.security.PermitAll;
 @Route(value="", layout=MainLayout.class)
 @PermitAll
 public class HomeView extends VerticalLayout {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Dbservice service;
     public HomeView(Dbservice service) {
     	this.service=service;

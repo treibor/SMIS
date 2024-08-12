@@ -54,14 +54,18 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @Route(value="releaseordermp", layout=MainLayout.class)
 @RolesAllowed({"USER","SUPER"})
 public class PrintViewMp extends VerticalLayout{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	DbserviceMp service;
 	Grid<Installmentmp> grid=new Grid<>(Installmentmp.class);
 	Set<Installment> selectedPersons;
 	IntegerField instNo=new IntegerField("Installment No:");
 	FormLayout layout=new FormLayout();
-	ComboBox<Impldistrict> implDistrict = new ComboBox("Implementing District");
-	ComboBox<Year> year=new ComboBox("Financial Year");
-	ComboBox<Constituencymp> constituency=new ComboBox("Parliamentary Constituency");
+	ComboBox<Impldistrict> implDistrict = new ComboBox<>("Implementing District");
+	ComboBox<Year> year=new ComboBox<>("Financial Year");
+	ComboBox<Constituencymp> constituency=new ComboBox<>("Parliamentary Constituency");
 	//ComboBox<Block> block=new ComboBox("Block");
 	TextField instletter=new TextField("Release Letter No.");
 	//TextField installmentcheque=new TextField("Cheque No.");

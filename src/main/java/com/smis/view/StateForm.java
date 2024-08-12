@@ -2,6 +2,7 @@ package com.smis.view;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.State;
+import com.smis.util.TextFieldUtil;
 import com.smis.entity.State;
 import com.smis.view.ConstimpForm.ConstiFormEvent;
 import com.smis.view.ConstimpForm.DeleteEvent;
@@ -38,6 +39,9 @@ public class StateForm extends FormLayout{
 	public StateForm(Dbservice service) {
 		this.service=service;
 		binder.bindInstanceFields(this);
+		TextFieldUtil.applyTextOnly(stateHq);
+		TextFieldUtil.applyTextOnly(stateLabel);
+		TextFieldUtil.applyTextOnly(stateName);
 		add(stateName, stateHq, stateLabel, createButtonsLayout());
 	}
 	

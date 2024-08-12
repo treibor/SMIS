@@ -11,6 +11,7 @@ import com.smis.entity.Scheme;
 import com.smis.entity.Village;
 import com.smis.entity.Work;
 import com.smis.entity.Year;
+import com.smis.util.TextFieldUtil;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -45,20 +46,20 @@ public class WorkForm extends VerticalLayout {
 	private Work work;
 	private Installment installment;
 	Binder<Work> binder = new BeanValidationBinder<>(Work.class);
-	ComboBox<Scheme> scheme = new ComboBox("Schemes");
-	ComboBox<Year> year = new ComboBox("Financial Year");
-	ComboBox<Constituency> constituency = new ComboBox("Assembly Constituency");
-	ComboBox<Block> block = new ComboBox("Block/MB");
-	ComboBox<Village> village = new ComboBox("Village");
+	ComboBox<Scheme> scheme = new ComboBox<>("Schemes");
+	ComboBox<Year> year = new ComboBox<>("Financial Year");
+	ComboBox<Constituency> constituency = new ComboBox<>("Assembly Constituency");
+	ComboBox<Block> block = new ComboBox<>("Block/MB");
+	ComboBox<Village> village = new ComboBox<>("Village");
 	// TextField workName=new TextField("Work Name");
 	TextArea workName=new TextArea("Work Name");
-	ComboBox<String> workSelect = new ComboBox("Select From Previous Works");
+	ComboBox<String> workSelect = new ComboBox<>("Select From Previous Works");
 	IntegerField noOfInstallments = new IntegerField("No Of Installments");
 	// NumberField noOfInstallments=new NumberField("No Of Installments");
 	// NumberField workAmount=new NumberField("Sanctioned Amount");
 	BigDecimalField workAmount = new BigDecimalField("Sanctioned Amount");
 	//TextField sanctionNo = new TextField("Sanction Number");
-	ComboBox<String> sanctionNo = new ComboBox("Sanction No");
+	ComboBox<String> sanctionNo = new ComboBox<>("Sanction No");
 	DatePicker sanctionDate = new DatePicker("Sanction Date");
 	Button save = new Button("Save");
 	Button delete = new Button("Delete");
@@ -73,7 +74,7 @@ public class WorkForm extends VerticalLayout {
 	TextField ucletter = new TextField("UC Number");
 	
 	DatePicker ucDate = new DatePicker("UC Date");
-	Notification notify = new Notification();
+	//Notification notify = new Notification();
 	Accordion accordion = new Accordion();
 	AccordionPanel workaccordion = new AccordionPanel();
 	AccordionPanel installaccordion = new AccordionPanel();
@@ -111,9 +112,25 @@ public class WorkForm extends VerticalLayout {
 				new VerticalLayout(configureUcForm(), createUcButtons()));
 		return accordion;
 	}
-
+	private void addCustomValueSetListener(ComboBox<String> comboBox) {
+		comboBox.setAllowCustomValue(true);
+		comboBox.addCustomValueSetListener(event -> {
+			String customValue = event.getDetail();
+			if (customValue != null && !customValue.matches("[0-9A-Za-z@./-&]+")) {
+				// Show an error notification or reset the value
+				Notification.show("Invalid input: Only letters, numbers, and '@', '.', '/', '-' and '&'  are allowed").addThemeVariants(NotificationVariant.LUMO_WARNING);
+				comboBox.clear();
+			} else {
+				comboBox.setItems(customValue);
+				comboBox.setValue(customValue);
+			}
+		});
+	}
 	public Component configureForm() {
-		// noOfInstallments.setValue(2);
+		TextFieldUtil.applyTextAreaValidation(workName);
+		TextFieldUtil.applyValidation(ucletter);
+		addCustomValueSetListener(workSelect);
+		addCustomValueSetListener(sanctionNo);
 		noOfInstallments.setStepButtonsVisible(true);
 		noOfInstallments.setMin(1);
 		noOfInstallments.setMax(3);
@@ -273,14 +290,14 @@ public class WorkForm extends VerticalLayout {
 
 	private void validatandSave() {
 		if (work == null) {
-			notify.show("Unable To Identify The Work", 5000, Position.TOP_CENTER);
+			Notification.show("Unable To Identify The Work", 5000, Position.TOP_CENTER);
 		} else if (noOfInstallments.getValue() < 1 || noOfInstallments.getValue() > 5) {
-			notify.show("Failure: Number of Installments Should Be Between 1 and 5", 5000, Position.TOP_CENTER);
+			Notification.show("Failure: Number of Installments Should Be Between 1 and 5", 5000, Position.TOP_CENTER);
 		} else if (workAmount.getValue() == null || workAmount.getValue().compareTo(BigDecimal.ZERO) == -1
 				|| workAmount.getValue().compareTo(BigDecimal.ZERO) == 0) {
-			notify.show("Failure: Amount  Must Be Entered .", 5000, Position.TOP_CENTER);
+			Notification.show("Failure: Amount  Must Be Entered .", 5000, Position.TOP_CENTER);
 		} else if (sanctionDate.getValue() == null) {
-			notify.show("Failure: Sanction Date Must Be Entered .", 5000, Position.TOP_CENTER);
+			Notification.show("Failure: Sanction Date Must Be Entered .", 5000, Position.TOP_CENTER);
 		} else {
 			try {
 				long singlework = work.getWorkCode();
@@ -298,7 +315,7 @@ public class WorkForm extends VerticalLayout {
 				// 5000, Position.TOP_CENTER);
 
 			} catch (Exception e) {
-				notify.show("Unable to Save Work. Please Enter All Mandatory Fields" + e, 5000, Position.TOP_CENTER)
+				Notification.show("Unable to Save Work. Please Enter All Mandatory Fields" + e, 5000, Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_ERROR);
 
 			}
@@ -316,19 +333,19 @@ public class WorkForm extends VerticalLayout {
 
 		int toEnterInstallment = tableinstallments + 1;
 		if (work == null) {
-			notify.show("Unable To Retrieve Work. Please Select Work From The Table");
+			Notification.show("Unable To Retrieve Work. Please Select Work From The Table");
 		} else if (workinstallments == tableinstallments) {
-			notify.show("Failure: All Installments Have Been Entered For The Selected Work.", 5000,
+			Notification.show("Failure: All Installments Have Been Entered For The Selected Work.", 5000,
 					Position.TOP_CENTER);
 		} else if (installmentAmount.getValue() == null || installmentAmount.getValue().compareTo(BigDecimal.ZERO) == 0
 				|| installmentAmount.getValue().compareTo(BigDecimal.ZERO) == -1) {
-			notify.show("Failure:Please Enter A Valid Amount .", 5000, Position.TOP_CENTER);
+			Notification.show("Failure:Please Enter A Valid Amount .", 5000, Position.TOP_CENTER);
 		} else if (work.getWorkAmount().compareTo(installmentAmount.getValue()) == -1) {
-			notify.show("Failure: Please Check Released Amount. It Should Be less Or Equal To The Sanctioned Amount",
+			Notification.show("Failure: Please Check Released Amount. It Should Be less Or Equal To The Sanctioned Amount",
 					5000, Position.TOP_CENTER);
 		} else if ((calculateReleasedInstAmount(work).add(installmentAmount.getValue()))
 				.compareTo(work.getWorkAmount()) == 1) {
-			notify.show("Failure: Released Amount:" + calculateReleasedInstAmount(work)
+			Notification.show("Failure: Released Amount:" + calculateReleasedInstAmount(work)
 					+ " & Amount To Be Released has Exceeded The Sanctioned Amount:" + work.getWorkAmount() + "", 5000,
 					Position.TOP_CENTER);
 		} else {
@@ -340,11 +357,11 @@ public class WorkForm extends VerticalLayout {
 				installment.setWork(work);
 				service.saveInstallment(installment);
 				updateWork("Installment " + toEnterInstallment + "");
-				notify.show("Installment No:" + toEnterInstallment + " Entered Sucessfully", 5000, Position.TOP_CENTER);
+				Notification.show("Installment No:" + toEnterInstallment + " Entered Sucessfully", 5000, Position.TOP_CENTER);
 				// notify.show("Installment No:"+toEnterInstallment+" Entered Sucessfully",5000,
 				// Position.TOP_CENTER);
 			} catch (Exception e) {
-				notify.show("Unable to Save Work" + e);
+				Notification.show("Unable to Save Work" + e);
 
 			}
 		}
@@ -372,9 +389,9 @@ public class WorkForm extends VerticalLayout {
 		int index = tableinstallments - 1;
 		if (ucletter.getValue() == null || ucletter.equals("") || ucDate.getValue() == null
 				|| ucDate.getValue().equals(null)) {
-			notify.show("Please Enter All Values", 5000, Position.TOP_CENTER);
+			Notification.show("Please Enter All Values", 5000, Position.TOP_CENTER);
 		} else if (ucDate.getValue().isBefore(service.getInstallments(work).get(index).getInstallmentDate())) {
-			notify.show("UC Date Cannot Be Before Installment Release Date", 5000, Position.TOP_CENTER);
+			Notification.show("UC Date Cannot Be Before Installment Release Date", 5000, Position.TOP_CENTER);
 		} else {
 			try {
 				this.installment = service.getInstallments(work).get(index);
@@ -386,9 +403,9 @@ public class WorkForm extends VerticalLayout {
 				} else {
 					updateWork("UC " + toEnterInstallment + "");
 				}
-				notify.show("UC:" + toEnterInstallment + " Entered Sucessfully", 5000, Position.TOP_CENTER);
+				Notification.show("UC:" + toEnterInstallment + " Entered Sucessfully", 5000, Position.TOP_CENTER);
 			} catch (Exception e) {
-				notify.show("Unable to Save Work" + e);
+				Notification.show("Unable to Save Work" + e);
 
 			}
 		}
@@ -400,7 +417,7 @@ public class WorkForm extends VerticalLayout {
 			work.setWorkStatus(text);
 			fireEvent(new SaveEvent(this, work));
 		} catch (Exception e) {
-			notify.show("Unable to Save Work" + e);
+			Notification.show("Unable to Save Work" + e);
 
 		}
 

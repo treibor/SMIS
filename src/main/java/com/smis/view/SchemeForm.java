@@ -2,6 +2,7 @@ package com.smis.view;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Scheme;
+import com.smis.util.TextFieldUtil;
 import com.smis.view.SchemeForm.SchemeFormEvent;
 import com.smis.view.SchemeForm.DeleteEvent;
 import com.smis.view.SchemeForm.SaveEvent;
@@ -26,6 +27,10 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 
 public class SchemeForm extends FormLayout{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Dbservice service;
 	Binder<Scheme> binder=new BeanValidationBinder<>(Scheme.class);
 	//IntegerField constituencyNo=new IntegerField("Scheme Number");
@@ -52,6 +57,10 @@ public class SchemeForm extends FormLayout{
 		schemeReport.setMax(4);
 		schemeReport.setMin(1);
 		schemeReport.setValue(1);
+		TextFieldUtil.applyValidation(schemeDept);
+		TextFieldUtil.applyValidation(schemeLabel);
+		TextFieldUtil.applyValidation(schemeName);
+		TextFieldUtil.applyValidation(schemeNameLong);
 		
 		add(schemeName, schemeNameLong, schemeDept, schemeDuration,  schemeLabel, schemeReport,inUse, createButtonsLayout());
 	}

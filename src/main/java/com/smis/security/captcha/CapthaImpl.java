@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.Random;
 public class CapthaImpl implements Captcha {
     private static final int COUNT_NUM = 6;
-    private static final int WIDTH_IMG = 200;
+    private static final int WIDTH_IMG = 150;
     private static final int HEIGHT_IMG = 40;
     private String genStr;
     private String charsInImg = "QWERTYUIOPASDFGHJKLZXCVBNM1234567890";
@@ -38,7 +38,8 @@ public class CapthaImpl implements Captcha {
         GradientPaint blackToGray = new GradientPaint(50, 50, Color.BLACK,300, 100, Color.LIGHT_GRAY);
         graphics.setPaint(blackToGray);
         graphics.fillRect(0,0, WIDTH_IMG, HEIGHT_IMG);
-        graphics.setColor(new Color(25, 159, 110));
+        //graphics.setColor(new Color(25, 159, 110));
+        graphics.setColor(new Color(101,168, 215));
         int x = 0;
         int y;
         for (int i = 0; i < genStr.length(); i++) {

@@ -2,6 +2,7 @@ package com.smis.view;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Year;
+import com.smis.util.TextFieldUtil;
 import com.smis.entity.Year;
 import com.smis.view.YearForm.YearFormEvent;
 import com.smis.view.YearForm.DeleteEvent;
@@ -24,6 +25,10 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.shared.Registration;
 
 public class YearForm extends FormLayout{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Dbservice service;
 	Binder<Year> binder=new BeanValidationBinder<>(Year.class);
 	TextField yearName=new TextField("Financial Year");
@@ -36,6 +41,8 @@ public class YearForm extends FormLayout{
 		this.service=service;
 		binder.bindInstanceFields(this);
 		yearName.setValueChangeMode(ValueChangeMode.LAZY);
+		TextFieldUtil.applyValidation(yearLabel);
+		TextFieldUtil.applyValidation(yearName);
 		yearName.addValueChangeListener(e->yearLabel.setValue(e.getValue()));
 		add(yearName, yearLabel, inUse, createButtonsLayout());
 	}
@@ -69,6 +76,10 @@ public class YearForm extends FormLayout{
 	}
 	
 	public static abstract class YearFormEvent extends ComponentEvent<YearForm> {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private Year Year;
 
 		protected YearFormEvent(YearForm source, Year Year) {
@@ -82,12 +93,22 @@ public class YearForm extends FormLayout{
 	}
 
 	public static class SaveEvent extends YearFormEvent {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		SaveEvent(YearForm source, Year Year) {
 			super(source, Year);
 		}
 	}
 
 	public static class DeleteEvent extends YearFormEvent {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		DeleteEvent(YearForm source, Year Year) {
 			super(source, Year);
 		}
@@ -95,6 +116,11 @@ public class YearForm extends FormLayout{
 	}
 
 	public static class CloseEvent extends YearFormEvent {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		CloseEvent(YearForm source) {
 			super(source, null);
 		}

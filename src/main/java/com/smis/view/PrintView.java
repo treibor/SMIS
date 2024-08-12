@@ -68,10 +68,10 @@ public class PrintView extends HorizontalLayout{
 	Set<Installment> selectedPersons;
 	IntegerField instNo=new IntegerField("Installment No:");
 	FormLayout layout=new FormLayout();
-	ComboBox<Scheme> scheme = new ComboBox("Schemes");
-	ComboBox<Year> year=new ComboBox("Financial Year");
-	ComboBox<Constituency> constituency=new ComboBox("Assembly Constituency");
-	ComboBox<Block> block=new ComboBox("Block");
+	ComboBox<Scheme> scheme = new ComboBox<>("Schemes");
+	ComboBox<Year> year=new ComboBox<>("Financial Year");
+	ComboBox<Constituency> constituency=new ComboBox<>("Assembly Constituency");
+	ComboBox<Block> block=new ComboBox<>("Block");
 	TextField instletter=new TextField("Release Letter No.");
 	TextField installmentcheque=new TextField("Cheque No.");
 	DatePicker instdate=new DatePicker("Release Date");

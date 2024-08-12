@@ -40,6 +40,10 @@ import jakarta.annotation.security.PermitAll;
 
 @PermitAll
 public class MainLayout extends AppLayout{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Dbservice service;
 	@Autowired
 	SecurityService securityService;
@@ -54,10 +58,10 @@ public class MainLayout extends AppLayout{
     Button saveButton=new Button("Save");
     TextField userName = new TextField("User Name");
 	String userType;
-	ComboBox<State> state = new ComboBox("State");
-	ComboBox<District> district = new ComboBox("District");
+	ComboBox<State> state = new ComboBox<>("State");
+	ComboBox<District> district = new ComboBox<>("District");
 	final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-	ComboBox usertype=new ComboBox("Role");
+	ComboBox<String> usertype=new ComboBox<>("Role");
 	private Users user;
 	boolean isUser;
 	boolean isAdmin;
@@ -79,14 +83,7 @@ public class MainLayout extends AppLayout{
 		district.setItems(service.getAllDistricts(state.getValue()));
 	}
 	private void createDrawer() {
-		SideNav nav = new SideNav();
-//		SideNavItem home = new SideNavItem("Home", HomeView.class, LineAwesomeIcon.HOME_SOLID.create());
-//		SideNavItem mla = new SideNavItem("MLA Schemes", WorkView.class, LineAwesomeIcon.PEOPLE_CARRY_SOLID.create());
-//		SideNavItem releaseorder = new SideNavItem("Release Order", PrintView.class, LineAwesomeIcon.DONATE_SOLID.create());
-//		SideNavItem master = new SideNavItem("Master", MasterView.class, LineAwesomeIcon.MASTODON.create());
-//		SideNavItem distmaster = new SideNavItem("District Master", DistView.class, LineAwesomeIcon.MASTODON.create());
-//		SideNavItem report = new SideNavItem("Reports", ReportView.class, LineAwesomeIcon.RECEIPT_SOLID.create());
-//		SideNavItem audit = new SideNavItem("Audit Trail", AuditView.class, LineAwesomeIcon.XBOX.create());
+		
 		VerticalLayout drawerContent = new VerticalLayout();
 
 	    // Add navigation items with helper text
@@ -98,23 +95,7 @@ public class MainLayout extends AppLayout{
         SideNavItemWithHelperText report = new SideNavItemWithHelperText("", "Reports", ReportView.class, LineAwesomeIcon.CALCULATOR_SOLID.create());
         SideNavItemWithHelperText audit = new SideNavItemWithHelperText("", "Audit Trail", AuditView.class, LineAwesomeIcon.CALENDAR.create());
         SideNavItemWithHelperText users = new SideNavItemWithHelperText("", "Users", UsersView.class, LineAwesomeIcon.USER.create());
-		/*
-		 * SideNavItem home = new SideNavItem("", HomeView.class,
-		 * LineAwesomeIcon.HOME_SOLID.create()); home.getElement().setAttribute("title",
-		 * "Home"); SideNavItem mla = new SideNavItem("", WorkView.class,
-		 * LineAwesomeIcon.PEOPLE_CARRY_SOLID.create());
-		 * mla.getElement().setAttribute("title", "MLA Schemes"); SideNavItem
-		 * releaseorder = new SideNavItem("", PrintView.class,
-		 * LineAwesomeIcon.DONATE_SOLID.create());
-		 * releaseorder.getElement().setAttribute("title", "Release Order"); SideNavItem
-		 * master = new SideNavItem("", MasterView.class,
-		 * LineAwesomeIcon.MASTODON.create()); SideNavItem distmaster = new
-		 * SideNavItem("", DistView.class, LineAwesomeIcon.MASTODON.create());
-		 * SideNavItem report = new SideNavItem("", ReportView.class,
-		 * LineAwesomeIcon.RECEIPT_SOLID.create()); SideNavItem audit = new
-		 * SideNavItem("", AuditView.class, LineAwesomeIcon.XBOX.create());
-		 */
-		//nav.addItem(home, mla, releaseorder, master,distmaster, report, audit);
+		
 		master.setVisible(isAdmin);
 		distmaster.setVisible(isSuper);
 		releaseorder.setVisible(isUser);
@@ -236,9 +217,9 @@ public class MainLayout extends AppLayout{
 	private void changePassword() {
 		// notify.show("Under Development", 3000, Position.TOP_CENTER);
 		if(oldpwd.getValue()==""||newpwd.getValue()==""||confirmpwd.getValue()=="") {
-			notify.show("Error: Enter All Values, Please", 3000, Position.TOP_CENTER);
+			Notification.show("Error: Enter All Values, Please", 3000, Position.TOP_CENTER);
 		}else if(newpwd.getValue().trim().length()<7) {
-			notify.show("Error: New Password is too Weak", 3000, Position.TOP_CENTER);
+			Notification.show("Error: New Password is too Weak", 3000, Position.TOP_CENTER);
 		} else {
 			if (newpwd.getValue().trim().equals(confirmpwd.getValue().trim())) {
 				String pwd = oldpwd.getValue();
@@ -247,17 +228,17 @@ public class MainLayout extends AppLayout{
 					user = service.getLoggedUser();
 					user.setPassword(passwordEncoder.encode(newpwd.getValue().trim()));
 					service.saveUser(user);
-					notify.show("Password Changed Successfully for User:" + user.getUserName(), 3000,
-							Position.TOP_CENTER);
+					Notification.show("Password Changed Successfully for User:" + user.getUserName(), 3000,
+							Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 					//dialog.close();
 					clearDialog();	
 				
 				} else {
 					
-					notify.show("Unauthorised User", 3000, Position.TOP_CENTER);
+					Notification.show("Unauthorised User", 3000, Position.TOP_CENTER);
 				}
 			}else {
-				notify.show("Please check and confirm your passwords", 3000, Position.TOP_CENTER);
+				Notification.show("Please check and confirm your passwords", 3000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			}
 		}
 	}
