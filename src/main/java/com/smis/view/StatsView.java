@@ -1,10 +1,5 @@
 package com.smis.view;
 
-import java.time.Month;
-import java.time.Year;
-import java.time.YearMonth;
-
-import com.smis.dbservice.DashboardService;
 import com.smis.dbservice.Dbservice;
 import com.storedobject.chart.BarChart;
 import com.storedobject.chart.CategoryData;
@@ -19,111 +14,55 @@ import com.storedobject.chart.Toolbox;
 import com.storedobject.chart.XAxis;
 import com.storedobject.chart.YAxis;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import jakarta.annotation.security.PermitAll;
-@PageTitle("Home")
-@Route(value="", layout=MainLayout.class)
+@PageTitle("Statistics")
+@Route(value="stats", layout=MainLayout.class)
 @PermitAll
-public class HomeView extends VerticalLayout {
+public class StatsView extends VerticalLayout {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	Dbservice service;
-	DashboardService dservice;
-    public HomeView(Dbservice service, DashboardService dservice) {
+    public StatsView(Dbservice service) {
     	this.service=service;
-    	this.dservice=dservice;
-    	add(getCharts2(), getCharts());
-        setWidthFull();
-        setJustifyContentMode(JustifyContentMode.CENTER);
-		setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-		getStyle().set("text-align", "center");
+    	addClassName("homeLayout");
+        setSpacing(true);
+        Image img = new Image("images/plant.png", "image");
+        img.setWidth("200px");
+        //add(img);
 
+        //add(new H2("Scheme Management & Information System 2.0"));
+        //add(new Paragraph("National Informatics Centre, Meghalaya"));
+        
+        add(getCharts(), getCharts2());
+        //add(getTabs());
+        setSizeFull();
+        //setJustifyContentMode(JustifyContentMode.CENTER);
+        //setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+        //getStyle().set("text-align", "center");
     }
-    private Component getCards() {
-		VerticalLayout card1 = createCard(1);
-		VerticalLayout card2 = createCard(2);
-		VerticalLayout card3 = createCard(3);
-		VerticalLayout card4 = createCard(4);
-		
-		return new HorizontalLayout(card1, card2, card3, card4);
-	}
-    private VerticalLayout createCard(int type) {
-		VerticalLayout card = new VerticalLayout();
-		card.addClassName("card");
-
-		Icon icon;
-        String title;
-        String description;
-
-
-		// Define content based on card type
-		switch (type) {
-		case 1:
-			 icon = VaadinIcon.CHECK.create();
-			long title1=dservice.getWorksCount();
-			title = ""+title1;
-			description = "Total Works Entered";
-			break;
-		case 2:
-			 icon = VaadinIcon.ADJUST.create();
-			long title2=dservice.getInstallmentCount();
-			title = ""+title2;
-			description = "Total Installments Released";
-			break;
-		case 3:
-			 icon = VaadinIcon.CALENDAR.create();
-			long title3=dservice.getCurrentMonthData();
-			title = ""+title3;
-			description = "Works Entered In The Current Month";
-			break;
-		case 4:
-			 icon = VaadinIcon.CALENDAR_CLOCK.create();
-			long title4=dservice.getMonthData();
-			title = ""+title4;
-			description = "Works Entered In The Previous Month";
-			break;
-		default:
-			 icon = VaadinIcon.BARCODE.create();
-			title = "Default Card Title";
-			description = "This is a default card description.";
-			break;
-		}
-		
-
-		// Create image component
-		 icon.addClassName("card-icon");
-
-		// Create title component
-		Span titleLabel = new Span(title);
-		titleLabel.addClassName("card-title");
-
-		// Create description component
-		Span descriptionLabel = new Span(description);
-		descriptionLabel.addClassName("card-description");
-
-		// Create a button
-		Button actionButton = new Button("Learn More");
-		actionButton.addClassName("card-button");
-
-		// Add components to the card layout
-		card.add(icon, titleLabel, descriptionLabel);
-
-		return card;
-	}public Component getCharts() {
+    public Component getTabs() {
+    	Tab details = new Tab("Details");
+        Tab payment = new Tab("Payment");
+        Tab shipping = new Tab("Shipping");
+        Tab tabs = new Tab(details, payment, shipping);
+        /*TabSheet t = new TabSheet();
+        t.setHeight("200px");
+        t.setWidth("400px");
+        t.addTab("details", getCharts(), VaadinIcon.TAB);*/
+        //details.add(getCharts());
+        //payment.add(getCharts2());
+        return tabs;
+    }
+    public Component getCharts() {
     	SOChart soChart = new SOChart();
     	SOChart soChart2 = new SOChart();
     	CategoryData labels = new CategoryData();
@@ -211,13 +150,10 @@ public class HomeView extends VerticalLayout {
         soChart.add(nc, toolbox);
         soChart2.add(bc, toolbox, title);
         HorizontalLayout getCharts=new HorizontalLayout();
-        getCharts.add( getCards(),soChart);
+        getCharts.add( soChart2,soChart);
         
         getCharts.addClassName("chartsLayout1");
         getCharts.setWidthFull();
-        getCharts.setJustifyContentMode(JustifyContentMode.CENTER);
-		//getCharts.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-		getStyle().set("text-align", "center");
         return getCharts;
     }
 

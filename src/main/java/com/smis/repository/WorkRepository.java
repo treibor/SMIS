@@ -1,11 +1,11 @@
 package com.smis.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import com.smis.entity.Block;
 import com.smis.entity.Constituency;
@@ -15,7 +15,6 @@ import com.smis.entity.Work;
 import com.smis.entity.Year;
 
 
-@Repository
 public interface WorkRepository extends JpaRepository<Work, Long> {
 	
 	List<Work> findByDistrictOrderByWorkCodeDesc(District district);
@@ -65,5 +64,9 @@ public interface WorkRepository extends JpaRepository<Work, Long> {
 	@Query("select c from Work c where c.district= :district and(str(c.workCode)=:searchTerm or lower(c.workName) like lower(concat('%', :searchTerm, '%'))or lower(c.sanctionNo) like lower(concat('%', :searchTerm, '%'))) order by c.workCode Desc")
 	List<Work> searchAll(@Param("searchTerm") String searchTerm, @Param("district") District district);
 	
-	
+	@Query("select  count(*) from Work c  where  c.enteredOn between :sdate and :edate")
+	int getWorksCountBetweenDates(@Param("sdate") LocalDate sdate, @Param("edate") LocalDate edate);
+	@Query("select  count(*) from Work c")
+	int getWorksCount();
+
 }

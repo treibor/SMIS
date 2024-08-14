@@ -194,12 +194,14 @@ public class Login extends VerticalLayout implements BeforeEnterObserver {
 				// registerSession(ServletContext, (UserDetails) authentication.getPrincipal());
 				registerSession(VaadinService.getCurrentRequest().getWrappedSession(),
 						(UserDetails) authentication.getPrincipal());
+				audit.saveLoginAudit("Login Successfully", username);
 				UI.getCurrent().navigate(HomeView.class);
 			} catch (Exception e) {
 				// Handle login failure
+				audit.saveLoginAudit("Login Failure- Authentication", username);
 				Notification.show("Authentication failed: Wrong User Name and Password" ).addThemeVariants(NotificationVariant.LUMO_ERROR);
 				clearFields();
-				audit.saveLoginAudit("Login Failure- Authentication", username);
+				
 			}
 //		}else {
 //			Notification.show("Invalid captcha").addThemeVariants(NotificationVariant.LUMO_ERROR);

@@ -31,7 +31,16 @@ public class Users {
 	private boolean enabled;
 	private String enteredBy;
 	private LocalDate enteredOn;
+	private LocalDate pwdChangedDate;
 	
+	
+	
+	public LocalDate getPwdChangedDate() {
+		return pwdChangedDate;
+	}
+	public void setPwdChangedDate(LocalDate pwdChangedDate) {
+		this.pwdChangedDate = pwdChangedDate;
+	}
 	public String getEnteredBy() {
 		return enteredBy;
 	}

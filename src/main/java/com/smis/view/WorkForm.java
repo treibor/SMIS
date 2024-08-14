@@ -42,6 +42,10 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.shared.Registration;
 
 public class WorkForm extends VerticalLayout {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Dbservice service;
 	private Work work;
 	private Installment installment;
@@ -116,7 +120,7 @@ public class WorkForm extends VerticalLayout {
 		comboBox.setAllowCustomValue(true);
 		comboBox.addCustomValueSetListener(event -> {
 			String customValue = event.getDetail();
-			if (customValue != null && !customValue.matches("[0-9A-Za-z@./-&]+")) {
+			if (customValue != null && !customValue.matches("[0-9A-Za-z@./-& ]+")) {
 				// Show an error notification or reset the value
 				Notification.show("Invalid input: Only letters, numbers, and '@', '.', '/', '-' and '&'  are allowed").addThemeVariants(NotificationVariant.LUMO_WARNING);
 				comboBox.clear();
@@ -129,8 +133,8 @@ public class WorkForm extends VerticalLayout {
 	public Component configureForm() {
 		TextFieldUtil.applyTextAreaValidation(workName);
 		TextFieldUtil.applyValidation(ucletter);
-		addCustomValueSetListener(workSelect);
-		addCustomValueSetListener(sanctionNo);
+		//addCustomValueSetListener(workSelect);
+		//addCustomValueSetListener(sanctionNo);
 		noOfInstallments.setStepButtonsVisible(true);
 		noOfInstallments.setMin(1);
 		noOfInstallments.setMax(3);

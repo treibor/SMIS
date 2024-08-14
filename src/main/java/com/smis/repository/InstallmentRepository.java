@@ -31,6 +31,7 @@ public interface InstallmentRepository extends JpaRepository<Installment, Long>{
 	@Query("select  a, c, d, e, f, g from Installment a join a.work c join c.constituency d join c.scheme e join c.year f join c.block g  where  c.district=:district and (c.scheme=:scheme or :scheme is null or :scheme=0) and (c.year=:year or :year is null or :year=0) and (c.block=:block or :block is null or :block=0) and (c.constituency=:consti or :consti is null or :consti=0) order by d.constituencyName, g.blockName, e.schemeName, f.yearName, c.workCode, a.installmentNo ASC")
 	List<Installment> getReportData(@Param("scheme") Scheme scheme, @Param("district") District district, @Param("year") Year year,@Param("consti") Constituency consti, @Param("block") Block block);
 	
-	
+	@Query("select  count(*) from Installment c")
+	int getInstallmentCount();
 	
 }
