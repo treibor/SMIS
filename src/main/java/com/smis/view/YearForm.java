@@ -2,7 +2,7 @@ package com.smis.view;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Year;
-import com.smis.util.TextFieldUtil;
+import com.smis.util.ValidationUtil;
 import com.smis.entity.Year;
 import com.smis.view.YearForm.YearFormEvent;
 import com.smis.view.YearForm.DeleteEvent;
@@ -41,8 +41,8 @@ public class YearForm extends FormLayout{
 		this.service=service;
 		binder.bindInstanceFields(this);
 		yearName.setValueChangeMode(ValueChangeMode.LAZY);
-		TextFieldUtil.applyValidation(yearLabel);
-		TextFieldUtil.applyValidation(yearName);
+		ValidationUtil.applyValidation(yearLabel);
+		ValidationUtil.applyValidation(yearName);
 		yearName.addValueChangeListener(e->yearLabel.setValue(e.getValue()));
 		add(yearName, yearLabel, inUse, createButtonsLayout());
 	}

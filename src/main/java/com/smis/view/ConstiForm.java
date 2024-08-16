@@ -3,7 +3,7 @@ package com.smis.view;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Constituency;
-import com.smis.util.TextFieldUtil;
+import com.smis.util.ValidationUtil;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -38,8 +38,8 @@ public class ConstiForm extends FormLayout{
 	public ConstiForm(Dbservice service) {
 		this.service=service;
 		binder.bindInstanceFields(this);
-		TextFieldUtil.applyTextOnly(constituencyLabel);
-		TextFieldUtil.applyTextOnly(constituencyMLA);
+		ValidationUtil.applyTextOnly(constituencyLabel);
+		ValidationUtil.applyTextOnly(constituencyMLA);
 		
 		add(constituencyNo, constituencyName, constituencyMLA, inUse,createButtonsLayout());
 	}

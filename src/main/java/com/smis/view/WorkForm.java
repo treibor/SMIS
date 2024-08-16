@@ -2,6 +2,9 @@ package com.smis.view;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Block;
@@ -11,7 +14,7 @@ import com.smis.entity.Scheme;
 import com.smis.entity.Village;
 import com.smis.entity.Work;
 import com.smis.entity.Year;
-import com.smis.util.TextFieldUtil;
+import com.smis.util.ValidationUtil;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -25,7 +28,6 @@ import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
@@ -38,7 +40,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.shared.Registration;
 
 public class WorkForm extends VerticalLayout {
@@ -116,23 +118,10 @@ public class WorkForm extends VerticalLayout {
 				new VerticalLayout(configureUcForm(), createUcButtons()));
 		return accordion;
 	}
-	private void addCustomValueSetListener(ComboBox<String> comboBox) {
-		comboBox.setAllowCustomValue(true);
-		comboBox.addCustomValueSetListener(event -> {
-			String customValue = event.getDetail();
-			if (customValue != null && !customValue.matches("[0-9A-Za-z@./-& ]+")) {
-				// Show an error notification or reset the value
-				Notification.show("Invalid input: Only letters, numbers, and '@', '.', '/', '-' and '&'  are allowed").addThemeVariants(NotificationVariant.LUMO_WARNING);
-				comboBox.clear();
-			} else {
-				comboBox.setItems(customValue);
-				comboBox.setValue(customValue);
-			}
-		});
-	}
+	
 	public Component configureForm() {
-		TextFieldUtil.applyTextAreaValidation(workName);
-		TextFieldUtil.applyValidation(ucletter);
+		ValidationUtil.applyTextAreaValidation(workName);
+		ValidationUtil.applyValidation(ucletter);
 		//addCustomValueSetListener(workSelect);
 		//addCustomValueSetListener(sanctionNo);
 		noOfInstallments.setStepButtonsVisible(true);
@@ -162,7 +151,7 @@ public class WorkForm extends VerticalLayout {
 			workSelect.setItems(workname);
 			workSelect.setValue(workname);
 		});
-		workSelect.addValueChangeListener(e->workName.setValue(workSelect.getValue()));
+		//workSelect.addValueChangeListener(e->workName.setValue(workSelect.getValue()));
 		//sanctionNo.setMinLength(2);
 		//sanctionNo.setMaxLength(50);
 		sanctionNo.setItems(service.getSanctionNos());
@@ -172,7 +161,9 @@ public class WorkForm extends VerticalLayout {
 			sanctionNo.setItems(sancno);
 			sanctionNo.setValue(sancno);
 		});
+		
 		workName.addClassName("custom-combobox");
+		
 		// village.setItemLabelGenerator(village->village.getVillageName());
 		FormLayout form1 = new FormLayout();
 		form1.setWidth("100%");
@@ -193,12 +184,9 @@ public class WorkForm extends VerticalLayout {
 				new ResponsiveStep("500px", 2));
 		return form1;
 	}
-
+	
 	private Component createButtonsLayout() {
-		// delete.setEnabled(isAdmin);
-		//save.setWidthFull();
-		//delete.setWidthFull();
-		//close.setWidthFull();
+		
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		save.addClickShortcut(Key.ENTER);
@@ -294,15 +282,18 @@ public class WorkForm extends VerticalLayout {
 
 	private void validatandSave() {
 		if (work == null) {
-			Notification.show("Unable To Identify The Work", 5000, Position.TOP_CENTER);
+			Notification.show("Unable To Identify The Work", 5000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 		} else if (noOfInstallments.getValue() < 1 || noOfInstallments.getValue() > 5) {
-			Notification.show("Failure: Number of Installments Should Be Between 1 and 5", 5000, Position.TOP_CENTER);
+			Notification.show("Failure: Number of Installments Should Be Between 1 and 5", 5000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 		} else if (workAmount.getValue() == null || workAmount.getValue().compareTo(BigDecimal.ZERO) == -1
 				|| workAmount.getValue().compareTo(BigDecimal.ZERO) == 0) {
-			Notification.show("Failure: Amount  Must Be Entered .", 5000, Position.TOP_CENTER);
+			Notification.show("Failure: Amount  Must Be Entered .", 5000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 		} else if (sanctionDate.getValue() == null) {
-			Notification.show("Failure: Sanction Date Must Be Entered .", 5000, Position.TOP_CENTER);
-		} else {
+			Notification.show("Failure: Sanction Date Must Be Entered .", 5000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+		} else if(!ValidationUtil.applyValidation(sanctionNo.getValue())) {
+			Notification.show("Failure: Sanction No. Contains Characters which are Not allowed.", 5000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+		}
+			else {
 			try {
 				long singlework = work.getWorkCode();
 				binder.writeBean(work);

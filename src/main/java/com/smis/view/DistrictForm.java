@@ -4,7 +4,7 @@ import com.smis.dbservice.Dbservice;
 import com.smis.entity.District;
 import com.smis.entity.Impldistrict;
 import com.smis.entity.State;
-import com.smis.util.TextFieldUtil;
+import com.smis.util.ValidationUtil;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -60,15 +60,15 @@ public class DistrictForm extends FormLayout {
 	private void configureFields() {
 		districtName.setMinLength(2);
 		districtName.setMaxLength(30);
-		TextFieldUtil.applyTextOnly(deputyCommissioner);
-		TextFieldUtil.applyTextOnly(deputyCommissionerName);
-		TextFieldUtil.applyTextOnly(districtAddress);
-		TextFieldUtil.applyTextOnly(districtFax);
-		TextFieldUtil.applyTextOnly(districtHq);
-		TextFieldUtil.applyTextOnly(districtLabel);
-		TextFieldUtil.applyTextOnly(districtName);
-		TextFieldUtil.applyTextOnly(districtPhone);
-		TextFieldUtil.applyTextOnly(districtPin);
+		ValidationUtil.applyTextOnly(deputyCommissioner);
+		ValidationUtil.applyTextOnly(deputyCommissionerName);
+		ValidationUtil.applyTextOnly(districtAddress);
+		ValidationUtil.applyTextOnly(districtFax);
+		ValidationUtil.applyTextOnly(districtHq);
+		ValidationUtil.applyTextOnly(districtLabel);
+		ValidationUtil.applyTextOnly(districtName);
+		ValidationUtil.applyTextOnly(districtPhone);
+		ValidationUtil.applyTextOnly(districtPin);
 	}
 
 	private Component createButtonsLayout() {

@@ -2,7 +2,7 @@ package com.smis.view;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Block;
-import com.smis.util.TextFieldUtil;
+import com.smis.util.ValidationUtil;
 import com.smis.view.BlockForm.BlockFormEvent;
 import com.smis.view.BlockForm.DeleteEvent;
 import com.smis.view.BlockForm.SaveEvent;
@@ -41,9 +41,9 @@ public class BlockForm extends FormLayout{
 		blockName.setHelperText("Eg: Mawlai or Shillong Municipal Board");
 		blockDevelopmentOfficer.setHelperText("Eg: Block Development Officer");
 		blockLabel.setHelperText("Eg: Mawlai C&RD Block");
-		TextFieldUtil.applyTextOnly(blockDevelopmentOfficer);
-		TextFieldUtil.applyTextOnly(blockLabel);
-		TextFieldUtil.applyTextOnly(blockName);
+		ValidationUtil.applyTextOnly(blockDevelopmentOfficer);
+		ValidationUtil.applyTextOnly(blockLabel);
+		ValidationUtil.applyTextOnly(blockName);
 		add(blockName, blockDevelopmentOfficer, blockLabel, inUse, createButtonsLayout());
 	}
 	

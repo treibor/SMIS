@@ -2,7 +2,7 @@ package com.smis.view;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Scheme;
-import com.smis.util.TextFieldUtil;
+import com.smis.util.ValidationUtil;
 import com.smis.view.SchemeForm.SchemeFormEvent;
 import com.smis.view.SchemeForm.DeleteEvent;
 import com.smis.view.SchemeForm.SaveEvent;
@@ -57,10 +57,10 @@ public class SchemeForm extends FormLayout{
 		schemeReport.setMax(4);
 		schemeReport.setMin(1);
 		schemeReport.setValue(1);
-		TextFieldUtil.applyValidation(schemeDept);
-		TextFieldUtil.applyValidation(schemeLabel);
-		TextFieldUtil.applyValidation(schemeName);
-		TextFieldUtil.applyValidation(schemeNameLong);
+		ValidationUtil.applyValidation(schemeDept);
+		ValidationUtil.applyValidation(schemeLabel);
+		ValidationUtil.applyValidation(schemeName);
+		ValidationUtil.applyValidation(schemeNameLong);
 		
 		add(schemeName, schemeNameLong, schemeDept, schemeDuration,  schemeLabel, schemeReport,inUse, createButtonsLayout());
 	}
