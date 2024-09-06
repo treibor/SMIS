@@ -291,7 +291,7 @@ public class WorkForm extends VerticalLayout {
 		} else if (sanctionDate.getValue() == null) {
 			Notification.show("Failure: Sanction Date Must Be Entered .", 5000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 		} else if(!ValidationUtil.applyValidation(sanctionNo.getValue())) {
-			Notification.show("Failure: Sanction No. Contains Characters which are Not allowed.", 5000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+			Notification.show("Sanction No: Special Characters like *, ?, ^,%, $ ,#  are not allowed.", 5000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 		}
 			else {
 			try {
