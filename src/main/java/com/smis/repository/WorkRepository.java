@@ -51,7 +51,7 @@ public interface WorkRepository extends JpaRepository<Work, Long> {
 		                            @Param("consti") Constituency consti, 
 		                            @Param("block") Block block);
 	
-	@Query("select  c, d, e, f, g, h from Work c join c.constituency d join c.block e join c.scheme f join c.year g join c.district h where  c.district=:district and (c.scheme=:scheme or :scheme is null or :scheme=0) and (c.year=:year or :year is null or :year=0) and (c.block=:block or :block is null or :block=0) and (c.constituency=:consti or :consti is null or :consti=0) order by d.constituencyName, e.blockName, f.schemeName, g.yearName, c.workCode Desc")
+	@Query("select  c, d, e, f, g, h from Work c join c.constituency d join c.block e join c.scheme f join c.year g join c.district h where  c.district=:district and (c.scheme=:scheme or :scheme is null) and (c.year=:year or :year is null) and (c.block=:block or :block is null ) and (c.constituency=:consti or :consti is null ) order by d.constituencyName, e.blockName, f.schemeName, g.yearName, c.workCode Desc")
 	List<Work> getReportWorks(@Param("scheme") Scheme scheme, @Param("district") District district, @Param("year") Year year,@Param("consti") Constituency consti, @Param("block") Block block);
 	
 	String a1="select c from Work c where c.district= :district and(";

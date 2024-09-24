@@ -353,7 +353,9 @@ public class WorkView extends VerticalLayout {
 						// check if any installment is entered
 						List<Installment> installments = service.getInstallments(work);
 						workform.delete.setEnabled(isAdmin);
-						disableFields();
+						if(!isAdmin) {
+							disableFields();
+						}
 						// workform.setEnabled(isAdmin);
 						int tablecountindex = tablecount - 1;
 						if (workinstallment == tablecount) {

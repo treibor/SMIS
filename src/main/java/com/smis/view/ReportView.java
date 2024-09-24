@@ -250,8 +250,9 @@ public class ReportView extends VerticalLayout {
 				File file = Paths.get(res.toURI()).toFile();
 				String absolutePath = file.getAbsolutePath();
 				String reportPath = absolutePath.substring(0, absolutePath.length() - 15);
-
+				System.out.println("A");
 				if (reportTypemla.getValue() == "Detailed Report") {
+					System.out.println("Z");
 					List<Installment> installment = service.getInstallmentForReport(scheme.getValue(), year.getValue(),
 							consti.getValue(), block.getValue());
 					Resource resource = new ClassPathResource("report/Detailsmla.jrxml");
@@ -261,6 +262,7 @@ public class ReportView extends VerticalLayout {
 					Map<String, Object> parameters = new HashMap<>();
 					JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,
 							jrBeanCollectionDataSource);
+					System.out.println("B");
 					JasperExportManager.exportReportToPdfFile(jasperPrint, reportPath + "//detailreport.pdf");
 					File a = new File(reportPath + "//detailreport.pdf");
 					StreamResource resourcerange = new StreamResource("DetailedReport.pdf", () -> createResource(a));

@@ -65,44 +65,44 @@ import '@vaadin/vaadin-lumo-styles/vaadin-iconset.js';
 
 const loadOnDemand = (key) => {
   const pending = [];
-  if (key === '3368b28ae401a37aec04b5f8d138532a46b6c3b9c4d4377cb3615fb35b8d388d') {
-    pending.push(import('./chunks/chunk-10d4b4f3eeb53fdb33ff8619e6e16679c2755effa183c3fb199473d4e1ecf671.js'));
-  }
   if (key === '130fdac2f606b415395067da45456dd0d791445544f7ad3d166f02d18e3093de') {
     pending.push(import('./chunks/chunk-245229f1ff1b47e1bc3e05dfb2e2b78f36ba323410235657a18ce85ca15dd59a.js'));
   }
   if (key === 'ba0740ecd7eaf5a968f0c2ab0d8956e90792075a7e15f0bc1d6802044a5a4d45') {
     pending.push(import('./chunks/chunk-10d4b4f3eeb53fdb33ff8619e6e16679c2755effa183c3fb199473d4e1ecf671.js'));
   }
-  if (key === 'cc6a9a9a230166e119979efdc09d9ef284a90119880c86c8af928ccf83fc7b88') {
-    pending.push(import('./chunks/chunk-245229f1ff1b47e1bc3e05dfb2e2b78f36ba323410235657a18ce85ca15dd59a.js'));
-  }
-  if (key === '8cd1296780278484c56befb9de72ec763042f3535ec9325e2a92b3a68c14746f') {
-    pending.push(import('./chunks/chunk-dc377c1dd2f489dbb675570d36bf1caa51aa1fa50d9570d0a59052c580e9973b.js'));
-  }
   if (key === '42bb99999e2c1e88421f77d963f4acff8c5e62364dff2127fc662ac9fea1cdfc') {
     pending.push(import('./chunks/chunk-2d64e66c99b7f979ef0637fd12ca11143b7c5834f11da7f14c83bf1ee728f10d.js'));
-  }
-  if (key === 'ed28b5faf3885a5e351a83211b1dd8e139c98b9849f40792e127744d5d3bed2d') {
-    pending.push(import('./chunks/chunk-143932b8c52012fb2603269685b9b2965aa0002fac29390ae8f1ee4cebaeaf7c.js'));
-  }
-  if (key === '21d3b6ee93a374fd3dc19fd4d02e858024d453eed3ba592ab9abc8b257977d38') {
-    pending.push(import('./chunks/chunk-10d4b4f3eeb53fdb33ff8619e6e16679c2755effa183c3fb199473d4e1ecf671.js'));
   }
   if (key === '9dcdce97eb6be983b7fbbda11f5ead2fa8ba6e14013d655cfe2e7cad3335963c') {
     pending.push(import('./chunks/chunk-b45f1ea93f69918bbbd12dad38f606f5beab72ff32848f61eb9f6eafc375edaa.js'));
   }
+  if (key === 'ed28b5faf3885a5e351a83211b1dd8e139c98b9849f40792e127744d5d3bed2d') {
+    pending.push(import('./chunks/chunk-143932b8c52012fb2603269685b9b2965aa0002fac29390ae8f1ee4cebaeaf7c.js'));
+  }
+  if (key === '8cd1296780278484c56befb9de72ec763042f3535ec9325e2a92b3a68c14746f') {
+    pending.push(import('./chunks/chunk-dc377c1dd2f489dbb675570d36bf1caa51aa1fa50d9570d0a59052c580e9973b.js'));
+  }
+  if (key === '21d3b6ee93a374fd3dc19fd4d02e858024d453eed3ba592ab9abc8b257977d38') {
+    pending.push(import('./chunks/chunk-10d4b4f3eeb53fdb33ff8619e6e16679c2755effa183c3fb199473d4e1ecf671.js'));
+  }
   if (key === '49ed8ff4166585dcf29b567e05f6fe39fce200af1c1a8ae7b5ce3f0a204c39e0') {
     pending.push(import('./chunks/chunk-725767ed1f958265cc624ca8f759498fe057772aac0f68ea6cd9668875714bea.js'));
   }
-  if (key === '90cc937964680a305fcc8edbb281af173ffd85324889ca04f0508af20f5b467b') {
-    pending.push(import('./chunks/chunk-2fd42244bc0bd9493eca2789551c303c05ed538eaae7a701dfb862c63b9e8b3b.js'));
+  if (key === '61de215dc74f10ce4838d50ec138c6796d05143f35a6234f87c9566338c90a2b') {
+    pending.push(import('./chunks/chunk-b697ebcdb9c19190e13673b3f9f77d6540ce10d6c78fe07f692798b3f836ab26.js'));
+  }
+  if (key === 'cc6a9a9a230166e119979efdc09d9ef284a90119880c86c8af928ccf83fc7b88') {
+    pending.push(import('./chunks/chunk-245229f1ff1b47e1bc3e05dfb2e2b78f36ba323410235657a18ce85ca15dd59a.js'));
   }
   if (key === '0153f681941e1b720af11bbb8ba0a99e916d03102d8fa24ec5b23c9dc7d7b74e') {
     pending.push(import('./chunks/chunk-10d4b4f3eeb53fdb33ff8619e6e16679c2755effa183c3fb199473d4e1ecf671.js'));
   }
-  if (key === '61de215dc74f10ce4838d50ec138c6796d05143f35a6234f87c9566338c90a2b') {
-    pending.push(import('./chunks/chunk-b697ebcdb9c19190e13673b3f9f77d6540ce10d6c78fe07f692798b3f836ab26.js'));
+  if (key === '90cc937964680a305fcc8edbb281af173ffd85324889ca04f0508af20f5b467b') {
+    pending.push(import('./chunks/chunk-2fd42244bc0bd9493eca2789551c303c05ed538eaae7a701dfb862c63b9e8b3b.js'));
+  }
+  if (key === '3368b28ae401a37aec04b5f8d138532a46b6c3b9c4d4377cb3615fb35b8d388d') {
+    pending.push(import('./chunks/chunk-10d4b4f3eeb53fdb33ff8619e6e16679c2755effa183c3fb199473d4e1ecf671.js'));
   }
   return Promise.all(pending);
 }

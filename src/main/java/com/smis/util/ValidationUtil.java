@@ -15,12 +15,12 @@ public class ValidationUtil {
     public static void applyValidation(TextField textField) {
         textField.setAllowedCharPattern("[0-9A-Za-z.()@/'&\\s-]");
         textField.setMinLength(0);
-        textField.setMaxLength(30);
+        textField.setMaxLength(50);
     }
     public static void applyTextOnly(TextField textField) {
         textField.setAllowedCharPattern("[0-9A-Za-z ]");
         textField.setMinLength(0);
-        textField.setMaxLength(30);
+        textField.setMaxLength(50);
     }
     public static void applyTextAreaValidation(TextArea textArea) {
     	//textArea.setAllowedCharPattern("[0-9A-Za-z.,()@/-'& ]");
