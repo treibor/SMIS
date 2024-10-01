@@ -82,7 +82,7 @@ public class WorkView extends VerticalLayout {
 		year.setItemLabelGenerator(Year::getYearName);
 		scheme.setItemLabelGenerator(Scheme::getSchemeName);
 		consti.setItemLabelGenerator(
-				constituency -> constituency.getConstituencyName() + "-" + constituency.getConstituencyMLA());
+				constituency -> constituency.getConstituencyNo() + "-"+constituency.getConstituencyName() + "-" + constituency.getConstituencyMLA());
 		block.setWidthFull();
 		scheme.setWidthFull();
 		year.setWidthFull();

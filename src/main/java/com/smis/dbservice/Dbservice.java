@@ -480,7 +480,7 @@ public class Dbservice implements Serializable{
 			return crepo.findAll();
 		} else {
 			// return crepo.findByDistrictAndInUse(getDistrict(), true);
-			return crepo.findByDistrictAndInUseOrderByConstituencyNameAsc(getDistrict(), true);
+			return crepo.findByDistrictAndInUseOrderByConstituencyNoAsc(getDistrict(), true);
 		}
 		// return crepo.findAll();
 	}

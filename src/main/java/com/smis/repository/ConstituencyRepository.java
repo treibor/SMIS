@@ -14,4 +14,5 @@ public interface ConstituencyRepository extends JpaRepository<Constituency, Long
 	List<Constituency> findByDistrict(District district);
 	//List<Constituency> findByDistrictAndInUse(District district, boolean inUse);
 	List<Constituency> findByDistrictAndInUseOrderByConstituencyNameAsc(District district, boolean inUse);
+	List<Constituency> findByDistrictAndInUseOrderByConstituencyNoAsc(District district, boolean inUse);
 }

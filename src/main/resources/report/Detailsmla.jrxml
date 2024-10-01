@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cherry_Landscape_4" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="7a5c9b49-9dc5-422a-ac69-e92cf61ef530">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SMIS.jrdax"/>
@@ -118,6 +118,8 @@
 		<property name="com.jaspersoft.studio.field.label" value="district_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="district"/>
 	</field>
+	
+</variable>
 	<group name="Group1">
 		<groupExpression><![CDATA[$F{work.constituency.constituencyName}]]></groupExpression>
 		<groupHeader>
@@ -188,13 +190,13 @@
 	<group name="Group4">
 		<groupExpression><![CDATA[$F{work.workCode}]]></groupExpression>
 		<groupHeader>
-			<band height="39">
+			<band height="33">
 				<frame>
-					<reportElement mode="Opaque" x="30" y="3" width="770" height="30" forecolor="#B89F7D" backcolor="#F5F5F5" uuid="e7ece452-19ba-40b0-b0b6-74fa170a5362">
+					<reportElement stretchType="ElementGroupHeight" mode="Opaque" x="30" y="3" width="770" height="30" forecolor="#B89F7D" backcolor="#F5F5F5" uuid="e7ece452-19ba-40b0-b0b6-74fa170a5362">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textField textAdjust="ScaleFont">
-						<reportElement style="SubTitle" x="1" y="0" width="764" height="15" forecolor="#080101" uuid="269cf67f-f407-4abf-b8ac-4bb29965f3f2">
+						<reportElement style="SubTitle" stretchType="ElementGroupHeight" x="-1" y="0" width="764" height="15" forecolor="#080101" uuid="269cf67f-f407-4abf-b8ac-4bb29965f3f2">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						</reportElement>
 						<textElement>
@@ -203,13 +205,23 @@
 						<textFieldExpression><![CDATA["Work: "+$F{work.workCode}+"-"+$F{work.workName}]]></textFieldExpression>
 					</textField>
 					<textField textAdjust="ScaleFont">
-						<reportElement style="SubTitle" x="2" y="16" width="764" height="15" forecolor="#080101" uuid="fc0889e3-b806-4c7f-974d-8d7ab1c0df81">
+						<reportElement style="SubTitle" x="40" y="15" width="726" height="15" forecolor="#080101" uuid="fc0889e3-b806-4c7f-974d-8d7ab1c0df81">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						</reportElement>
 						<textElement>
 							<font size="10" isBold="false"/>
 						</textElement>
 						<textFieldExpression><![CDATA["No of Installments: "+$F{work.noOfInstallments}+" || Sanction No: "+$F{work.sanctionNo}+" || Sanction Date: "+$F{work.sanctionDate}+" || Status: "+$F{work.workStatus}]]></textFieldExpression>
+					</textField>
+					<textField textAdjust="StretchHeight">
+						<reportElement style="Detail" positionType="Float" x="-29" y="0" width="28" height="28" uuid="dee8a6fc-bb9c-427b-a81a-aa7a3d68264c">
+							<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="58b91665-ced9-484e-8692-90d95d15fdcc"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<textElement>
+							<font fontName="Times New Roman" size="10"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{Group4_COUNT}]]></textFieldExpression>
 					</textField>
 				</frame>
 			</band>

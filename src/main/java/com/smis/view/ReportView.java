@@ -108,7 +108,7 @@ public class ReportView extends VerticalLayout {
 		block.setItemLabelGenerator(Block::getBlockName);
 		scheme.setItemLabelGenerator(Scheme::getSchemeName);
 		year.setItemLabelGenerator(Year::getYearName);
-		consti.setItemLabelGenerator(consti-> consti.getConstituencyName()+" - "+consti.getConstituencyMLA());
+		consti.setItemLabelGenerator(consti-> consti.getConstituencyNo()+" - "+consti.getConstituencyName()+" - "+consti.getConstituencyMLA());
 		block.addValueChangeListener(e -> removePdfViewer());
 		scheme.addValueChangeListener(e -> removePdfViewer());
 		year.addValueChangeListener(e -> removePdfViewer());
@@ -252,7 +252,7 @@ public class ReportView extends VerticalLayout {
 				String reportPath = absolutePath.substring(0, absolutePath.length() - 15);
 				System.out.println("A");
 				if (reportTypemla.getValue() == "Detailed Report") {
-					System.out.println("Z");
+					//System.out.println("Z");
 					List<Installment> installment = service.getInstallmentForReport(scheme.getValue(), year.getValue(),
 							consti.getValue(), block.getValue());
 					Resource resource = new ClassPathResource("report/Detailsmla.jrxml");
@@ -262,7 +262,7 @@ public class ReportView extends VerticalLayout {
 					Map<String, Object> parameters = new HashMap<>();
 					JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,
 							jrBeanCollectionDataSource);
-					System.out.println("B");
+					//System.out.println("B");
 					JasperExportManager.exportReportToPdfFile(jasperPrint, reportPath + "//detailreport.pdf");
 					File a = new File(reportPath + "//detailreport.pdf");
 					StreamResource resourcerange = new StreamResource("DetailedReport.pdf", () -> createResource(a));

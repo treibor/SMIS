@@ -16,6 +16,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 import org.springframework.security.web.context.DelegatingSecurityContextRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -30,7 +31,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
-import com.smis.view.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 
 import jakarta.servlet.Filter;
@@ -128,7 +128,7 @@ public class SecurityConfiguration extends VaadinWebSecurity {
 		http
 		.addFilterBefore(rateLimitingFilter, ChannelProcessingFilter.class)
         .addFilterBefore(disableOptionsMethodFilter(), ChannelProcessingFilter.class)
-		
+        //.addFilterAfter(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
 		.headers(headers -> headers
 				.addHeaderWriter(new StaticHeadersWriter("Strict-Transport-Security", "max-age=31536000"))
 	            .xssProtection(xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
