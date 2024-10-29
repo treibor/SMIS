@@ -126,7 +126,7 @@ public class SecurityConfiguration extends VaadinWebSecurity {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-		.addFilterBefore(rateLimitingFilter, ChannelProcessingFilter.class)
+		//.addFilterBefore(rateLimitingFilter, ChannelProcessingFilter.class)
         .addFilterBefore(disableOptionsMethodFilter(), ChannelProcessingFilter.class)
         //.addFilterAfter(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
 		.headers(headers -> headers

@@ -44,10 +44,10 @@ public class WorkView extends VerticalLayout {
 	Dbservice service;
 	Grid<Work> grid = new Grid<>(Work.class);
 	TextField filterText = new TextField();
-	ComboBox<Block> block = new ComboBox();
-	ComboBox<Constituency> consti = new ComboBox();
-	ComboBox<Year> year = new ComboBox();
-	ComboBox<Scheme> scheme = new ComboBox();
+	ComboBox<Block> block = new ComboBox<Block>();
+	ComboBox<Constituency> consti = new ComboBox<Constituency>();
+	ComboBox<Year> year = new ComboBox<Year>();
+	ComboBox<Scheme> scheme = new ComboBox<Scheme>();
 	Button expButton = new Button("Export");
 	// Checkbox displayFilter= new Checkbox("Show More Filters");
 	WorkForm workform;
@@ -83,6 +83,10 @@ public class WorkView extends VerticalLayout {
 		scheme.setItemLabelGenerator(Scheme::getSchemeName);
 		consti.setItemLabelGenerator(
 				constituency -> constituency.getConstituencyNo() + "-"+constituency.getConstituencyName() + "-" + constituency.getConstituencyMLA());
+		block.setPlaceholder("Block");
+		consti.setPlaceholder("Constituency");
+		year.setPlaceholder("Year");
+		scheme.setPlaceholder("Scheme");
 		block.setWidthFull();
 		scheme.setWidthFull();
 		year.setWidthFull();
