@@ -424,6 +424,8 @@ public class MainLayout extends AppLayout  {
 						users.setRole(usertype.getValue().toString());
 						users.setUserName(userName.getValue());
 						users.setPassword(passwordEncoder.encode(newpwd.getValue().trim()));
+						users.setEnteredOn(LocalDate.now());
+						users.setEnabled(true);
 						service.saveUser(users);
 						clearUserFields();
 						Notification.show("User Created Successfully", 3000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
