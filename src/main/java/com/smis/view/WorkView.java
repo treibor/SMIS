@@ -1,7 +1,9 @@
 package com.smis.view;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,9 +19,11 @@ import com.smis.entity.Year;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -103,35 +107,33 @@ public class WorkView extends VerticalLayout {
 		// grid.setClassNameGenerator(work -> work.getWorkAmount().intValue() > 500 ?
 		// "warn" : null);
 		// grid.getColumns().forEach(col-> col.setAutoWidth(true));
-
+		
 		grid.setColumns("workCode");
 		grid.addColumn(work -> work.getWorkName()).setHeader("Name of The Work").setWidth("20%").setResizable(true)
 				.setSortable(true);
 		grid.addColumn(work -> work.getWorkAmount()).setHeader("Sanc. Amount").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
-		//Grid.Column<Work> yearColumn = grid.addColumn(work -> work.getYear().getYearName()).setAutoWidth(true).setHeader("Year").setSortable(true).setResizable(true);
-		//Grid.Column<Work> blockColumn = grid.addColumn(work -> work.getBlock().getBlockName()).setAutoWidth(true).setHeader("Block/MB").setSortable(true).setResizable(true);
-		//Grid.Column<Work> schemeColumn = grid.addColumn(work -> work.getScheme().getSchemeName()).setAutoWidth(true).setHeader("Scheme").setSortable(true).setResizable(true);
-		//Grid.Column<Work> constiColumn = grid.addColumn(work -> work.getConstituency().getConstituencyNo() + "-"+ work.getConstituency().getConstituencyName() + "-"+ work.getConstituency().getConstituencyMLA()).setWidth("20%").setHeader("Constituency").setSortable(true).setResizable(true);
-		//Grid.Column<Work> yearColumn = grid.addColumn(work -> work.getYear().getYearName()).setAutoWidth(true).setHeader("Year").setSortable(true).setResizable(true);
 		grid.addColumn(work -> work.getBlock().getBlockName()).setAutoWidth(true).setHeader("Block/MB").setSortable(true).setResizable(true);
 		grid.addColumn(work -> work.getScheme().getSchemeName()).setAutoWidth(true).setHeader("Scheme").setSortable(true).setResizable(true);
 		grid.addColumn(work -> work.getConstituency().getConstituencyNo() + "-"+ work.getConstituency().getConstituencyName() + "-"+ work.getConstituency().getConstituencyMLA()).setWidth("20%").setHeader("Constituency").setSortable(true).setResizable(true);
 		grid.addColumn(work -> work.getYear().getYearName()).setAutoWidth(true).setHeader("Year").setSortable(true).setResizable(true);
 		grid.addColumn(work -> work.getSanctionNo()).setHeader("Sanc. No").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
-		grid.addColumn(work -> work.getSanctionDate()).setHeader("Sanc. Date").setResizable(true).setSortable(true)
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		grid.addColumn(work -> 
+			work.getSanctionDate()!=null? 
+					work.getSanctionDate().format(dateFormatter):"No Date").setHeader("Sanc. Date").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
 		grid.addColumn(work -> work.getNoOfInstallments()).setHeader("Installments").setResizable(true)
 				.setSortable(true).setAutoWidth(true);
-		/// grid.addColumn(work ->
-		/// work.getConstituency().getConstituencyNo()+"-"+work.getConstituency().getConstituencyName()+"-"+work.getConstituency().getConstituencyMLA()).setHeader("Assembly
-		/// Constituency").setResizable(true).setSortable(true).setAutoWidth(true);
 		grid.addColumn(work -> work.getWorkStatus()).setHeader("Status").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
 		grid.addColumn(work -> work.getEnteredBy()).setHeader("Entered By").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
-		grid.addColumn(work -> work.getEnteredOn()).setHeader("Entered On").setResizable(true).setSortable(true)
+		
+		grid.addColumn(work ->
+		work.getEnteredOn()!=null?
+			work.getEnteredOn().format(dateFormatter):"No Date").setHeader("Entered On").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
 		grid.asSingleSelect().addValueChangeListener(e -> editWork(e.getValue()));
 		grid.getHeaderRows().clear();
@@ -148,7 +150,42 @@ public class WorkView extends VerticalLayout {
 				return "low-rating";
 			return null;
 		});
+		GridContextMenu<Work> contextMenu = new GridContextMenu<>(grid);
 
+		// Add a menu item for viewing installments
+		contextMenu.addItem("View Installments", event -> {
+		    Optional<Work> selectedWork = event.getItem();
+		    selectedWork.ifPresent(work -> {
+		        // Show a dialog or a new component with installments
+		        showInstallmentsDialog(work);
+		    });
+		});
+
+	}
+
+	
+	private void showInstallmentsDialog(Work work) { // Create a dialog
+		Dialog dialog = new Dialog();
+		dialog.setHeaderTitle(work.getWorkCode()+"-"+work.getWorkName());
+
+		// Create a Grid for installments
+		Grid<Installment> installmentGrid = new Grid<>(Installment.class, false);
+		installmentGrid.addColumn(Installment::getInstallmentNo).setHeader("Installment Number").setResizable(true);
+
+		installmentGrid.addColumn(Installment::getInstallmentAmount).setHeader("Amount Released").setResizable(true);
+		installmentGrid.addColumn(Installment::getInstallmentDate).setHeader("Released Date").setResizable(true);
+		installmentGrid.addColumn(Installment::getInstallmentLetter).setHeader("Letter No.").setResizable(true);
+		installmentGrid.addColumn(Installment::getUcLetter).setHeader("UC Letter No").setResizable(true);
+		installmentGrid.addColumn(Installment::getUcDate).setHeader("UC Date").setResizable(true);
+		installmentGrid.addColumn(Installment::getEnteredBy).setHeader("Entered By").setResizable(true);
+		installmentGrid.addColumn(Installment::getEnteredOn).setHeader("Entered On").setResizable(true);
+		List<Installment> installments = service.getInstallments(work);
+		installmentGrid.setItems(installments);
+		installmentGrid.setAllRowsVisible(true);
+		Button closeButton = new Button("Close", e -> dialog.close());
+		dialog.add(installmentGrid);
+		dialog.getFooter().add(closeButton);
+		dialog.open();
 	}
 
 	public void filterGrid() {
@@ -296,6 +333,7 @@ public class WorkView extends VerticalLayout {
 		newWork.setYear(work.getYear());
 		newWork.setSanctionDate(work.getSanctionDate());
 		newWork.setSanctionNo(work.getSanctionNo());
+		
 		editWork(newWork);
 
 	}
@@ -337,10 +375,12 @@ public class WorkView extends VerticalLayout {
 
 	private void editWork(Work work) {
 		try {
+			
 			int workinstallment = 0;
 			if (work == null) {
 				closeEditor();
 			} else {
+				
 				workform.setWork(work);
 				workform.setVisible(true);
 				workform.save.setEnabled(isUser);
@@ -414,7 +454,7 @@ public class WorkView extends VerticalLayout {
 		} catch (ArithmeticException aE) {
 			
 		} catch (Exception e) {
-			
+			System.out.println(e);
 		}
 	}
 

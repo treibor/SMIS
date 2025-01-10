@@ -349,6 +349,8 @@ public class WorkForm extends VerticalLayout {
 				installment.setInstallmentAmount(installmentAmount.getValue());
 				installment.setInstallmentNo(service.getInstallments(work).size() + 1);
 				installment.setInstallmentAmountPrev(calculateReleasedInstAmount(work));
+				installment.setEnteredBy(service.getloggeduser());
+				installment.setEnteredOn(LocalDate.now());
 				installment.setWork(work);
 				service.saveInstallment(installment);
 				updateWork("Installment " + toEnterInstallment + "");

@@ -397,7 +397,10 @@
 				<textElement textAlignment="Center" markup="styled">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.lang.Long( 100* ($F{installmentAmount}.longValue()+$F{installmentAmountPrev}.longValue()) /($F{work.workAmount}.longValue()) ) +"%"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#.##").format(
+    100.0 * ($F{installmentAmount}.doubleValue() + $F{installmentAmountPrev}.doubleValue()) 
+    / $F{work.workAmount}.doubleValue()
+) + "%"]]></textFieldExpression>
 			</textField>
 			<textField pattern="#.###;(#.###-)">
 				<reportElement style="Detail" x="400" y="0" width="58" height="15" uuid="a746aba1-45af-4d4e-a513-fe751f9e60e9">

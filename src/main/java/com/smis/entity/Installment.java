@@ -36,6 +36,22 @@ public class Installment implements Serializable {
 	private String installmentLabel;
 	private String ucLetter;
 	private LocalDate ucDate;
+	private String enteredBy;
+	private LocalDate enteredOn;
+	public String getEnteredBy() {
+		return enteredBy;
+	}
+	public void setEnteredBy(String enteredBy) {
+		this.enteredBy = enteredBy;
+	}
+	public LocalDate getEnteredOn() {
+		return enteredOn;
+	}
+	public void setEnteredOn(LocalDate enteredOn) {
+		this.enteredOn = enteredOn;
+	}
+
+
 	@Column(length=2000)
 	private String copyTo;
 	public String getCopyTo() {
