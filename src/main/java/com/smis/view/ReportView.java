@@ -250,7 +250,7 @@ public class ReportView extends VerticalLayout {
 				File file = Paths.get(res.toURI()).toFile();
 				String absolutePath = file.getAbsolutePath();
 				String reportPath = absolutePath.substring(0, absolutePath.length() - 15);
-				System.out.println("A");
+				//System.out.println("A");
 				if (reportTypemla.getValue() == "Detailed Report") {
 					//System.out.println("Z");
 					List<Installment> installment = service.getInstallmentForReport(scheme.getValue(), year.getValue(),

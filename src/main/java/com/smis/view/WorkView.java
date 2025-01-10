@@ -167,18 +167,30 @@ public class WorkView extends VerticalLayout {
 	private void showInstallmentsDialog(Work work) { // Create a dialog
 		Dialog dialog = new Dialog();
 		dialog.setHeaderTitle(work.getWorkCode()+"-"+work.getWorkName());
-
-		// Create a Grid for installments
 		Grid<Installment> installmentGrid = new Grid<>(Installment.class, false);
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		installmentGrid.addColumn(Installment::getInstallmentNo).setHeader("Installment Number").setResizable(true);
-
 		installmentGrid.addColumn(Installment::getInstallmentAmount).setHeader("Amount Released").setResizable(true);
-		installmentGrid.addColumn(Installment::getInstallmentDate).setHeader("Released Date").setResizable(true);
+		//installmentGrid.addColumn(Installment::getInstallmentDate).setHeader("Released Date").setResizable(true);
+		installmentGrid.addColumn(installment->
+		installment.getInstallmentDate()!=null?
+				installment.getInstallmentDate().format(dateFormatter):"No Date").setHeader("Released Date").setResizable(true).setSortable(true)
+					.setAutoWidth(true);
+	
 		installmentGrid.addColumn(Installment::getInstallmentLetter).setHeader("Letter No.").setResizable(true);
 		installmentGrid.addColumn(Installment::getUcLetter).setHeader("UC Letter No").setResizable(true);
-		installmentGrid.addColumn(Installment::getUcDate).setHeader("UC Date").setResizable(true);
+		//installmentGrid.addColumn(Installment::getUcDate).setHeader("UC Date").setResizable(true);
+		installmentGrid.addColumn(installment->
+			installment.getUcDate()!=null?
+					installment.getUcDate().format(dateFormatter):"").setHeader("UC. Date").setResizable(true).setSortable(true)
+						.setAutoWidth(true);
 		installmentGrid.addColumn(Installment::getEnteredBy).setHeader("Entered By").setResizable(true);
-		installmentGrid.addColumn(Installment::getEnteredOn).setHeader("Entered On").setResizable(true);
+		//installmentGrid.addColumn(Installment::getEnteredOn).setHeader("Entered On").setResizable(true);
+		installmentGrid.addColumn(installment->
+		installment.getEnteredOn()!=null?
+				installment.getEnteredOn().format(dateFormatter):"No Date").setHeader("Entered On").setResizable(true).setSortable(true)
+					.setAutoWidth(true);
+	
 		List<Installment> installments = service.getInstallments(work);
 		installmentGrid.setItems(installments);
 		installmentGrid.setAllRowsVisible(true);
