@@ -14,6 +14,7 @@ import com.smis.entity.District;
 import com.smis.entity.Impldistrict;
 import com.smis.entity.Installmentmp;
 import com.smis.entity.Users;
+import com.smis.entity.UsersRoles;
 import com.smis.entity.Workmp;
 import com.smis.entity.Year;
 import com.smis.repository.BlockRepository;
@@ -22,6 +23,7 @@ import com.smis.repository.ConstituencyRepository;
 import com.smis.repository.DistrictRepository;
 import com.smis.repository.ImpldistrictRepository;
 import com.smis.repository.InstallmentmpRepository;
+import com.smis.repository.RoleRepository;
 import com.smis.repository.InstallmentmpRepository;
 import com.smis.repository.SchemeRepository;
 import com.smis.repository.UserRepository;
@@ -30,6 +32,8 @@ import com.smis.repository.WorkRepository;
 import com.smis.repository.YearRepository;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class DbserviceMp {
@@ -41,8 +45,9 @@ public class DbserviceMp {
 	private final InstallmentmpRepository irepo;
 	private final ImpldistrictRepository idrepo;
 	private final UserRepository urepo;
+	private final RoleRepository rolerepo;
 	Notification notify=new Notification();
-	public DbserviceMp(UserRepository urepo,WorkmpRepository workrepo, YearRepository yrepo, ConstituencympRepository crepo,BlockRepository brepo,DistrictRepository drepo, InstallmentmpRepository irepo, ImpldistrictRepository idrepo) {
+	public DbserviceMp(UserRepository urepo,WorkmpRepository workrepo, YearRepository yrepo, ConstituencympRepository crepo,BlockRepository brepo,DistrictRepository drepo, InstallmentmpRepository irepo, ImpldistrictRepository idrepo,RoleRepository rolerepo) {
 		this.wrepo = workrepo;
 		this.yrepo = yrepo;
 		this.idrepo=idrepo;
@@ -51,34 +56,41 @@ public class DbserviceMp {
 		this.drepo=drepo;
 		this.irepo=irepo;
 		this.urepo=urepo;
+		this.rolerepo=rolerepo;
+	}
+	public List<UsersRoles> getRoles(){
+		return rolerepo.findByUser(getLoggedUser());
 	}
 	
+	public boolean isUser() {
+	    //Users loggedUser = getLoggedUser(); // Retrieve the logged-in user
+	    
+	    return getRoles().stream()
+	            .anyMatch(role -> role.getRoleName().equalsIgnoreCase("Admin")
+	                    || role.getRoleName().equalsIgnoreCase("SUPER")
+	                    || role.getRoleName().equalsIgnoreCase("USER"));
+	}
+
+	
+	public boolean isAdmin() {
+		//Users loggedUser = getLoggedUser(); // Retrieve the logged-in user
+	    return getRoles().stream()
+	            .anyMatch(role -> role.getRoleName().equalsIgnoreCase("Admin")
+	                    || role.getRoleName().equalsIgnoreCase("SUPER"));
+	}
+
+	public boolean isSuperAdmin() {
+		//Users loggedUser = getLoggedUser(); // Retrieve the logged-in user
+		return getRoles().stream()
+	            .anyMatch(role -> 
+	                    role.getRoleName().equalsIgnoreCase("SUPER")
+	                   );
+	}
 	//Development Phase only
 	public District getDistrict() {
 		return drepo.findByDistrictId(getLoggedUser().getDistrict().getDistrictId());
 	}
-	public boolean isUser() {
-		if (getLoggedUser().getRole().equals("USER")||getLoggedUser().getRole().equals("SUPER")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	public boolean isAdmin() {
-		if(getLoggedUser().getRole().equals("ADMIN") ||getLoggedUser().getRole().equals("SUPER")) {
-			return true;
-		}else {
-			return false;
-		}
-		
-	}
-	public boolean isSuperAdmin() {
-		if(getLoggedUser().getRole().equals("SUPER")) {
-			return true;
-		}else {
-			return false;
-		}
-	}
+	
 	public Users findUser(String username) {
 		return urepo.findByUserName(username);
 	}

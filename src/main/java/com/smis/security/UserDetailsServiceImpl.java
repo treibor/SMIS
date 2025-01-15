@@ -2,6 +2,7 @@ package com.smis.security;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.smis.entity.UsersRoles;
 import com.smis.entity.Users;
 import com.smis.repository.UserRepository;
 
@@ -41,24 +43,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 
 	}
-    private static List<GrantedAuthority> getAuthorities(Users user) {
-        String role = user.getRole();
-        // Create a SimpleGrantedAuthority with the role string
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
-        // Return a singleton list containing the authority
-        return Collections.singletonList(authority);
-    }
 	/*
-	 * private static List<GrantedAuthority> getAuthorities(Users user) { return
-	 * user.getRole().stream().map(role -> new SimpleGrantedAuthority("ROLE_" +
-	 * role.getRoleName()))
-	 * 
-	 * .collect(Collectors.toList());
-	 * 
-	 * 
-	 * }
+	 * private static List<GrantedAuthority> getAuthorities(Users user) { List<Role>
+	 * role = user.getRoles(); // Create a SimpleGrantedAuthority with the role
+	 * string SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_"
+	 * + role); // Return a singleton list containing the authority return
+	 * Collections.singletonList(authority); }
 	 */
     
+	private static List<GrantedAuthority> getAuthorities(Users user) {
+		return user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName()))
+
+				.collect(Collectors.toList());
+
+	}
 
    
 

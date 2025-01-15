@@ -18,6 +18,7 @@ import com.smis.entity.Installment;
 import com.smis.entity.Scheme;
 import com.smis.entity.State;
 import com.smis.entity.Users;
+import com.smis.entity.UsersRoles;
 import com.smis.entity.Village;
 import com.smis.entity.Work;
 import com.smis.entity.Year;
@@ -26,6 +27,7 @@ import com.smis.repository.ConstituencyRepository;
 import com.smis.repository.DistrictRepository;
 import com.smis.repository.ImpldistrictRepository;
 import com.smis.repository.InstallmentRepository;
+import com.smis.repository.RoleRepository;
 import com.smis.repository.SchemeRepository;
 import com.smis.repository.StateRepository;
 import com.smis.repository.UserRepository;
@@ -34,6 +36,8 @@ import com.smis.repository.WorkRepository;
 import com.smis.repository.YearRepository;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class Dbservice implements Serializable{
@@ -52,11 +56,12 @@ public class Dbservice implements Serializable{
 	private final UserRepository urepo;
 	private final StateRepository strepo;
 	private final VillageRepository vtrepo;
-	Notification notify = new Notification();
+	private final RoleRepository rolerepo;
+	//Notification Notification = new Notification();
 
 	public Dbservice(StateRepository strepo, UserRepository urepo, WorkRepository workrepo, YearRepository yrepo,
 			SchemeRepository srepo, ConstituencyRepository crepo, BlockRepository brepo, DistrictRepository drepo,
-			InstallmentRepository irepo, ImpldistrictRepository idrepo, VillageRepository vrepo) {
+			InstallmentRepository irepo, ImpldistrictRepository idrepo, VillageRepository vrepo, RoleRepository rolerepo) {
 		this.wrepo = workrepo;
 		this.yrepo = yrepo;
 		this.srepo = srepo;
@@ -68,6 +73,7 @@ public class Dbservice implements Serializable{
 		this.urepo = urepo;
 		this.strepo = strepo;
 		this.vtrepo = vrepo;
+		this.rolerepo=rolerepo;
 	}
 
 	// Development Phase only
@@ -82,34 +88,33 @@ public class Dbservice implements Serializable{
 	public State getState(State state) {
 		return strepo.findByStateId(state.getStateId());
 	}
-
+	public List<UsersRoles> getRoles(){
+		return rolerepo.findByUser(getLoggedUser());
+	}
+	
 	public boolean isUser() {
-		if (getLoggedUser().getRole().equals("USER") || getLoggedUser().getRole().equals("ADMIN")
-				|| getLoggedUser().getRole().equals("SUPER")) {
-			return true;
-		} else {
-			return false;
-		}
+	    //Users loggedUser = getLoggedUser(); // Retrieve the logged-in user
+	    
+	    return getRoles().stream()
+	            .anyMatch(role -> role.getRoleName().equalsIgnoreCase("Admin")
+	                    || role.getRoleName().equalsIgnoreCase("SUPER")
+	                    || role.getRoleName().equalsIgnoreCase("USER"));
 	}
 
+	
 	public boolean isAdmin() {
-		if (getLoggedUser().getRole() == "Admin" || getLoggedUser().getRole().equals("ADMIN")
-				|| getLoggedUser().getRole().equals("SUPER")) {
-
-			return true;
-		} else {
-
-			return false;
-		}
-
+		//Users loggedUser = getLoggedUser(); // Retrieve the logged-in user
+	    return getRoles().stream()
+	            .anyMatch(role -> role.getRoleName().equalsIgnoreCase("Admin")
+	                    || role.getRoleName().equalsIgnoreCase("SUPER"));
 	}
 
 	public boolean isSuperAdmin() {
-		if (getLoggedUser().getRole().equals("SUPER")) {
-			return true;
-		} else {
-			return false;
-		}
+		//Users loggedUser = getLoggedUser(); // Retrieve the logged-in user
+		return getRoles().stream()
+	            .anyMatch(role -> 
+	                    role.getRoleName().equalsIgnoreCase("SUPER")
+	                   );
 	}
 
 	// Users
@@ -130,7 +135,7 @@ public class Dbservice implements Serializable{
 
 	public void saveUser(Users user) {
 		if (user == null) {
-			Notification notification = Notification.show("Fail Fail Fail-7734");
+			Notification.show("Fail Fail Fail-7734");
 			return;
 		}
 		urepo.save(user);
@@ -202,7 +207,7 @@ public class Dbservice implements Serializable{
 			}
 			irepo.save(install);
 		} catch (Exception e) {
-			notify.show("Unable to Save Installment. Error:" + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Save Installment. Error:" + e, 5000, Position.TOP_CENTER);
 		}
 	}
 
@@ -210,7 +215,7 @@ public class Dbservice implements Serializable{
 		try {
 			irepo.deleteByWork(work);
 		} catch (Exception e) {
-			notify.show("Unable to Delete Installment. Error:" + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Delete Installment. Error:" + e, 5000, Position.TOP_CENTER);
 		}
 	}
 
@@ -271,7 +276,7 @@ public class Dbservice implements Serializable{
 			wrepo.save(work);
 		} catch (Exception e) {
 
-			notify.show("Unable to Save Work. Error:" + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Save Work. Error:" + e, 5000, Position.TOP_CENTER);
 		}
 	}
 
@@ -279,9 +284,9 @@ public class Dbservice implements Serializable{
 		// irepo.deleteByWork(work);
 		try {
 			wrepo.delete(work);
-			notify.show("Deleted Successfully");
+			Notification.show("Deleted Successfully");
 		} catch (Exception e) {
-			notify.show("Unable to Delete Work. Error:" + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Delete Work. Error:" + e, 5000, Position.TOP_CENTER);
 		}
 	}
 
@@ -294,7 +299,7 @@ public class Dbservice implements Serializable{
 			}
 			crepo.save(consti);
 		} catch (Exception e) {
-			notify.show("Unable to Save Constituency. Error:" + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Save Constituency. Error:" + e, 5000, Position.TOP_CENTER);
 		}
 
 	}
@@ -303,7 +308,7 @@ public class Dbservice implements Serializable{
 		try {
 			crepo.delete(consti);
 		} catch (Exception e) {
-			notify.show("Unable to Delete Constituency " + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Delete Constituency " + e, 5000, Position.TOP_CENTER);
 		}
 	}
 
@@ -320,7 +325,7 @@ public class Dbservice implements Serializable{
 		try {
 			yrepo.delete(year);
 		} catch (Exception e) {
-			notify.show("Unable to Delete Year " + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Delete Year " + e, 5000, Position.TOP_CENTER);
 		}
 	}
 
@@ -333,7 +338,7 @@ public class Dbservice implements Serializable{
 			}
 			srepo.save(scheme);
 		} catch (Exception e) {
-			notify.show("Unable to Save Scheme " + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Save Scheme " + e, 5000, Position.TOP_CENTER);
 		}
 
 	}
@@ -342,7 +347,7 @@ public class Dbservice implements Serializable{
 		try {
 			srepo.delete(scheme);
 		} catch (Exception e) {
-			notify.show("Unable to Delete Constituency " + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Delete Constituency " + e, 5000, Position.TOP_CENTER);
 		}
 
 	}
@@ -356,7 +361,7 @@ public class Dbservice implements Serializable{
 			}
 			brepo.save(block);
 		} catch (DataIntegrityViolationException e) {
-			notify.show("Unable to Save Block/MB as It already Exists" + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Save Block/MB as It already Exists" + e, 5000, Position.TOP_CENTER);
 		}
 	}
 
@@ -364,7 +369,7 @@ public class Dbservice implements Serializable{
 		try {
 			brepo.delete(block);
 		} catch (Exception e) {
-			notify.show("Unable to Delete Constituency " + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Delete Constituency " + e, 5000, Position.TOP_CENTER);
 		}
 	}
 
@@ -377,7 +382,7 @@ public class Dbservice implements Serializable{
 			}
 			strepo.save(state);
 		} catch (Exception e) {
-			notify.show("Unable to Save State" + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Save State" + e, 5000, Position.TOP_CENTER);
 		}
 	}
 
@@ -385,7 +390,7 @@ public class Dbservice implements Serializable{
 		try {
 			strepo.delete(state);
 		} catch (Exception e) {
-			notify.show("Unable to Delete Constituency " + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Delete Constituency " + e, 5000, Position.TOP_CENTER);
 		}
 
 	}
@@ -406,7 +411,7 @@ public class Dbservice implements Serializable{
 			idrepo.delete(impdist);
 			drepo.delete(dist);
 		} catch (Exception e) {
-			notify.show("Unable to Delete District " + e, 5000, Position.TOP_CENTER);
+			Notification.show("Unable to Delete District " + e, 5000, Position.TOP_CENTER);
 		}
 
 	}
@@ -536,5 +541,17 @@ public class Dbservice implements Serializable{
 
 	public List<Impldistrict> getAllImplDistricts() {
 		return idrepo.findAll();
+	}
+	public void saveRole(UsersRoles role) {
+		try {
+			if (role == null) {
+
+				return;
+			}
+			rolerepo.save(role);
+		} catch (Exception e) {
+			Notification.show("Unable to Save Constituency. Error:" + e, 5000, Position.TOP_CENTER);
+		}
+
 	}
 }

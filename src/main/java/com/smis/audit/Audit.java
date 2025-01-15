@@ -15,8 +15,10 @@ public class Audit {
 	private static final long serialVersionUID = 1L;
 	@Autowired
 	private AuditService auditservice;
-	private Dbservice uservice;
+	//@Autowired
 	AuditTrail audit;
+	private Dbservice uservice;
+	
 	
 	
 	public Audit(Dbservice uservice) {

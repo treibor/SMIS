@@ -2,9 +2,6 @@ package com.smis.view;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Block;
@@ -40,7 +37,6 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.shared.Registration;
 
 public class WorkForm extends VerticalLayout {
@@ -49,6 +45,8 @@ public class WorkForm extends VerticalLayout {
 	 */
 	private static final long serialVersionUID = 1L;
 	Dbservice service;
+	//@Autowired
+	
 	private Work work;
 	private Installment installment;
 	Binder<Work> binder = new BeanValidationBinder<>(Work.class);
@@ -91,7 +89,7 @@ public class WorkForm extends VerticalLayout {
 	// Label ucmaster=new Label("");
 	boolean isAdmin;
 	boolean isUser;
-
+	
 	public WorkForm(Dbservice service) {
 		block.addValueChangeListener(e -> getVillages(e.getValue()));
 		this.service = service;
@@ -354,6 +352,7 @@ public class WorkForm extends VerticalLayout {
 				installment.setWork(work);
 				service.saveInstallment(installment);
 				updateWork("Installment " + toEnterInstallment + "");
+				//audit.saveAudit(work, "Save Installment");
 				Notification.show("Installment No:" + toEnterInstallment + " Entered Sucessfully", 5000, Position.TOP_CENTER);
 				// notify.show("Installment No:"+toEnterInstallment+" Entered Sucessfully",5000,
 				// Position.TOP_CENTER);
@@ -394,12 +393,15 @@ public class WorkForm extends VerticalLayout {
 				this.installment = service.getInstallments(work).get(index);
 				installment.setUcDate(ucDate.getValue());
 				installment.setUcLetter(ucletter.getValue());
+				//audit=new Audit(service);
+				//audit.saveAudit(work, "Save UC");
 				service.saveInstallment(installment);
 				if (work.getNoOfInstallments() == tableinstallments) {
 					updateWork("Completed");
 				} else {
 					updateWork("UC " + toEnterInstallment + "");
 				}
+				
 				Notification.show("UC:" + toEnterInstallment + " Entered Sucessfully", 5000, Position.TOP_CENTER);
 			} catch (Exception e) {
 				Notification.show("Unable to Save Work" + e);

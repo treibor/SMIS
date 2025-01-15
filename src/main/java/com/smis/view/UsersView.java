@@ -40,7 +40,7 @@ public class UsersView extends HorizontalLayout {
 		usergrid.removeAllColumns();
 		usergrid.addColumn(users->users.getUserId()).setHeader("Id").setSortable(true).setResizable(true);
 		usergrid.addColumn(users->users.getUserName()).setHeader("User Name").setSortable(true).setResizable(true);
-		usergrid.addColumn(users->users.getRole()).setHeader("Role").setSortable(true).setResizable(true);
+		//usergrid.addColumn(users->users.getRole()).setHeader("Role").setSortable(true).setResizable(true);
 		usergrid.addColumn(users->users.isEnabled()).setHeader("Enabled?").setSortable(true).setResizable(true);
 		usergrid.addColumn(users->users.getEnteredBy()).setHeader("Entered By").setSortable(true).setResizable(true);
 		usergrid.addColumn(users->users.getEnteredOn()).setHeader("Entered On").setSortable(true).setResizable(true);

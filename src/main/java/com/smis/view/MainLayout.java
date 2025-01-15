@@ -1,7 +1,6 @@
 package com.smis.view;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.District;
+import com.smis.entity.UsersRoles;
 import com.smis.entity.State;
 import com.smis.entity.Users;
 import com.smis.security.SecurityService;
@@ -36,8 +36,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.AfterNavigationEvent;
-import com.vaadin.flow.router.AfterNavigationObserver;
 
 import jakarta.annotation.security.PermitAll;
 
@@ -53,7 +51,7 @@ public class MainLayout extends AppLayout  {
 	Dialog dialog;
 	Dialog userdialog;
 	Dialog aboutdialog;
-	Notification notify;
+	//Notification notify;
 	PasswordField oldpwd;
 	PasswordField newpwd;
 	PasswordField confirmpwd;
@@ -331,7 +329,7 @@ public class MainLayout extends AppLayout  {
 			userdialog.open();
 
 		} else {
-			notify.show("Please Contact Your Administrator", 3000, Position.TOP_CENTER);
+			Notification.show("Please Contact Your Administrator", 3000, Position.TOP_CENTER);
 		}
 	}
 
@@ -403,10 +401,11 @@ public class MainLayout extends AppLayout  {
 		}
 	private void saveNewUser() {
 		// TODO Auto-generated method stub
-		if (district.getValue() == null || state.getValue() == null || usertype.getValue() == null
-				|| userName.getValue().equals("") || newpwd.getValue() == "" || confirmpwd.getValue() == "") {
+		if (district.isEmpty()  || state.isEmpty()  || usertype.isEmpty() 
+				|| userName.isEmpty() || newpwd.isEmpty() || confirmpwd.getValue().isEmpty()) {
 			Notification.show(" Enter All Values, Please", 3000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
-		}else if (userName.getValue().trim().length() < 7) {
+		}
+		else if (userName.getValue().trim().length() < 7) {
 			Notification.show("User name is too short", 3000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 		} else if(!checkPasswordStrength(newpwd.getValue())){
 			Notification.show("Password is too weak. Please use a combination of Lower case, Upper case, Number and Special Charaters").addThemeVariants(NotificationVariant.LUMO_WARNING);
@@ -417,27 +416,29 @@ public class MainLayout extends AppLayout  {
 				try {
 					if (service.findUser(userName.getValue()) == null) {
 						Users users = new Users();
-
-						// users.setUserId(service.findMaxUserSerial() + 1);
+						UsersRoles role=new UsersRoles();
 						users.setDistrict(district.getValue());
-						// users.setState(state.getValue());
-						users.setRole(usertype.getValue().toString());
 						users.setUserName(userName.getValue());
 						users.setPassword(passwordEncoder.encode(newpwd.getValue().trim()));
+						users.setEnteredBy(service.getloggeduser());
 						users.setEnteredOn(LocalDate.now());
+						users.setPwdChangedDate(LocalDate.now());
 						users.setEnabled(true);
 						service.saveUser(users);
+						role.setUser(users);
+						role.setRoleName(usertype.getValue().toString());
+						service.saveRole(role);
 						clearUserFields();
-						Notification.show("User Created Successfully", 3000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+						Notification.show("User Created Successfully", 3000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+						userdialog.close();
 					} else {
 						Notification.show("Username Already Taken. Enter Another Username", 3000, Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 						userName.setValue("");
 						userName.focus();
 					}
-					// notify.show("Wat Leh Kamkai. Enter All Values, Please", 3000,
-					// Position.TOP_CENTER);
+					
 				} catch (Exception e) {
-					Notification.show("Error Encountered" + e).addThemeVariants(NotificationVariant.LUMO_ERROR);
+					Notification.show("Error Encountered. Please Contact The Adminisrator. Error:" + e).addThemeVariants(NotificationVariant.LUMO_ERROR);
 				}
 			}
 		}
