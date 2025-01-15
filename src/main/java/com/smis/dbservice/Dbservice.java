@@ -1,9 +1,12 @@
 package com.smis.dbservice;
 
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
@@ -36,8 +39,7 @@ import com.smis.repository.WorkRepository;
 import com.smis.repository.YearRepository;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
-
-import jakarta.transaction.Transactional;
+import com.vaadin.flow.component.notification.NotificationVariant;
 
 @Service
 public class Dbservice implements Serializable{
@@ -91,6 +93,18 @@ public class Dbservice implements Serializable{
 	public List<UsersRoles> getRoles(){
 		return rolerepo.findByUser(getLoggedUser());
 	}
+	public List<UsersRoles> getRolesByUser(Users username){
+		return rolerepo.findByUser(username);
+	}
+	public List<String> fetchRolesForSelectedUser(Users user) {
+	    // Use your service to fetch the roles of the logged-in user
+	    //List<UsersRoles> userRoles = rolerepo.findByUser(getLoggedUser());
+
+	    // Map the UsersRoles objects to a list of role names
+	    return getRolesByUser(user).stream()
+	                    .map(UsersRoles::getRoleName)
+	                    .collect(Collectors.toList());
+	}
 	
 	public boolean isUser() {
 	    //Users loggedUser = getLoggedUser(); // Retrieve the logged-in user
@@ -124,10 +138,15 @@ public class Dbservice implements Serializable{
 	public List<Users> findUsersByDistrict(District district) {
 		return urepo.findByDistrict(district);
 	}
+	public List<Users> findUsersByDistrictAndUserNameNot(District district, String username) {
+		return urepo.findByDistrictAndUserNameNot(district, username);
+	}
 	public Users getLoggedUser() {
 		return urepo.findByUserName(getloggeduser());
 	}
-
+	public Users getUser(String user) {
+		return urepo.findByUserName(user);
+	}
 	public String getloggeduser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return auth.getName();
@@ -542,16 +561,26 @@ public class Dbservice implements Serializable{
 	public List<Impldistrict> getAllImplDistricts() {
 		return idrepo.findAll();
 	}
+	
 	public void saveRole(UsersRoles role) {
-		try {
-			if (role == null) {
-
-				return;
-			}
-			rolerepo.save(role);
-		} catch (Exception e) {
-			Notification.show("Unable to Save Constituency. Error:" + e, 5000, Position.TOP_CENTER);
-		}
-
+	    try {
+	        if (role != null) {
+	            rolerepo.save(role); // Save or update the role
+	        }
+	    } catch (Exception e) {
+	        Notification.show("Unable to Save Role. Error: " + e, 5000, Position.TOP_CENTER)
+	                    .addThemeVariants(NotificationVariant.LUMO_ERROR);
+	    }
 	}
+	public void deleteRole(UsersRoles role) {
+	    try {
+	        if (role != null) {
+	            rolerepo.delete(role); // Save or update the role
+	        }
+	    } catch (Exception e) {
+	        Notification.show("Unable to Save Role. Error: " + e, 5000, Position.TOP_CENTER)
+	                    .addThemeVariants(NotificationVariant.LUMO_ERROR);
+	    }
+	}
+	
 }

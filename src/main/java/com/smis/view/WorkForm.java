@@ -314,7 +314,7 @@ public class WorkForm extends VerticalLayout {
 			}
 		}
 	}
-
+	
 	public void setWork(Work work) {
 		this.work = work;
 		binder.readBean(work);

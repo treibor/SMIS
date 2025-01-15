@@ -1,11 +1,18 @@
 package com.smis.view;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.District;
 import com.smis.entity.Users;
+import com.smis.entity.UsersRoles;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
@@ -14,9 +21,14 @@ import jakarta.annotation.security.RolesAllowed;
 @PageTitle("Users")
 @Route(value = "users", layout = MainLayout.class)
 public class UsersView extends HorizontalLayout {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Grid<Users> usergrid=new Grid<>(Users.class);
 	Dbservice service;
 	UsersForm form=new UsersForm(service);
+	Tab tab1=new Tab("Users");
 	public UsersView(Dbservice service) {
 		this.service=service;
 		// TODO Auto-generated constructor stub
@@ -25,6 +37,14 @@ public class UsersView extends HorizontalLayout {
 		getUsergrid();
 		closeEditor();
 		add(getContent());
+		//add(getTabs());
+	}
+	public Component getTabs() {
+		TabSheet tabSheet = new TabSheet();
+		tabSheet.add("Villages",getContent());
+		//tabSheet.add(tab1, getAnnexure1());
+		tabSheet.setSizeFull();
+		return tabSheet;
 	}
 	private Component getContent() {
 		
@@ -44,12 +64,14 @@ public class UsersView extends HorizontalLayout {
 		usergrid.addColumn(users->users.isEnabled()).setHeader("Enabled?").setSortable(true).setResizable(true);
 		usergrid.addColumn(users->users.getEnteredBy()).setHeader("Entered By").setSortable(true).setResizable(true);
 		usergrid.addColumn(users->users.getEnteredOn()).setHeader("Entered On").setSortable(true).setResizable(true);
-		usergrid.setItems(service.findUsersByDistrict(service.getLoggedUser().getDistrict()));
+		//usergrid.setItems(service.findUsersByDistrict(service.getLoggedUser().getDistrict()));
+		usergrid.setItems(service.findUsersByDistrictAndUserNameNot(service.getLoggedUser().getDistrict(), "SUPERUSER"));
 		usergrid.asSingleSelect().addValueChangeListener(e->editUser(e.getValue()));
 		usergrid.setSizeFull();
 		//return usergrid;
 	}
 	
+
 	private void editUser(Users user) {
 		// TODO Auto-generated method stub
 		form.setVisible(false);
@@ -58,6 +80,8 @@ public class UsersView extends HorizontalLayout {
 		} else {
 			form.setUsers(user);
 			form.setVisible(true);
+			form.checkboxGroup.clear();
+			form.checkboxGroup.select(service.fetchRolesForSelectedUser(user));
 			//yearform.setYear(year);
 			
 		}

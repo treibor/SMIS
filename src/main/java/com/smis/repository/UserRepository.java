@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<Users, Long>{
 	Users findByUserName(String username);
 	Users findByUserNameAndEnabled(String username, boolean enabled);
 	List<Users> findByDistrict(District district);
-	
+	List <Users> findByDistrictAndUserNameNot(District dist, String username);
 	@Query("select Max(c.userId) from Users c ")
 	Long findMaxSerial();
 }
