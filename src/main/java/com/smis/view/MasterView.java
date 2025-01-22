@@ -251,6 +251,7 @@ public class MasterView extends VerticalLayout{
 			blockform.setVisible(false);
 			constiform.setVisible(false);
 			schemeform.inUse.setValue(true);
+			//schemeform.schemeprocessaccordion.add(schemeform.createSchemeProcessLayout(year));
 		}
 	}
 	private void closeBlockEditor() {

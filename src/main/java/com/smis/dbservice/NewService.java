@@ -1,12 +1,12 @@
 package com.smis.dbservice;
 
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import com.smis.entity.Block;
 import com.smis.entity.Constituency;
 import com.smis.entity.District;
-import com.smis.entity.Impldistrict;
 import com.smis.entity.Installment;
+import com.smis.entity.InstallmentNew;
 import com.smis.entity.ProcessFlow;
 import com.smis.entity.ProcessUser;
 import com.smis.entity.Scheme;
@@ -25,13 +25,12 @@ import com.smis.entity.State;
 import com.smis.entity.Users;
 import com.smis.entity.UsersRoles;
 import com.smis.entity.Village;
-import com.smis.entity.Work;
+import com.smis.entity.WorkNew;
 import com.smis.entity.Year;
 import com.smis.repository.BlockRepository;
 import com.smis.repository.ConstituencyRepository;
 import com.smis.repository.DistrictRepository;
-import com.smis.repository.ImpldistrictRepository;
-import com.smis.repository.InstallmentRepository;
+import com.smis.repository.InstallmentNewRepository;
 import com.smis.repository.ProcessFlowRepo;
 import com.smis.repository.ProcessUserRepository;
 import com.smis.repository.RoleRepository;
@@ -40,57 +39,47 @@ import com.smis.repository.SchemeRepository;
 import com.smis.repository.StateRepository;
 import com.smis.repository.UserRepository;
 import com.smis.repository.VillageRepository;
-import com.smis.repository.WorkRepository;
+import com.smis.repository.WorkNewRepository;
 import com.smis.repository.YearRepository;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.notification.NotificationVariant;
 
 @Service
-public class Dbservice implements Serializable{
+public class NewService implements Serializable{
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final WorkRepository wrepo;
-	private final YearRepository yrepo;
-	private final SchemeRepository srepo;
-	private final ConstituencyRepository crepo;
-	private final BlockRepository brepo;
-	private final DistrictRepository drepo;
-	private final InstallmentRepository irepo;
-	private final ImpldistrictRepository idrepo;
-	private final UserRepository urepo;
-	private final StateRepository strepo;
-	private final VillageRepository vtrepo;
-	private final RoleRepository rolerepo;
-	
-	//Notification Notification = new Notification();
-	//@Autowired
-	private final MasterProcessRepository schemeprocessrepo;
-	private final ProcessUserRepository processuserrepo;
-	private final ProcessFlowRepo pflowrepo;
-	public Dbservice(StateRepository strepo, UserRepository urepo, WorkRepository workrepo, YearRepository yrepo,
-			SchemeRepository srepo, ConstituencyRepository crepo, BlockRepository brepo, DistrictRepository drepo,
-			InstallmentRepository irepo, ImpldistrictRepository idrepo, VillageRepository vrepo, RoleRepository rolerepo,  MasterProcessRepository schemeprocessrepo,ProcessUserRepository processuserrepo,ProcessFlowRepo pflowrepo) {
-		this.wrepo = workrepo;
-		this.yrepo = yrepo;
-		this.srepo = srepo;
-		this.crepo = crepo;
-		this.brepo = brepo;
-		this.drepo = drepo;
-		this.irepo = irepo;
-		this.idrepo = idrepo;
-		this.urepo = urepo;
-		this.strepo = strepo;
-		this.vtrepo = vrepo;
-		this.rolerepo=rolerepo;
-		this.schemeprocessrepo=schemeprocessrepo;
-		this.processuserrepo=processuserrepo;
-		this.pflowrepo=pflowrepo;
-	}
-
-	// Development Phase only
+	@Autowired
+	WorkNewRepository wrepo;
+	@Autowired
+	YearRepository yrepo;
+	@Autowired
+	SchemeRepository srepo;
+	@Autowired
+	ConstituencyRepository crepo;
+	@Autowired
+	BlockRepository brepo;
+	@Autowired
+	DistrictRepository drepo;
+	@Autowired
+	InstallmentNewRepository irepo;
+	@Autowired
+	UserRepository urepo;
+	@Autowired
+	StateRepository strepo;
+	@Autowired
+	VillageRepository vtrepo;
+	@Autowired
+	RoleRepository rolerepo;
+	@Autowired
+	MasterProcessRepository schemeprocessrepo;
+	@Autowired
+	ProcessUserRepository processuserrepo;
+	@Autowired
+	ProcessFlowRepo pflowrepo;
 	public List<Village> getVillage(Block block) {
 		return vtrepo.findByBlock(block);
 	}
@@ -192,7 +181,7 @@ public class Dbservice implements Serializable{
 
 	public BigDecimal calculateTotalReleasedAmount(Scheme scheme, Year year) {
 		BigDecimal amount = BigDecimal.ZERO;
-		List<Work> worksentered = wrepo.getWorksForCalculation(scheme, getDistrict(), year);
+		List<WorkNew> worksentered = wrepo.getWorksForCalculation(scheme, getDistrict(), year);
 		int count = worksentered.size();
 		if (count > 0) {
 			for (int i = 0; i < count; i++) {
@@ -205,32 +194,32 @@ public class Dbservice implements Serializable{
 	}
 
 	// Installment Service
-	public int getInstallmentCount(Work work) {
+	public int getInstallmentCount(WorkNew work) {
 		return irepo.countByWork(work);
 	}
 
-	public List<Installment> getInstallments(Work work) {
+	public List<InstallmentNew> getInstallments(WorkNew work) {
 		return irepo.findByWork(work);
 	}
 
-	public List<Installment> getMaxInstallment(Work work, int inst_no) {
+	public List<InstallmentNew> getMaxInstallment(WorkNew work, int inst_no) {
 		return irepo.findByWorkAndInstallmentNo(work, inst_no);
 	}
 
-	public List<Installment> getFilteredInstallments(Scheme scheme, Constituency consti, Block block, Year year,
+	public List<InstallmentNew> getFilteredInstallments(Scheme scheme, Constituency consti, Block block, Year year,
 			int installment) {
 		return irepo.getFilteredInstallment(scheme, consti, block, getDistrict(), year, installment);
 	}
 
-	public Installment getInstallmentByWorkAndNo(int insallment, Work work) {
+	public InstallmentNew getInstallmentByWorkAndNo(int insallment, WorkNew work) {
 		return irepo.getInstallmentByNoAndWork(insallment, work);
 	}
 
-	public List<Installment> getInstallmentForReport(Scheme scheme, Year year, Constituency consti, Block block) {
+	public List<InstallmentNew> getInstallmentForReport(Scheme scheme, Year year, Constituency consti, Block block) {
 		return irepo.getReportData(scheme, getDistrict(), year, consti, block);
 	}
 
-	public void saveInstallment(Installment install) {
+	public void saveInstallment(InstallmentNew install) {
 		try {
 			if (install == null) {
 
@@ -242,7 +231,7 @@ public class Dbservice implements Serializable{
 		}
 	}
 
-	public void deleteInstallments(Work work) {
+	public void deleteInstallments(WorkNew work) {
 		try {
 			irepo.deleteByWork(work);
 		} catch (Exception e) {
@@ -252,15 +241,22 @@ public class Dbservice implements Serializable{
 
 	// Works Queries
 	
-	
-	public List<Work> getFilteredWorks(String searchTerm) {
+	public List<WorkNew> getWorksByUser() {
+		try {
+			//return wrepo.search(searchTerm, getDistrict());
+			return wrepo.findWorksAssignedToUser(getLoggedUser());
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+	}
+	public List<WorkNew> getFilteredWorks(String searchTerm) {
 		try {
 			return wrepo.search(searchTerm, getDistrict());
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
 	}
-	public List<Work> getFilteredWorkss(String searchTerm) {
+	public List<WorkNew> getFilteredWorkss(String searchTerm) {
 		try {
 			return wrepo.searchAll(searchTerm, getDistrict());
 		} catch (Exception e) {
@@ -268,7 +264,7 @@ public class Dbservice implements Serializable{
 		}
 	}
 
-	public List<Work> getFilteredWorks(Scheme scheme, Constituency consti, Block block, Year year) {
+	public List<WorkNew> getFilteredWorks(Scheme scheme, Constituency consti, Block block, Year year) {
 		try {
 			return wrepo.getFilteredWorks(scheme, getDistrict(), year, consti, block);
 		} catch (Exception e) {
@@ -278,7 +274,7 @@ public class Dbservice implements Serializable{
 		}
 	}
 
-	public List<Work> getReportWorks(Scheme scheme, Constituency consti, Block block, Year year) {
+	public List<WorkNew> getReportWorks(Scheme scheme, Constituency consti, Block block, Year year) {
 		try {
 			return wrepo.getReportWorks(scheme, getDistrict(), year, consti, block);
 		} catch (Exception e) {
@@ -300,7 +296,7 @@ public class Dbservice implements Serializable{
 		return wrepo.findByScheme(scheme).size();
 	}
 
-	public void saveWork(Work work) {
+	public void saveWork(WorkNew work) {
 		try {
 			if (work == null) {
 
@@ -313,7 +309,7 @@ public class Dbservice implements Serializable{
 		}
 	}
 
-	public void deleteWork(Work work) {
+	public void deleteWork(WorkNew work) {
 		// irepo.deleteByWork(work);
 		try {
 			wrepo.delete(work);
@@ -437,37 +433,16 @@ public class Dbservice implements Serializable{
 		drepo.save(dist);
 	}
 
-	public void deleteDistrict(District dist) {
-		try {
-			Impldistrict impdist = idrepo.findByDistrictCodeAndStateOrderByDistrictNameAsc(dist.getDistrictCode(),
-					dist.getState());
-			idrepo.delete(impdist);
-			drepo.delete(dist);
-		} catch (Exception e) {
-			Notification.show("Unable to Delete District " + e, 5000, Position.TOP_CENTER);
-		}
-
-	}
+	
 
 	public long getMaxDistrictCode(State state) {
 		return drepo.findMaxDistrictCode(state);
 	}
 
 	// save & Delete impldistrict
-	public void saveImplDistrict(Impldistrict dist) {
-		if (dist == null) {
-
-			return;
-		}
-		idrepo.save(dist);
-	}
-
-	public Impldistrict getImpldistrict(long id) {
-		return idrepo.findByDistrictIdOrderByDistrictName(id);
-	}
-
+	
 	// Methods to Get All Data from Individual Tables
-	public List<Work> getAllWorks() {
+	public List<WorkNew> getAllWorks() {
 		if (isSuperAdmin()) {
 			return wrepo.findAll();
 		} else {
@@ -568,13 +543,11 @@ public class Dbservice implements Serializable{
 		return strepo.findAll();
 	}
 
-	public List<Installment> getAllInstallments() {
+	public List<InstallmentNew> getAllInstallments() {
 		return irepo.findAll();
 	}
 
-	public List<Impldistrict> getAllImplDistricts() {
-		return idrepo.findAll();
-	}
+	
 	
 	public void saveRole(UsersRoles role) {
 	    try {

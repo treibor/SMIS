@@ -10,6 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
@@ -38,7 +40,19 @@ public class Users {
 	private LocalDate pwdChangedDate;
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user", fetch = FetchType.LAZY)
 	private List<UsersRoles> Roles;
-
+	@ManyToMany
+    @JoinTable(
+        name = "process",
+        joinColumns = @JoinColumn(name = "userId"),
+        inverseJoinColumns = @JoinColumn(name = "processId")
+    )
+    private List<MasterProcess> assignedProcesses; 
+	public List<MasterProcess> getAssignedProcesses() {
+		return assignedProcesses;
+	}
+	public void setAssignedProcesses(List<MasterProcess> assignedProcesses) {
+		this.assignedProcesses = assignedProcesses;
+	}
 	public LocalDate getPwdChangedDate() {
 		return pwdChangedDate;
 	}

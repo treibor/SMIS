@@ -5,6 +5,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.smis.dbservice.Dbservice;
+import com.smis.entity.ProcessUser;
+import com.smis.entity.Scheme;
+import com.smis.entity.MasterProcess;
 import com.smis.entity.Users;
 import com.smis.entity.UsersRoles;
 import com.vaadin.flow.component.Component;
@@ -16,6 +19,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
@@ -39,28 +43,51 @@ public class UsersForm extends FormLayout {
 	TextField districtLabel=new TextField("Label");
 	Button save= new Button("Update");
 	CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
+	//CheckboxGroup<Scheme> schemeGroup = new CheckboxGroup<>();
+	public ComboBox<Scheme> schemes=new ComboBox<Scheme>("Scheme");
+	ComboBox<MasterProcess> schemeprocess=new ComboBox<MasterProcess>("Assigned Task");
+	Button savetask= new Button("Add Task");
 	private Users user;
 	//private Impldistrict impldist;
 	public UsersForm(Dbservice service) {
 		this.service=service;
+		//schemes.setValue(null);
 		binder.bindInstanceFields(this);
-		add(createForm(), createButtonsLayout());
+		add(createForm());
 	
 	}
 
 	private Component createForm() {
-		
 		checkboxGroup.setLabel("Roles");
 		checkboxGroup.setItems("ADMIN", "USER");
-		checkboxGroup.select("Order ID", "Customer");
+		//checkboxGroup.select("Order ID", "Customer");
 		checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
-		return new VerticalLayout(enabled,checkboxGroup);
-	}
-
-	private Component createButtonsLayout() {
+		schemes.setItems(service.getAllSchemes());
+		schemes.setItemLabelGenerator(Scheme::getSchemeName);
+		schemes.addValueChangeListener(e->addProcessScheme(e.getValue()));
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		save.addClickShortcut(Key.ENTER);
 		save.addClickListener(event-> validateandSave());
+		savetask.addClickListener(e->addTask());
+		return new VerticalLayout(enabled,checkboxGroup,save,  schemes, schemeprocess, savetask);
+	}
+
+	private void addTask() {
+		ProcessUser userprocess=new ProcessUser();
+		//userprocess.setSchemeprocess(schemeprocess.getValue());
+		userprocess.setUser(user);
+		//ystem.out.println(user.getUserName());
+		service.saveProcessUser(userprocess);
+		Notification.show("Success");
+	}
+
+	private void addProcessScheme(Scheme scheme) {
+		schemeprocess.setItems(service.getSchemeProcess(scheme));
+		schemeprocess.setItemLabelGenerator(MasterProcess::getProcessName);
+	}
+
+	private Component createButtonsLayout() {
+		
 		return new HorizontalLayout(save);
 	}
 	

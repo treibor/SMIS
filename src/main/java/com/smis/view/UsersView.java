@@ -10,6 +10,7 @@ import com.smis.entity.Users;
 import com.smis.entity.UsersRoles;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabSheet;
@@ -27,10 +28,11 @@ public class UsersView extends HorizontalLayout {
 	private static final long serialVersionUID = 1L;
 	Grid<Users> usergrid=new Grid<>(Users.class);
 	Dbservice service;
-	UsersForm form=new UsersForm(service);
+	UsersForm form;
 	Tab tab1=new Tab("Users");
 	public UsersView(Dbservice service) {
 		this.service=service;
+		form=new UsersForm(service);
 		// TODO Auto-generated constructor stub
 		setSizeFull();
 		configureForms();
@@ -82,7 +84,8 @@ public class UsersView extends HorizontalLayout {
 			form.setVisible(true);
 			form.checkboxGroup.clear();
 			form.checkboxGroup.select(service.fetchRolesForSelectedUser(user));
-			//yearform.setYear(year);
+			form.schemes.clear();
+			
 			
 		}
 	}

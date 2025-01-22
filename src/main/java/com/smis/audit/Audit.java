@@ -9,6 +9,7 @@ import com.smis.dbservice.AuditService;
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.AuditTrail;
 import com.smis.entity.Work;
+import com.smis.entity.WorkNew;
 import com.vaadin.flow.server.VaadinRequest;
 @Service
 public class Audit {
@@ -36,6 +37,16 @@ public class Audit {
 	}
 
 	public void saveAudit(Work work, String action) {
+		audit=new AuditTrail();
+		audit.setAction(action);
+		audit.setActionBy(uservice.getloggeduser());
+		audit.setActionOn(LocalDateTime.now());
+		audit.setIpAddress(getRealClientIp());
+		//String villageText=work.getSanctionNo() == null ? "Master Data" : crop.getVillage().getVillageName();
+		audit.setDetails(work.getWorkCode()+"- Sanction No:" +work.getSanctionNo() +", Sanction Date-"+work.getSanctionDate()+",Name-"+ work.getWorkName()+", Previous User-"+work.getEnteredBy()+", Previous Entry Date-"+work.getEnteredOn());
+		auditservice.updateAudit(audit);
+	}
+	public void saveAudit(WorkNew work, String action) {
 		audit=new AuditTrail();
 		audit.setAction(action);
 		audit.setActionBy(uservice.getloggeduser());

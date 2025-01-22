@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Work implements Serializable{
+public class WorkNew implements Serializable{
 	/**
 	 * 
 	 */
@@ -79,6 +79,10 @@ public class Work implements Serializable{
 	@JoinColumn(name="districtId")
 	@NotNull
 	private District district;
+	@ManyToOne
+	@JoinColumn(name = "processId")
+	private MasterProcess process;
+	
 	
 	
 	private String enteredBy;
@@ -87,6 +91,12 @@ public class Work implements Serializable{
 	
 	
 	
+	public MasterProcess getProcess() {
+		return process;
+	}
+	public void setProcess(MasterProcess process) {
+		this.process = process;
+	}
 	public long getWorkId() {
 		return workId;
 	}

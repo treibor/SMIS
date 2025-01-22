@@ -13,6 +13,7 @@ import com.smis.entity.UsersRoles;
 import com.smis.entity.State;
 import com.smis.entity.Users;
 import com.smis.security.SecurityService;
+import com.smis.view.processflow.WorkViewNew;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -116,6 +117,8 @@ public class MainLayout extends AppLayout  {
 				LineAwesomeIcon.DONATE_SOLID.create());
 		SideNavItemWithHelperText master = new SideNavItemWithHelperText("", "Master", MasterView.class,
 				LineAwesomeIcon.BALANCE_SCALE_LEFT_SOLID.create());
+		SideNavItemWithHelperText schemeprocess = new SideNavItemWithHelperText("", "Scheme Process", SchemeProcessView.class,
+				LineAwesomeIcon.BALANCE_SCALE_LEFT_SOLID.create());
 		SideNavItemWithHelperText distmaster = new SideNavItemWithHelperText("", "District Master", DistView.class,
 				LineAwesomeIcon.BALANCE_SCALE_RIGHT_SOLID.create());
 		SideNavItemWithHelperText report = new SideNavItemWithHelperText("", "Reports", ReportView.class,
@@ -124,7 +127,8 @@ public class MainLayout extends AppLayout  {
 				LineAwesomeIcon.CALENDAR.create());
 		SideNavItemWithHelperText users = new SideNavItemWithHelperText("", "Users", UsersView.class,
 				LineAwesomeIcon.USER.create());
-
+		SideNavItemWithHelperText newWorks = new SideNavItemWithHelperText("", "New Works", WorkViewNew.class,
+				LineAwesomeIcon.PEOPLE_CARRY_SOLID.create());
 		master.setVisible(isAdmin);
 		distmaster.setVisible(isSuper);
 		releaseorder.setVisible(isUser);
@@ -134,7 +138,7 @@ public class MainLayout extends AppLayout  {
 		// getElement().getStyle().set("--_vaadin-app-layout-drawer-width", "2px");
 		// addToDrawer(new VerticalLayout(nav));
 		// addToDrawer(nav);
-		drawerContent.add(home, mla, releaseorder, master, distmaster, report, audit, users);
+		drawerContent.add(home, mla, releaseorder, master,schemeprocess, distmaster, report, audit, users, newWorks);
 		addToDrawer(drawerContent);
 	}
 

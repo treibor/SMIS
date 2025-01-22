@@ -1,25 +1,30 @@
 package com.smis.view;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Scheme;
+import com.smis.entity.MasterProcess;
 import com.smis.util.ValidationUtil;
-import com.smis.view.SchemeForm.SchemeFormEvent;
-import com.smis.view.SchemeForm.DeleteEvent;
-import com.smis.view.SchemeForm.SaveEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
@@ -33,6 +38,7 @@ public class SchemeForm extends FormLayout{
 	private static final long serialVersionUID = 1L;
 	Dbservice service;
 	Binder<Scheme> binder=new BeanValidationBinder<>(Scheme.class);
+	//Binder<Scheme> binder2=new BeanValidationBinder<>(SchemeProcess.class);
 	//IntegerField constituencyNo=new IntegerField("Scheme Number");
 	TextField schemeName=new TextField("Scheme Name");
 	TextField schemeNameLong=new TextField("Scheme Full Name");
@@ -48,6 +54,11 @@ public class SchemeForm extends FormLayout{
 	Checkbox inUse=new Checkbox("In Use");
 	private Scheme scheme;
 	Notification notify=new Notification();
+	Accordion accordion = new Accordion();
+	AccordionPanel schememasteraccordion = new AccordionPanel();
+	AccordionPanel schemeprocessaccordion = new AccordionPanel();
+	
+	//AccordionPanel ucaccordion = new AccordionPanel();
 	public SchemeForm(Dbservice service) {
 		this.service=service;
 		binder.bindInstanceFields(this);
@@ -62,9 +73,64 @@ public class SchemeForm extends FormLayout{
 		ValidationUtil.applyValidation(schemeName);
 		ValidationUtil.applyValidation(schemeNameLong);
 		
-		add(schemeName, schemeNameLong, schemeDept, schemeDuration,  schemeLabel, schemeReport,inUse, createButtonsLayout());
+		//add(schemeName, schemeNameLong, schemeDept, schemeDuration,  schemeLabel, schemeReport,inUse, createButtonsLayout());
+		add (createFinalPanel());
 	}
 	
+	public Component createFinalPanel() {
+		schememasteraccordion = accordion.add("Master", createSchemeLayout());
+		//schemeprocessaccordion = accordion.add("Scheme Process", createSchemeProcessLayout());
+		return accordion;
+	}
+	
+	
+	public Component createSchemeProcessLayout() {
+	    // Fetch and initialize the list of SchemeProcess objects
+		
+		//System.out.println("Scheme"+this.scheme);
+	    List<MasterProcess> schemeProcesses = new ArrayList<>(service.getSchemeProcess(scheme));
+	   
+	    // Create a ListBox for SchemeProcess
+	    ListBox<MasterProcess> listBox = new ListBox<>();
+	    listBox.setItems(schemeProcesses);
+	    listBox.setItemLabelGenerator(MasterProcess::getProcessName); // Adjust the method as needed
+	    listBox.setSizeFull();
+	    // Create buttons
+	    Button moveUp = new Button("Move Up", event -> moveItemUp(listBox, schemeProcesses));
+	    Button moveDown = new Button("Move Down", event -> moveItemDown(listBox, schemeProcesses));
+	    
+	    // Layout and return
+	    VerticalLayout layout = new VerticalLayout(listBox, new HorizontalLayout(moveUp, moveDown));
+	    return layout;
+	}
+	private void moveItemUp(ListBox<MasterProcess> listBox, List<MasterProcess> schemeProcesses) {
+	    MasterProcess selected = listBox.getValue(); // Get the selected item
+	    if (selected != null) {
+	        int index = schemeProcesses.indexOf(selected);
+	        if (index > 0) {
+	            Collections.swap(schemeProcesses, index, index - 1); // Swap with the previous item
+	            listBox.setItems(schemeProcesses); // Refresh the ListBox
+	            listBox.setValue(selected); // Retain selection
+	        }
+	    }
+	}
+
+	private void moveItemDown(ListBox<MasterProcess> listBox, List<MasterProcess> schemeProcesses) {
+	    MasterProcess selected = listBox.getValue(); // Get the selected item
+	    if (selected != null) {
+	        int index = schemeProcesses.indexOf(selected);
+	        if (index < schemeProcesses.size() - 1) {
+	            Collections.swap(schemeProcesses, index, index + 1); // Swap with the next item
+	            listBox.setItems(schemeProcesses); // Refresh the ListBox
+	            listBox.setValue(selected); // Retain selection
+	        }
+	    }
+	}
+	
+	
+	private Component createSchemeLayout() {
+		return new VerticalLayout(schemeName, schemeNameLong, schemeDept, schemeDuration,  schemeLabel, schemeReport,inUse, createButtonsLayout());
+	}
 	private Component createButtonsLayout() {
 		// TODO Auto-generated method stub
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
