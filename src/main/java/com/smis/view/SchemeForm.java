@@ -87,20 +87,23 @@ public class SchemeForm extends FormLayout{
 	public Component createSchemeProcessLayout() {
 	    // Fetch and initialize the list of SchemeProcess objects
 		
-		//System.out.println("Scheme"+this.scheme);
-	    List<MasterProcess> schemeProcesses = new ArrayList<>(service.getSchemeProcess(scheme));
-	   
-	    // Create a ListBox for SchemeProcess
-	    ListBox<MasterProcess> listBox = new ListBox<>();
-	    listBox.setItems(schemeProcesses);
-	    listBox.setItemLabelGenerator(MasterProcess::getProcessName); // Adjust the method as needed
-	    listBox.setSizeFull();
-	    // Create buttons
-	    Button moveUp = new Button("Move Up", event -> moveItemUp(listBox, schemeProcesses));
-	    Button moveDown = new Button("Move Down", event -> moveItemDown(listBox, schemeProcesses));
+		/*
+		 * //System.out.println("Scheme"+this.scheme); List<MasterProcess>
+		 * schemeProcesses = new ArrayList<>(service.getSchemeProcess(scheme));
+		 * 
+		 * // Create a ListBox for SchemeProcess ListBox<MasterProcess> listBox = new
+		 * ListBox<>(); listBox.setItems(schemeProcesses);
+		 * listBox.setItemLabelGenerator(MasterProcess::getProcessName); // Adjust the
+		 * method as needed listBox.setSizeFull();
+		 */
+		/*
+		 * // Create buttons Button moveUp = new Button("Move Up", event ->
+		 * moveItemUp(listBox, schemeProcesses)); Button moveDown = new
+		 * Button("Move Down", event -> moveItemDown(listBox, schemeProcesses));
+		 */
 	    
 	    // Layout and return
-	    VerticalLayout layout = new VerticalLayout(listBox, new HorizontalLayout(moveUp, moveDown));
+	    VerticalLayout layout = new VerticalLayout();
 	    return layout;
 	}
 	private void moveItemUp(ListBox<MasterProcess> listBox, List<MasterProcess> schemeProcesses) {

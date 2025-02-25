@@ -146,10 +146,11 @@ public class WorkForm extends VerticalLayout {
 		workSelect.setAllowCustomValue(true);
 		workSelect.addCustomValueSetListener(e -> {
 			String workname = e.getDetail();
+			//System.out.println(workname);
 			workSelect.setItems(workname);
 			workSelect.setValue(workname);
 		});
-		//workSelect.addValueChangeListener(e->workName.setValue(workSelect.getValue()));
+		workSelect.addValueChangeListener(e->workName.setValue(workSelect.getValue()));
 		//sanctionNo.setMinLength(2);
 		//sanctionNo.setMaxLength(50);
 		sanctionNo.setItems(service.getSanctionNos());

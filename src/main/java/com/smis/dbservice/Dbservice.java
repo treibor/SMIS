@@ -597,15 +597,7 @@ public class Dbservice implements Serializable{
 	    }
 	}
 	
-	public List<MasterProcess> getSchemeProcess(Scheme scheme){
-		return schemeprocessrepo.findByScheme(scheme);
-	}
-	public MasterProcess getSchemeProcessByScheme(Scheme scheme){
-		return schemeprocessrepo.findFirstBySchemeOrderByStepOrder(scheme);
-	}
-	public int getMaxStepOrder(Scheme scheme) {
-		return schemeprocessrepo.findMaxStepOrderByScheme(scheme);
-	}
+	
 	
 	public void saveSchemeProcess(MasterProcess process) {
 		schemeprocessrepo.save(process);

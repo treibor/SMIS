@@ -79,7 +79,7 @@ public class SchemeProcessView extends VerticalLayout {
     }
 
     public void populateProcessGrid(Scheme scheme) {
-        schemeprocessgrid.setItems(service.getSchemeProcess(scheme));
+        //schemeprocessgrid.setItems(service.getSchemeProcess(scheme));
     }
 
     private Component getContent() {
@@ -108,14 +108,15 @@ public class SchemeProcessView extends VerticalLayout {
     }
 
     private void editScheme(Scheme scheme) {
-        schemeProcesses = new ArrayList<>(service.getSchemeProcess(scheme));
-        schemeprocessgrid.setItems(schemeProcesses);
+        //schemeProcesses = new ArrayList<>(service.getSchemeProcess(scheme));
+        //schemeprocessgrid.setItems(schemeProcesses);
     }
 
     private void addNewItem() {
         String processName = process.getValue();
         Scheme scheme=schemegrid.asSingleSelect().getValue();
-        int stepOrder=service.getMaxStepOrder(scheme)+1;
+        int stepOrder=0;
+        //service.getMaxStepOrder(scheme)+1;
         if (processName != null && !processName.trim().isEmpty()) {
             MasterProcess newProcess = new MasterProcess();
             newProcess.setProcessName(processName);

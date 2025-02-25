@@ -82,8 +82,10 @@ public class UsersForm extends FormLayout {
 	}
 
 	private void addProcessScheme(Scheme scheme) {
-		schemeprocess.setItems(service.getSchemeProcess(scheme));
-		schemeprocess.setItemLabelGenerator(MasterProcess::getProcessName);
+		/*
+		 * schemeprocess.setItems(service.getSchemeProcess(scheme));
+		 * schemeprocess.setItemLabelGenerator(MasterProcess::getProcessName);
+		 */
 	}
 
 	private Component createButtonsLayout() {

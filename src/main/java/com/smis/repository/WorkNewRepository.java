@@ -70,22 +70,5 @@ public interface WorkNewRepository extends JpaRepository<WorkNew, Long>{
 	int getWorksCount();
 	
 	
-	 @Query("""
-		        SELECT w 
-		        FROM WorkNew w 
-		        JOIN ProcessFlow pf ON pf.work = w
-		        JOIN pf.schemeprocess sp
-		        JOIN ProcessUser pu ON pu.schemeprocess = sp
-		        WHERE pu.user.id = :userId
-		    """)
-		    List<WorkNew> findWorksByUserId(@Param("userId") Long userId);
-	 @Query("""
-		        SELECT w 
-		        FROM WorkNew w 
-		        JOIN ProcessFlow pf ON pf.work = w
-		        JOIN pf.schemeprocess sp
-		        JOIN ProcessUser pu ON pu.schemeprocess = sp
-		        WHERE pu.user = :user
-		    """)
-		    List<WorkNew> findWorksAssignedToUser(@Param("user") Users user);
+	
 }

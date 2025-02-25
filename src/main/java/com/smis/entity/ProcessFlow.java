@@ -24,8 +24,8 @@ public class ProcessFlow {
 	private Users user;
 
 	@ManyToOne
-	@JoinColumn(name = "schemeprocessId" ,referencedColumnName = "schemeprocessId")
-	private MasterProcess schemeprocess;
+	@JoinColumn(name = "processId" ,referencedColumnName = "processId")
+	private MasterProcess process;
 
 	@ManyToOne
 	@JoinColumn(name = "workId")
@@ -57,15 +57,15 @@ public class ProcessFlow {
 
 	
 
-	public MasterProcess getSchemeprocess() {
-		return schemeprocess;
-	}
-
-	public void setSchemeprocess(MasterProcess schemeprocess) {
-		this.schemeprocess = schemeprocess;
-	}
-
 	
+
+	public MasterProcess getProcess() {
+		return process;
+	}
+
+	public void setProcess(MasterProcess process) {
+		this.process = process;
+	}
 
 	public WorkNew getWork() {
 		return work;

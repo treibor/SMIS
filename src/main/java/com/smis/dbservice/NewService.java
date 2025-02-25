@@ -244,7 +244,7 @@ public class NewService implements Serializable{
 	public List<WorkNew> getWorksByUser() {
 		try {
 			//return wrepo.search(searchTerm, getDistrict());
-			return wrepo.findWorksAssignedToUser(getLoggedUser());
+			return Collections.emptyList();
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
@@ -570,15 +570,6 @@ public class NewService implements Serializable{
 	    }
 	}
 	
-	public List<MasterProcess> getSchemeProcess(Scheme scheme){
-		return schemeprocessrepo.findByScheme(scheme);
-	}
-	public MasterProcess getSchemeProcessByScheme(Scheme scheme){
-		return schemeprocessrepo.findFirstBySchemeOrderByStepOrder(scheme);
-	}
-	public int getMaxStepOrder(Scheme scheme) {
-		return schemeprocessrepo.findMaxStepOrderByScheme(scheme);
-	}
 	
 	public void saveSchemeProcess(MasterProcess process) {
 		schemeprocessrepo.save(process);

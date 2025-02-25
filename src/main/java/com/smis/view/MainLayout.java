@@ -138,7 +138,8 @@ public class MainLayout extends AppLayout  {
 		// getElement().getStyle().set("--_vaadin-app-layout-drawer-width", "2px");
 		// addToDrawer(new VerticalLayout(nav));
 		// addToDrawer(nav);
-		drawerContent.add(home, mla, releaseorder, master,schemeprocess, distmaster, report, audit, users, newWorks);
+		//drawerContent.add(home, mla, releaseorder, master, distmaster, report, audit, users,schemeprocess, newWorks);
+		drawerContent.add(home, mla, releaseorder, master, distmaster, report, audit, users);
 		addToDrawer(drawerContent);
 	}
 
