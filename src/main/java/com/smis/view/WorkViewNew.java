@@ -13,10 +13,7 @@ import com.smis.dbservice.Dbservice;
 import com.smis.entity.Block;
 import com.smis.entity.Constituency;
 import com.smis.entity.Installment;
-import com.smis.entity.ProcessFlow;
-import com.smis.entity.ProcessFlowUser;
 import com.smis.entity.Scheme;
-import com.smis.entity.Users;
 import com.smis.entity.Work;
 import com.smis.entity.Year;
 import com.vaadin.flow.component.Component;
@@ -39,11 +36,11 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 import software.xdev.vaadin.grid_exporter.GridExporter;
 
-@PageTitle("MLA Schemes")
-@Route(value = "mlaschemes", layout = MainLayout.class)
+@PageTitle("MLA-Schemes")
+@Route(value = "mlaschemesnews", layout = MainLayout.class)
 @RolesAllowed({ "USER", "SUPER", "ADMIN" })
 //@CssImport(value = "../components/vaadin-grid.css", themeFor = "vaadin-grid")
-public class WorkView extends VerticalLayout {
+public class WorkViewNew extends VerticalLayout {
 	/**
 	 * 
 	 */
@@ -62,8 +59,7 @@ public class WorkView extends VerticalLayout {
 	boolean isUser;
 	@Autowired
 	private Audit audit;
-
-	public WorkView(Dbservice service) {
+	public WorkViewNew(Dbservice service) {
 		this.service = service;
 		setSizeFull();
 		isAdmin = service.isAdmin();
@@ -76,17 +72,6 @@ public class WorkView extends VerticalLayout {
 		closeEditor();
 
 	}
-
-	public boolean checkAuthority(ProcessFlow pf) {
-		Users user = service.getLoggedUser();
-		ProcessFlowUser pfu = service.getProcessFlowUser(user, pf);
-		if (pfu == null) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
 	private void configureCombos() {
 		block.setItems(service.getAllBlocks());
 		// block.setClearButtonVisible(true);
@@ -100,8 +85,8 @@ public class WorkView extends VerticalLayout {
 		block.setItemLabelGenerator(Block::getBlockName);
 		year.setItemLabelGenerator(Year::getYearName);
 		scheme.setItemLabelGenerator(Scheme::getSchemeName);
-		consti.setItemLabelGenerator(constituency -> constituency.getConstituencyNo() + "-"
-				+ constituency.getConstituencyName() + "-" + constituency.getConstituencyMLA());
+		consti.setItemLabelGenerator(
+				constituency -> constituency.getConstituencyNo() + "-"+constituency.getConstituencyName() + "-" + constituency.getConstituencyMLA());
 		block.setPlaceholder("Block");
 		consti.setPlaceholder("Constituency");
 		year.setPlaceholder("Year");
@@ -117,41 +102,39 @@ public class WorkView extends VerticalLayout {
 	}
 
 	private void configureGrid() {
-
+		
 		grid.setSizeFull();
 		// grid.setClassNameGenerator(work -> work.getWorkAmount().intValue() > 500 ?
 		// "warn" : null);
 		// grid.getColumns().forEach(col-> col.setAutoWidth(true));
-
+		
 		grid.setColumns("workCode");
 		grid.addColumn(work -> work.getWorkName()).setHeader("Name of The Work").setWidth("20%").setResizable(true)
 				.setSortable(true);
 		grid.addColumn(work -> work.getWorkAmount()).setHeader("Sanc. Amount").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
-		grid.addColumn(work -> work.getBlock().getBlockName()).setAutoWidth(true).setHeader("Block/MB")
-				.setSortable(true).setResizable(true);
-		grid.addColumn(work -> work.getScheme().getSchemeName()).setAutoWidth(true).setHeader("Scheme")
-				.setSortable(true).setResizable(true);
-		grid.addColumn(work -> work.getConstituency().getConstituencyNo() + "-"
-				+ work.getConstituency().getConstituencyName() + "-" + work.getConstituency().getConstituencyMLA())
-				.setWidth("20%").setHeader("Constituency").setSortable(true).setResizable(true);
-		grid.addColumn(work -> work.getYear().getYearName()).setAutoWidth(true).setHeader("Year").setSortable(true)
-				.setResizable(true);
+		grid.addColumn(work -> work.getBlock().getBlockName()).setAutoWidth(true).setHeader("Block/MB").setSortable(true).setResizable(true);
+		grid.addColumn(work -> work.getScheme().getSchemeName()).setAutoWidth(true).setHeader("Scheme").setSortable(true).setResizable(true);
+		grid.addColumn(work -> work.getConstituency().getConstituencyNo() + "-"+ work.getConstituency().getConstituencyName() + "-"+ work.getConstituency().getConstituencyMLA()).setWidth("20%").setHeader("Constituency").setSortable(true).setResizable(true);
+		grid.addColumn(work -> work.getYear().getYearName()).setAutoWidth(true).setHeader("Year").setSortable(true).setResizable(true);
 		grid.addColumn(work -> work.getSanctionNo()).setHeader("Sanc. No").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		grid.addColumn(
-				work -> work.getSanctionDate() != null ? work.getSanctionDate().format(dateFormatter) : "No Date")
-				.setHeader("Sanc. Date").setResizable(true).setSortable(true).setAutoWidth(true);
+		grid.addColumn(work -> 
+			work.getSanctionDate()!=null? 
+					work.getSanctionDate().format(dateFormatter):"No Date").setHeader("Sanc. Date").setResizable(true).setSortable(true)
+				.setAutoWidth(true);
 		grid.addColumn(work -> work.getNoOfInstallments()).setHeader("Installments").setResizable(true)
 				.setSortable(true).setAutoWidth(true);
 		grid.addColumn(work -> work.getWorkStatus()).setHeader("Status").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
 		grid.addColumn(work -> work.getEnteredBy()).setHeader("Entered By").setResizable(true).setSortable(true)
 				.setAutoWidth(true);
-
-		grid.addColumn(work -> work.getEnteredOn() != null ? work.getEnteredOn().format(dateFormatter) : "No Date")
-				.setHeader("Entered On").setResizable(true).setSortable(true).setAutoWidth(true);
+		
+		grid.addColumn(work ->
+		work.getEnteredOn()!=null?
+			work.getEnteredOn().format(dateFormatter):"No Date").setHeader("Entered On").setResizable(true).setSortable(true)
+				.setAutoWidth(true);
 		grid.asSingleSelect().addValueChangeListener(e -> editWork(e.getValue()));
 		grid.getHeaderRows().clear();
 //		HeaderRow headerRow = grid.appendHeaderRow();
@@ -171,43 +154,43 @@ public class WorkView extends VerticalLayout {
 
 		// Add a menu item for viewing installments
 		contextMenu.addItem("View Installments", event -> {
-			Optional<Work> selectedWork = event.getItem();
-			selectedWork.ifPresent(work -> {
-				// Show a dialog or a new component with installments
-				showInstallmentsDialog(work);
-			});
+		    Optional<Work> selectedWork = event.getItem();
+		    selectedWork.ifPresent(work -> {
+		        // Show a dialog or a new component with installments
+		        showInstallmentsDialog(work);
+		    });
 		});
 
 	}
 
+	
 	private void showInstallmentsDialog(Work work) { // Create a dialog
 		Dialog dialog = new Dialog();
-		dialog.setHeaderTitle(work.getWorkCode() + "-" + work.getWorkName());
+		dialog.setHeaderTitle(work.getWorkCode()+"-"+work.getWorkName());
 		Grid<Installment> installmentGrid = new Grid<>(Installment.class, false);
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		installmentGrid.addColumn(Installment::getInstallmentNo).setHeader("Installment Number").setResizable(true);
 		installmentGrid.addColumn(Installment::getInstallmentAmount).setHeader("Amount Released").setResizable(true);
-		// installmentGrid.addColumn(Installment::getInstallmentDate).setHeader("Released
-		// Date").setResizable(true);
-		installmentGrid.addColumn(installment -> installment.getInstallmentDate() != null
-				? installment.getInstallmentDate().format(dateFormatter)
-				: "No Date").setHeader("Released Date").setResizable(true).setSortable(true).setAutoWidth(true);
-
+		//installmentGrid.addColumn(Installment::getInstallmentDate).setHeader("Released Date").setResizable(true);
+		installmentGrid.addColumn(installment->
+		installment.getInstallmentDate()!=null?
+				installment.getInstallmentDate().format(dateFormatter):"No Date").setHeader("Released Date").setResizable(true).setSortable(true)
+					.setAutoWidth(true);
+	
 		installmentGrid.addColumn(Installment::getInstallmentLetter).setHeader("Letter No.").setResizable(true);
 		installmentGrid.addColumn(Installment::getUcLetter).setHeader("UC Letter No").setResizable(true);
-		// installmentGrid.addColumn(Installment::getUcDate).setHeader("UC
-		// Date").setResizable(true);
-		installmentGrid.addColumn(
-				installment -> installment.getUcDate() != null ? installment.getUcDate().format(dateFormatter) : "")
-				.setHeader("UC. Date").setResizable(true).setSortable(true).setAutoWidth(true);
+		//installmentGrid.addColumn(Installment::getUcDate).setHeader("UC Date").setResizable(true);
+		installmentGrid.addColumn(installment->
+			installment.getUcDate()!=null?
+					installment.getUcDate().format(dateFormatter):"").setHeader("UC. Date").setResizable(true).setSortable(true)
+						.setAutoWidth(true);
 		installmentGrid.addColumn(Installment::getEnteredBy).setHeader("Entered By").setResizable(true);
-		// installmentGrid.addColumn(Installment::getEnteredOn).setHeader("Entered
-		// On").setResizable(true);
-		installmentGrid.addColumn(
-				installment -> installment.getEnteredOn() != null ? installment.getEnteredOn().format(dateFormatter)
-						: "No Date")
-				.setHeader("Entered On").setResizable(true).setSortable(true).setAutoWidth(true);
-
+		//installmentGrid.addColumn(Installment::getEnteredOn).setHeader("Entered On").setResizable(true);
+		installmentGrid.addColumn(installment->
+		installment.getEnteredOn()!=null?
+				installment.getEnteredOn().format(dateFormatter):"No Date").setHeader("Entered On").setResizable(true).setSortable(true)
+					.setAutoWidth(true);
+	
 		List<Installment> installments = service.getInstallments(work);
 		installmentGrid.setItems(installments);
 		installmentGrid.setAllRowsVisible(true);
@@ -218,7 +201,7 @@ public class WorkView extends VerticalLayout {
 	}
 
 	public void filterGrid() {
-
+		
 		// selected
 		// filterText.setValue("");
 		grid.setItems(
@@ -237,7 +220,7 @@ public class WorkView extends VerticalLayout {
 	public void updateGrid() {
 
 		grid.setItems(service.getAllWorks());
-
+		
 	}
 
 	private Component getToolbar() {
@@ -251,50 +234,50 @@ public class WorkView extends VerticalLayout {
 		Button addButton = new Button("New Work");
 		addButton.setIcon(new Icon(VaadinIcon.PLUS_CIRCLE_O));
 		addButton.addClickListener(e -> addWork());
-		addButton.setVisible(checkAuthority(service.getProcessFlowByOrder(1)));
+		// for testing purpose: generate dummy data
 		Button testButton = new Button("Generate Test Data");
 
 		testButton.addClickListener(e -> generateTestData());
 		configureCombos();
-		// HorizontalLayout toolbar = new HorizontalLayout(filterText, addButton,
-		// testButton);
-		// HorizontalLayout toolbar = new HorizontalLayout(filterText,consti, block,
-		// scheme, year, addButton, expButton);
+		//HorizontalLayout toolbar = new HorizontalLayout(filterText, addButton, testButton);
+		//HorizontalLayout toolbar = new HorizontalLayout(filterText,consti, block, scheme, year, addButton, expButton);
 		FormLayout toolbar = new FormLayout();
 		toolbar.add(filterText, 2);
 		toolbar.add(consti, 2);
 		toolbar.add(block, 2);
-		toolbar.add(scheme, 1);
+		toolbar.add(scheme,1);
 		toolbar.add(year, 1);
 		toolbar.add(addButton, 1);
-		toolbar.add(expButton, 1);
-		toolbar.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2), // 1 column by default
-				new FormLayout.ResponsiveStep("600px", 4), // 2 columns for screens wider than 600px
-				new FormLayout.ResponsiveStep("800px", 10) // 3 columns for screens wider than 800px
+		toolbar.add(expButton,1);
+		toolbar.setResponsiveSteps(
+		    new FormLayout.ResponsiveStep("0", 2),   // 1 column by default
+		    new FormLayout.ResponsiveStep("600px", 4), // 2 columns for screens wider than 600px
+		    new FormLayout.ResponsiveStep("800px", 10)  // 3 columns for screens wider than 800px
 		);
 		toolbar.setWidthFull();
 		return toolbar;
 	}
 
+	
 	private void generateTestData() {
 		// TODO Auto-generated method stub
 		try {
-
+			
 			for (int a = 0; a < service.getAllSchemes().size(); a++) {
-
+				
 				// for (int a = service.getAllSchemes().size()-1; a <
 				// service.getAllSchemes().size(); a++) {
-				Scheme scheme = service.getAllSchemes().get(a);
-				for (int b = 0; b < service.getAllConstituencies().size(); b++) {
-					Constituency consti = service.getAllConstituencies().get(b);
+				Scheme scheme=service.getAllSchemes().get(a);
+				for (int b = 0; b < service.getAllConstituencies().size();b++) {
+					Constituency consti= service.getAllConstituencies().get(b);
 					for (int c = 0; c < service.getAllBlocks().size(); c++) {
 						// for (int c = service.getAllBlocks().size()-1; c <
 						// service.getAllBlocks().size(); c++) {
-						Block block = service.getAllBlocks().get(c);
-
+						Block block=service.getAllBlocks().get(c);
+						
 						for (int d = 0; d < service.getAllYears().size(); d++) {
 							// service.getAllYears().size(); d++) {
-							Year year = service.getAllYears().get(d);
+							Year year=service.getAllYears().get(d); 
 							Work testwork = new Work();
 							testwork.setBlock(block);
 							testwork.setVillage(service.getVillage(service.getAllBlocks().get(1)).get(1));
@@ -303,11 +286,10 @@ public class WorkView extends VerticalLayout {
 							testwork.setYear(year);
 							testwork.setNoOfInstallments(2);
 							testwork.setWorkAmount(BigDecimal.valueOf(10000));
-							testwork.setWorkName("Construction at " + consti.getConstituencyName() + " for "
-									+ scheme.getSchemeName() + "");
+							testwork.setWorkName("Construction at "+consti.getConstituencyName()+" for "+scheme.getSchemeName()+"");
 							testwork.setWorkCode(service.getWorkCode() + 1);
 							testwork.setDistrict(service.getDistrict());
-							testwork.setSanctionNo("ABC/SANC/" + scheme.getSchemeName());
+							testwork.setSanctionNo("ABC/SANC/"+scheme.getSchemeName());
 							testwork.setWorkStatus("Entered");
 							// testwork.setSanctionDate(new LocalDateTime());
 							service.saveWork(testwork);
@@ -317,6 +299,8 @@ public class WorkView extends VerticalLayout {
 			}
 			updateGrid();
 		} catch (Exception e) {
+			
+			
 
 		}
 	}
@@ -334,9 +318,10 @@ public class WorkView extends VerticalLayout {
 
 		service.saveWork(event.getWork());
 		audit.saveAudit(event.getWork(), "Save/Update");
-
+		
 		updateList();
 		long b = service.getWorkCode();
+		
 
 		// closeEditor();
 		if (a == b) {
@@ -351,7 +336,7 @@ public class WorkView extends VerticalLayout {
 		grid.asSingleSelect().clear();
 		workform.installaccordion.setEnabled(false);
 		workform.ucaccordion.setEnabled(false);
-
+		
 		Work newWork = new Work();
 		newWork.setBlock(work.getBlock());
 		newWork.setConstituency(work.getConstituency());
@@ -360,7 +345,7 @@ public class WorkView extends VerticalLayout {
 		newWork.setYear(work.getYear());
 		newWork.setSanctionDate(work.getSanctionDate());
 		newWork.setSanctionNo(work.getSanctionNo());
-
+		
 		editWork(newWork);
 
 	}
@@ -379,7 +364,7 @@ public class WorkView extends VerticalLayout {
 		scheme.clear();
 		consti.clear();
 		year.clear();
-		/// grid.setItems(service.getFilteredWorks(filterText.getValue()));
+		///grid.setItems(service.getFilteredWorks(filterText.getValue()));
 		grid.setItems(service.getFilteredWorkss(filterText.getValue()));
 		// configureGrid();
 	}
@@ -401,40 +386,40 @@ public class WorkView extends VerticalLayout {
 	}
 
 	private void editWork(Work work) {
-
 		try {
+			
 			int workinstallment = 0;
 			if (work == null) {
 				closeEditor();
 			} else {
-
+				
 				workform.setWork(work);
 				workform.setVisible(true);
 				workform.save.setEnabled(isUser);
 				enableFields();
 				workinstallment = work.getNoOfInstallments();
-
+				
 				if (work.getWorkAmount() != null) {
 					// check if work is entered or not by checking if installment is greater than 0
 					int tablecount = service.getInstallmentCount(work);
 					int toEnter = tablecount + 1;
-
+					
 					if (tablecount > 0) {
-
+						
 						// check if any installment is entered
 						List<Installment> installments = service.getInstallments(work);
 						workform.delete.setEnabled(isAdmin);
-						if (!isAdmin) {
+						if(!isAdmin) {
 							disableFields();
 						}
 						// workform.setEnabled(isAdmin);
 						int tablecountindex = tablecount - 1;
 						if (workinstallment == tablecount) {
 							// check if all installments are entered, (if yes check if uc is enetered
-
+							
 							if (installments.get(tablecountindex).getInstallmentLetter() == null) {
 								closeAllAccordion();
-
+								
 								// workform.ucmaster.setText("UC: " + tablecount);
 							} else if (installments.get(tablecountindex).getUcLetter() == null) {
 								openUcAccordion();
@@ -446,53 +431,42 @@ public class WorkView extends VerticalLayout {
 							}
 						} else {
 							// Not All Installments are entered
-
+							
 							if (installments.get(tablecountindex).getInstallmentLetter() == null) {
 								// check if release order is not printed
 								closeAllAccordion();
 							} else if (installments.get(tablecountindex).getUcLetter() == null) {
-
+								
 								openUcAccordion();
 								workform.ucmaster.setText("UC: " + tablecount);
 
 							} else {
-
 								openInstallAccordion();
 								workform.installmentAmount.setValue(work.getWorkAmount()
 										.subtract(installments.get(tablecountindex).getInstallmentAmount()));
 								workform.installmentmaster.setText("Installment: " + toEnter);
-
 							}
 						}
 					} else {
 						// "No Installments In the table"-Enter New Installment
-
 						workform.delete.setEnabled(true);
 						openInstallAccordion();
 						workform.installmentAmount
 								.setValue(work.getWorkAmount().divide(new BigDecimal(work.getNoOfInstallments())));
 						workform.installmentmaster.setText("Installment: " + toEnter);
-
 					}
 
 				} else {
+					
 					closeAllAccordion();
+					// workform.delete.setEnabled(isA);
 					enableFields();
-				}
-				if(!checkAuthority(service.getProcessFlowByOrder(1))) {
-					workform.workaccordion.setVisible(false);
-				}
-				if(!checkAuthority(service.getProcessFlowByOrder(2))) {
-					workform.installaccordion.setVisible(false);
-				}
-				if(!checkAuthority(service.getProcessFlowByOrder(4))) {
-					workform.ucaccordion.setVisible(false);
 				}
 			}
 		} catch (ArithmeticException aE) {
-
+			
 		} catch (Exception e) {
-			//System.out.println(e);
+			System.out.println(e);
 		}
 	}
 
@@ -505,14 +479,12 @@ public class WorkView extends VerticalLayout {
 	}
 
 	public void openInstallAccordion() {
-		
-			workform.workaccordion.setOpened(false);
-			workform.installaccordion.setEnabled(true);
-			workform.installaccordion.setOpened(true);
-			workform.ucaccordion.setEnabled(false);
-			workform.ucaccordion.setOpened(false);
-			workform.workaccordion.setOpened(false);
-		
+		workform.workaccordion.setOpened(false);
+		workform.installaccordion.setEnabled(true);
+		workform.installaccordion.setOpened(true);
+		workform.ucaccordion.setEnabled(false);
+		workform.ucaccordion.setOpened(false);
+		workform.workaccordion.setOpened(false);
 	}
 
 	public void openUcAccordion() {

@@ -1,13 +1,14 @@
 package com.smis.view;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.smis.dbservice.Dbservice;
-import com.smis.entity.ProcessUser;
-import com.smis.entity.Scheme;
-import com.smis.entity.MasterProcess;
+import com.smis.entity.Block;
+import com.smis.entity.ProcessFlow;
+import com.smis.entity.ProcessFlowUser;
 import com.smis.entity.Users;
 import com.smis.entity.UsersRoles;
 import com.vaadin.flow.component.Component;
@@ -21,6 +22,7 @@ import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -43,10 +45,13 @@ public class UsersForm extends FormLayout {
 	TextField districtLabel=new TextField("Label");
 	Button save= new Button("Update");
 	CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
+	public Grid<ProcessFlowUser> pfugrid=new Grid<ProcessFlowUser>();
 	//CheckboxGroup<Scheme> schemeGroup = new CheckboxGroup<>();
-	public ComboBox<Scheme> schemes=new ComboBox<Scheme>("Scheme");
-	ComboBox<MasterProcess> schemeprocess=new ComboBox<MasterProcess>("Assigned Task");
-	Button savetask= new Button("Add Task");
+	public ComboBox<ProcessFlow> processflow=new ComboBox<ProcessFlow>("Process");
+	public ComboBox<Block> block=new ComboBox<Block>("Block");
+	//ComboBox<MasterProcess> schemeprocess=new ComboBox<MasterProcess>("Assigned Task");
+	Button savetask= new Button("Add Process");
+	Button deletetask= new Button("Delete Process");
 	private Users user;
 	//private Impldistrict impldist;
 	public UsersForm(Dbservice service) {
@@ -62,31 +67,68 @@ public class UsersForm extends FormLayout {
 		checkboxGroup.setItems("ADMIN", "USER");
 		//checkboxGroup.select("Order ID", "Customer");
 		checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
-		schemes.setItems(service.getAllSchemes());
-		schemes.setItemLabelGenerator(Scheme::getSchemeName);
-		schemes.addValueChangeListener(e->addProcessScheme(e.getValue()));
+		processflow.setItems(service.getAllProcessFlow());
+		processflow.setItemLabelGenerator(ProcessFlow::getStepName);
+		//processflow.addValueChangeListener(e->addProcessScheme(e.getValue()));
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		save.addClickShortcut(Key.ENTER);
+		block.setItems(service.getAllBlocks());
+		block.setItemLabelGenerator(Block::getBlockName);
 		save.addClickListener(event-> validateandSave());
-		savetask.addClickListener(e->addTask());
-		return new VerticalLayout(enabled,checkboxGroup,save,  schemes, schemeprocess, savetask);
+		processflow.addValueChangeListener(e-> getBlocks(e.getValue()));
+		savetask.addClickListener(e->addProcess());
+		deletetask.addClickListener(e->deleteProcess());
+		block.setVisible(false);
+		pfugrid.setHeight("200px");
+		return new VerticalLayout(enabled,checkboxGroup,save,  processflow,block,  savetask,deletetask,pfugrid);
 	}
-
-	private void addTask() {
-		ProcessUser userprocess=new ProcessUser();
-		//userprocess.setSchemeprocess(schemeprocess.getValue());
-		userprocess.setUser(user);
-		//ystem.out.println(user.getUserName());
-		service.saveProcessUser(userprocess);
-		Notification.show("Success");
+	private void deleteProcess() {
+		try {
+		service.deleteProcessFlowUser(pfugrid.asSingleSelect().getValue());
+			Notification.show("Process Deleted");
+		}catch(Exception e) {
+			Notification.show("Error:"+e);
+		}
 	}
-
-	private void addProcessScheme(Scheme scheme) {
-		/*
-		 * schemeprocess.setItems(service.getSchemeProcess(scheme));
-		 * schemeprocess.setItemLabelGenerator(MasterProcess::getProcessName);
-		 */
+	private void addProcess() {
+		ProcessFlowUser existingPFU = service.getProcessFlowUser(user, processflow.getValue());
+		if (existingPFU != null) {
+		    // Update existing entry
+		    existingPFU.setAssignedDate(LocalDate.now());
+		    service.saveProcessFlowUser(existingPFU);
+		    
+		} else {
+		    // Create new entry
+		    ProcessFlowUser pfu = new ProcessFlowUser();
+		    pfu.setUser(user);
+		    pfu.setProcessFlow(processflow.getValue());
+		    pfu.setAssignedDate(LocalDate.now());
+		    service.saveProcessFlowUser(pfu);
+		}
+		Notification.show("Process Assigned to User");
+		refreshpfugrid(user);
 	}
+	
+	public void refreshpfugrid(Users user) {
+		pfugrid.removeAllColumns();
+		pfugrid.addColumn(processflowuser->processflowuser.getProcessFlow().getStepOrder()).setHeader("Order").setResizable(true);
+		pfugrid.addColumn(processflowuser->processflowuser.getProcessFlow().getStepName()).setHeader("Process").setResizable(true).setWidth("95%");
+		pfugrid.setItems(service.getProcessFlowUser(user));
+	}
+	
+	
+	public void getBlocks(ProcessFlow pf) {
+		if (pf != null) {
+			String process = pf.getStepName();
+			if (process.equals("Enter UC")) {
+				block.setVisible(true);
+			} else {
+				block.setVisible(false);
+			}
+		}
+	}
+	
+	
 
 	private Component createButtonsLayout() {
 		

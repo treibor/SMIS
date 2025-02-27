@@ -80,9 +80,9 @@ public class WorkForm extends VerticalLayout {
 	DatePicker ucDate = new DatePicker("UC Date");
 	//Notification notify = new Notification();
 	Accordion accordion = new Accordion();
-	AccordionPanel workaccordion = new AccordionPanel();
-	AccordionPanel installaccordion = new AccordionPanel();
-	AccordionPanel ucaccordion = new AccordionPanel();
+	public AccordionPanel workaccordion = new AccordionPanel();
+	public AccordionPanel installaccordion = new AccordionPanel();
+	public AccordionPanel ucaccordion = new AccordionPanel();
 	// Label installmentmaster=new Label("");
 	H3 installmentmaster = new H3("");
 	H3 ucmaster = new H3("");

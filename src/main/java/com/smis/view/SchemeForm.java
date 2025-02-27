@@ -1,12 +1,7 @@
 package com.smis.view;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.smis.dbservice.Dbservice;
 import com.smis.entity.Scheme;
-import com.smis.entity.MasterProcess;
 import com.smis.util.ValidationUtil;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
@@ -18,7 +13,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -106,29 +100,7 @@ public class SchemeForm extends FormLayout{
 	    VerticalLayout layout = new VerticalLayout();
 	    return layout;
 	}
-	private void moveItemUp(ListBox<MasterProcess> listBox, List<MasterProcess> schemeProcesses) {
-	    MasterProcess selected = listBox.getValue(); // Get the selected item
-	    if (selected != null) {
-	        int index = schemeProcesses.indexOf(selected);
-	        if (index > 0) {
-	            Collections.swap(schemeProcesses, index, index - 1); // Swap with the previous item
-	            listBox.setItems(schemeProcesses); // Refresh the ListBox
-	            listBox.setValue(selected); // Retain selection
-	        }
-	    }
-	}
-
-	private void moveItemDown(ListBox<MasterProcess> listBox, List<MasterProcess> schemeProcesses) {
-	    MasterProcess selected = listBox.getValue(); // Get the selected item
-	    if (selected != null) {
-	        int index = schemeProcesses.indexOf(selected);
-	        if (index < schemeProcesses.size() - 1) {
-	            Collections.swap(schemeProcesses, index, index + 1); // Swap with the next item
-	            listBox.setItems(schemeProcesses); // Refresh the ListBox
-	            listBox.setValue(selected); // Retain selection
-	        }
-	    }
-	}
+	
 	
 	
 	private Component createSchemeLayout() {

@@ -15,12 +15,9 @@ import org.springframework.stereotype.Service;
 import com.smis.entity.Block;
 import com.smis.entity.Constituency;
 import com.smis.entity.District;
-import com.smis.entity.Installment;
 import com.smis.entity.InstallmentNew;
 import com.smis.entity.ProcessFlow;
-import com.smis.entity.ProcessUser;
 import com.smis.entity.Scheme;
-import com.smis.entity.MasterProcess;
 import com.smis.entity.State;
 import com.smis.entity.Users;
 import com.smis.entity.UsersRoles;
@@ -32,9 +29,7 @@ import com.smis.repository.ConstituencyRepository;
 import com.smis.repository.DistrictRepository;
 import com.smis.repository.InstallmentNewRepository;
 import com.smis.repository.ProcessFlowRepo;
-import com.smis.repository.ProcessUserRepository;
 import com.smis.repository.RoleRepository;
-import com.smis.repository.MasterProcessRepository;
 import com.smis.repository.SchemeRepository;
 import com.smis.repository.StateRepository;
 import com.smis.repository.UserRepository;
@@ -75,10 +70,7 @@ public class NewService implements Serializable{
 	@Autowired
 	RoleRepository rolerepo;
 	@Autowired
-	MasterProcessRepository schemeprocessrepo;
-	@Autowired
-	ProcessUserRepository processuserrepo;
-	@Autowired
+	
 	ProcessFlowRepo pflowrepo;
 	public List<Village> getVillage(Block block) {
 		return vtrepo.findByBlock(block);
@@ -571,12 +563,7 @@ public class NewService implements Serializable{
 	}
 	
 	
-	public void saveSchemeProcess(MasterProcess process) {
-		schemeprocessrepo.save(process);
-	}
-	public void saveProcessUser(ProcessUser processuser) {
-		processuserrepo.save(processuser);
-	}
+	
 	public void saveProcessFlow(ProcessFlow processflow) {
 		pflowrepo.save(processflow);
 	}

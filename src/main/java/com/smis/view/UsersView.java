@@ -1,21 +1,16 @@
 package com.smis.view;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.smis.dbservice.Dbservice;
-import com.smis.entity.District;
+import com.smis.entity.ProcessFlowUser;
 import com.smis.entity.Users;
-import com.smis.entity.UsersRoles;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
 import jakarta.annotation.security.RolesAllowed;
 
 @RolesAllowed({"ADMIN", "SUPER"})
@@ -73,7 +68,6 @@ public class UsersView extends HorizontalLayout {
 		//return usergrid;
 	}
 	
-
 	private void editUser(Users user) {
 		// TODO Auto-generated method stub
 		form.setVisible(false);
@@ -84,9 +78,14 @@ public class UsersView extends HorizontalLayout {
 			form.setVisible(true);
 			form.checkboxGroup.clear();
 			form.checkboxGroup.select(service.fetchRolesForSelectedUser(user));
-			form.schemes.clear();
-			
-			
+			// ProcessFlowUser processFlow = null;
+			form.block.setVisible(false);
+			if (service.getProcessFlowUser(user).size() > 0) {
+				form.refreshpfugrid(user);
+
+			}else {
+				form.pfugrid.removeAllColumns();
+			}
 		}
 	}
 	private void configureForms() {

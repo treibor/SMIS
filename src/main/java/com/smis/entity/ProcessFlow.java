@@ -1,104 +1,85 @@
 package com.smis.entity;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 
 @Entity
-//@Table(name = "workflow_assignment")
-public class ProcessFlow {
+public class ProcessFlow implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "processflow_generator")
-	@SequenceGenerator(name = "processflow_generator", sequenceName = "processflow_sequence", allocationSize = 1)
-	private long flowId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "process_generator")
+    @SequenceGenerator(name = "process_generator", allocationSize = 1, sequenceName = "process_seq", initialValue = 1)
+    private long processFlowId;
 
-	@ManyToOne
-	@JoinColumn(name = "userId")
-	private Users user;
+    private String stepName;
+    private int stepOrder;
 
-	@ManyToOne
-	@JoinColumn(name = "processId" ,referencedColumnName = "processId")
-	private MasterProcess process;
+    @OneToMany(mappedBy = "processFlow", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProcessFlowUser> assignedUsers = new ArrayList<>();
 
-	@ManyToOne
-	@JoinColumn(name = "workId")
-	private WorkNew work;
-
-	private boolean isComplete;
-
-	private LocalDateTime assignedDate;
-
-	private LocalDateTime completedDate;
-
-	public long getFlowId() {
-		return flowId;
-	}
-
-	public void setFlowId(long flowId) {
-		this.flowId = flowId;
-	}
-
-	public Users getUser() {
-		return user;
-	}
-
-	public void setUser(Users user) {
-		this.user = user;
-	}
+    @ManyToOne
+    @JoinColumn(name = "nextStepId")
+    private ProcessFlow nextStep;
 
 	
-
-	
-
-	
-
-	public MasterProcess getProcess() {
-		return process;
+    
+    public long getProcessFlowId() {
+		return processFlowId;
 	}
 
-	public void setProcess(MasterProcess process) {
-		this.process = process;
+	public void setProcessFlowId(long processFlowId) {
+		this.processFlowId = processFlowId;
 	}
 
-	public WorkNew getWork() {
-		return work;
+	public String getStepName() {
+		return stepName;
 	}
 
-	public void setWork(WorkNew work) {
-		this.work = work;
+	public void setStepName(String stepName) {
+		this.stepName = stepName;
 	}
 
-	public boolean isComplete() {
-		return isComplete;
+	public int getStepOrder() {
+		return stepOrder;
 	}
 
-	public void setComplete(boolean isComplete) {
-		this.isComplete = isComplete;
+	public void setStepOrder(int stepOrder) {
+		this.stepOrder = stepOrder;
 	}
 
-	public LocalDateTime getAssignedDate() {
-		return assignedDate;
+	public List<ProcessFlowUser> getAssignedUsers() {
+		return assignedUsers;
 	}
 
-	public void setAssignedDate(LocalDateTime assignedDate) {
-		this.assignedDate = assignedDate;
+	public void setAssignedUsers(List<ProcessFlowUser> assignedUsers) {
+		this.assignedUsers = assignedUsers;
 	}
 
-	public LocalDateTime getCompletedDate() {
-		return completedDate;
+	public ProcessFlow getNextStep() {
+		return nextStep;
 	}
 
-	public void setCompletedDate(LocalDateTime completedDate) {
-		this.completedDate = completedDate;
+	public void setNextStep(ProcessFlow nextStep) {
+		this.nextStep = nextStep;
 	}
-	
-	
-	
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+    
+    
+    
 }

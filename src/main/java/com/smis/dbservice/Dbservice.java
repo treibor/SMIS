@@ -18,9 +18,8 @@ import com.smis.entity.District;
 import com.smis.entity.Impldistrict;
 import com.smis.entity.Installment;
 import com.smis.entity.ProcessFlow;
-import com.smis.entity.ProcessUser;
+import com.smis.entity.ProcessFlowUser;
 import com.smis.entity.Scheme;
-import com.smis.entity.MasterProcess;
 import com.smis.entity.State;
 import com.smis.entity.Users;
 import com.smis.entity.UsersRoles;
@@ -33,9 +32,8 @@ import com.smis.repository.DistrictRepository;
 import com.smis.repository.ImpldistrictRepository;
 import com.smis.repository.InstallmentRepository;
 import com.smis.repository.ProcessFlowRepo;
-import com.smis.repository.ProcessUserRepository;
+import com.smis.repository.ProcessFlowUserRepo;
 import com.smis.repository.RoleRepository;
-import com.smis.repository.MasterProcessRepository;
 import com.smis.repository.SchemeRepository;
 import com.smis.repository.StateRepository;
 import com.smis.repository.UserRepository;
@@ -67,12 +65,11 @@ public class Dbservice implements Serializable{
 	
 	//Notification Notification = new Notification();
 	//@Autowired
-	private final MasterProcessRepository schemeprocessrepo;
-	private final ProcessUserRepository processuserrepo;
 	private final ProcessFlowRepo pflowrepo;
+	private final ProcessFlowUserRepo pflowuserrepo;
 	public Dbservice(StateRepository strepo, UserRepository urepo, WorkRepository workrepo, YearRepository yrepo,
 			SchemeRepository srepo, ConstituencyRepository crepo, BlockRepository brepo, DistrictRepository drepo,
-			InstallmentRepository irepo, ImpldistrictRepository idrepo, VillageRepository vrepo, RoleRepository rolerepo,  MasterProcessRepository schemeprocessrepo,ProcessUserRepository processuserrepo,ProcessFlowRepo pflowrepo) {
+			InstallmentRepository irepo, ImpldistrictRepository idrepo, VillageRepository vrepo, RoleRepository rolerepo,  ProcessFlowRepo pflowrepo,ProcessFlowUserRepo pflowuserrepo) {
 		this.wrepo = workrepo;
 		this.yrepo = yrepo;
 		this.srepo = srepo;
@@ -85,9 +82,9 @@ public class Dbservice implements Serializable{
 		this.strepo = strepo;
 		this.vtrepo = vrepo;
 		this.rolerepo=rolerepo;
-		this.schemeprocessrepo=schemeprocessrepo;
-		this.processuserrepo=processuserrepo;
+		
 		this.pflowrepo=pflowrepo;
+		this.pflowuserrepo=pflowuserrepo;
 	}
 
 	// Development Phase only
@@ -597,15 +594,28 @@ public class Dbservice implements Serializable{
 	    }
 	}
 	
-	
-	
-	public void saveSchemeProcess(MasterProcess process) {
-		schemeprocessrepo.save(process);
+	public List<ProcessFlow> getAllProcessFlow() {
+		return pflowrepo.findAll();
 	}
-	public void saveProcessUser(ProcessUser processuser) {
-		processuserrepo.save(processuser);
+	public ProcessFlow getProcessFlowByOrder(int a) {
+		return pflowrepo.findByStepOrder(a);
 	}
+	
 	public void saveProcessFlow(ProcessFlow processflow) {
 		pflowrepo.save(processflow);
+	}
+	
+	
+	public List<ProcessFlowUser> getProcessFlowUser(Users user) {
+		return pflowuserrepo.findByUser(user);
+	}
+	public void saveProcessFlowUser(ProcessFlowUser pfu) {
+		pflowuserrepo.save(pfu);
+	}
+	public ProcessFlowUser getProcessFlowUser(Users user, ProcessFlow pfu) {
+		return pflowuserrepo.findByUserAndProcessFlow(user, pfu);
+	}
+	public void deleteProcessFlowUser(ProcessFlowUser pfu) {
+		pflowuserrepo.delete(pfu);
 	}
 }

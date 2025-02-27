@@ -69,33 +69,25 @@ public class WorkNew implements Serializable{
 	@JoinColumn(name="constituencyId")
 	@NotNull(message = "Please select the constituency")
 	private Constituency constituency;
-	public Village getVillage() {
-		return village;
-	}
-	public void setVillage(Village village) {
-		this.village = village;
-	}
 	@ManyToOne
 	@JoinColumn(name="districtId")
 	@NotNull
 	private District district;
 	@ManyToOne
-	@JoinColumn(name = "processId")
-	private MasterProcess process;
-	
-	
-	
+	@JoinColumn(name = "currentStepId")
+	private ProcessFlow currentStep;
 	private String enteredBy;
 	private LocalDate enteredOn;
 	
 	
 	
 	
-	public MasterProcess getProcess() {
-		return process;
+	
+	public ProcessFlow getCurrentStep() {
+		return currentStep;
 	}
-	public void setProcess(MasterProcess process) {
-		this.process = process;
+	public void setCurrentStep(ProcessFlow currentStep) {
+		this.currentStep = currentStep;
 	}
 	public long getWorkId() {
 		return workId;
@@ -116,7 +108,12 @@ public class WorkNew implements Serializable{
 	public void setWorkName(String workName) {
 		this.workName = workName;
 	}
-	
+	public Village getVillage() {
+		return village;
+	}
+	public void setVillage(Village village) {
+		this.village = village;
+	}
 	
 	public BigDecimal getWorkAmount() {
 		return workAmount;

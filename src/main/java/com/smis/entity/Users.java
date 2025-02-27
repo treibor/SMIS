@@ -34,6 +34,7 @@ public class Users {
 	@JoinColumn(name="districtId")
 	@NotNull
 	private District district;
+	
 	private boolean enabled;
 	private String enteredBy;
 	private LocalDate enteredOn;
@@ -46,13 +47,7 @@ public class Users {
         joinColumns = @JoinColumn(name = "userId"),
         inverseJoinColumns = @JoinColumn(name = "processId")
     )
-    private List<MasterProcess> assignedProcesses; 
-	public List<MasterProcess> getAssignedProcesses() {
-		return assignedProcesses;
-	}
-	public void setAssignedProcesses(List<MasterProcess> assignedProcesses) {
-		this.assignedProcesses = assignedProcesses;
-	}
+    
 	public LocalDate getPwdChangedDate() {
 		return pwdChangedDate;
 	}
@@ -112,5 +107,6 @@ public class Users {
 	public void setRoles(List<UsersRoles> roles) {
 		Roles = roles;
 	}
+	
 	
 }

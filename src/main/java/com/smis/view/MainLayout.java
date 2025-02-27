@@ -117,8 +117,7 @@ public class MainLayout extends AppLayout  {
 				LineAwesomeIcon.DONATE_SOLID.create());
 		SideNavItemWithHelperText master = new SideNavItemWithHelperText("", "Master", MasterView.class,
 				LineAwesomeIcon.BALANCE_SCALE_LEFT_SOLID.create());
-		SideNavItemWithHelperText schemeprocess = new SideNavItemWithHelperText("", "Scheme Process", SchemeProcessView.class,
-				LineAwesomeIcon.BALANCE_SCALE_LEFT_SOLID.create());
+		
 		SideNavItemWithHelperText distmaster = new SideNavItemWithHelperText("", "District Master", DistView.class,
 				LineAwesomeIcon.BALANCE_SCALE_RIGHT_SOLID.create());
 		SideNavItemWithHelperText report = new SideNavItemWithHelperText("", "Reports", ReportView.class,
@@ -138,8 +137,8 @@ public class MainLayout extends AppLayout  {
 		// getElement().getStyle().set("--_vaadin-app-layout-drawer-width", "2px");
 		// addToDrawer(new VerticalLayout(nav));
 		// addToDrawer(nav);
-		//drawerContent.add(home, mla, releaseorder, master, distmaster, report, audit, users,schemeprocess, newWorks);
-		drawerContent.add(home, mla, releaseorder, master, distmaster, report, audit, users);
+		drawerContent.add(home, mla, releaseorder, master, distmaster, report, audit, users, newWorks);
+		//drawerContent.add(home, mla, releaseorder, master, distmaster, report, audit, users);
 		addToDrawer(drawerContent);
 	}
 
